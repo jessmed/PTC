@@ -1,0 +1,384 @@
+/***
+@EjemploHTML:
+<form method="post" action="/search/">
+
+	<p>
+		<label>
+			Enter search terms<br />
+			<input type="text" name="q" />
+		</label> <input type="submit" value="Go" />
+	</p>
+
+</form>
+
+@Ejemplo:
+
+$.ajaxSetup({
+    'beforeSend' : function(xhr) {
+        xhr.overrideMimeType('text/html; charset=ISO-8859-1');
+    }
+});
+jQuery('#jquery-live-search-example input[name="q"]').liveSearch({url: Router.urlForModule('SearchResults') + '&q='});
+***/
+
+
+
+jQuery.fn.liveSearchValorAnyadir = function (conf) {
+	var config = jQuery.extend({
+		url:			'/search-results.php?q=', 
+		id:				'jquery-live-search', 
+		duration:		400, 
+		typeDelay:		700,
+		loadingClass:	'loading', 
+		onSlideUp:		function () {}, 
+		uptadePosition:	false
+	}, conf);
+
+
+	var liveSearch	= jQuery('#' + config.id);
+
+
+	// Create live-search if it doesn't exist
+	if (!liveSearch.length) {
+		liveSearch = jQuery('<div id="' + config.id + '"></div>')
+						.appendTo(document.body)
+						.hide()
+						.slideUp(0);
+
+		// Close live-search when clicking outside it
+		jQuery(document.body).click(function(event) {
+			var clicked = jQuery(event.target);
+
+			if (!(clicked.is('#' + config.id) || clicked.parents('#' + config.id).length || clicked.is('input'))) {
+				liveSearch.slideUp(config.duration, function () {
+					config.onSlideUp();
+				});
+			}
+		});
+	}
+
+	return this.each(function () {
+		var input							= jQuery(this).attr('autocomplete', 'off');
+		var liveSearchPaddingBorderHoriz	= parseInt(liveSearch.css('paddingLeft'), 10) + parseInt(liveSearch.css('paddingRight'), 10) + parseInt(liveSearch.css('borderLeftWidth'), 10) + parseInt(liveSearch.css('borderRightWidth'), 10);
+		var myObj							= this;
+		
+		var getObjText =function (){
+			return myObj;
+		};
+						
+		
+		// Re calculates live search's position
+		var repositionLiveSearch = function () {
+			var tmpOffset	= input.offset();
+			var inputDim	= {
+				left:		tmpOffset.left, 
+				top:		tmpOffset.top, 
+				width:		input.outerWidth(), 
+				height:		input.outerHeight()
+			};
+
+			inputDim.topPos		= inputDim.top + inputDim.height;
+			inputDim.totalWidth	= inputDim.width - liveSearchPaddingBorderHoriz;
+
+			liveSearch.css({
+				position:	'absolute', 
+				left:		inputDim.left + 'px', 
+				top:		inputDim.topPos + 'px',
+				width:		inputDim.totalWidth + 'px'
+			});
+		};
+
+		// Shows live-search for this input
+		var showLiveSearch = function () {
+			// Always reposition the live-search every time it is shown
+			// in case user has resized browser-window or zoomed in or whatever
+			repositionLiveSearch();
+
+			// We need to bind a resize-event every time live search is shown
+			// so it resizes based on the correct input element
+			$(window).unbind('resize', repositionLiveSearch);
+			$(window).bind('resize', repositionLiveSearch);
+
+			liveSearch.slideDown(config.duration);
+		};
+
+		// Hides live-search for this input
+		var hideLiveSearch = function () {
+			liveSearch.slideUp(config.duration, function () {
+				config.onSlideUp();
+			});
+		};
+
+		input
+			// On focus, if the live-search is empty, perform an new search
+			// If not, just slide it down. Only do this if there's something in the input
+			.focus(function () {
+				if (this.value !== '') {
+					// Perform a new search if there are no search results
+					if (liveSearch.html() == '') {
+						this.lastValue = '';
+						input.keyup();
+					}
+					// If there are search results show live search
+					else {
+						// HACK: In case search field changes width onfocus
+						setTimeout(showLiveSearch, 1);
+					}
+				}
+			})
+			// Auto update live-search onkeyup
+			.keyup(function (event) {
+					 
+				//borramos el dato al escribir
+				var objval=$('#' + this.name.replace("txt",""));
+				if (objval.length>0)
+					objval[0].value="";
+				
+				// Stop previous ajax-request
+				if (this.timer) {
+					clearTimeout(this.timer);
+				}
+				hideLiveSearch();
+				
+				// Don't update live-search if it's got the same value as last time
+				if (this.value != this.lastValue && this.value.replace(" ","").length>0) {
+					var q="";
+					if (this.value=="*")
+						q="";
+					else
+						q = this.value;
+					input.addClass(config.loadingClass);
+
+					this.timer = setTimeout(function () {						
+							$.getJSON(config.url + q, function(data) {
+								  var datos_html="";
+								  var items= eval(data);
+								  datos_html+="<ul>";
+								  for (var i=0;i<items.length;i++)
+										  datos_html+="<li><a href=\"#\" onclick=\"setAjaxValueValor('" + getObjText().name + "','" + items[i].Nombre + "'," + items[i].Id + ")\">" + items[i].Nombre + "</a></li>";
+								  datos_html+="</ul>";
+								  if (datos_html.length>0) {
+										liveSearch.html(datos_html);
+										showLiveSearch();
+									}
+									else {
+										hideLiveSearch();
+									}
+								 input.removeClass("loading");
+								})
+							/*
+							.complete(function() { alert("complete"); })
+							.success(function() { alert("second success"); })
+							.error(function() { alert("Ha ocurrido un error"); })*/
+							;								
+					   },config.typeDelay);
+
+				}else{
+					if (liveSearch.html.length>0) {
+						showLiveSearch();
+					}
+					else {
+						hideLiveSearch();
+					}
+				}
+				
+				this.lastValue = this.value;
+			}
+			);
+	});
+};
+
+
+var listBoxToLoad;
+function CargaValoresCri(url, listBox, txtBusqueda){				
+listBoxToLoad=listBox;
+	$("#"+listBox.id).removeClass( "loadingOp" );
+	$.getJSON(url + txtBusqueda, function(data) {
+		  var datos_html="";
+		  var items= eval(data);
+		  var objselect=listBoxToLoad;
+
+		  var options = objselect.options;
+	      while (options.length>0)
+			objselect.remove(0);
+		  for (var i=0;i<items.length;i++){
+				options[i] = new Option(items[i].Nombre, items[i].Id, false, false);
+							}
+		
+		})
+		.done(function() {
+			console.log( "second success" );
+		 })
+		.fail(function() {
+			console.log( "error" );
+		 })
+		.always(function() {
+			$("#"+listBox.id).removeClass( "loadingOp" );
+		});
+			  
+}
+
+jQuery.fn.liveSearchValorToList = function (conf) {
+	var config = jQuery.extend({
+		url:			'/search-results.php?q=', 
+		id:				'jquery-live-search', 
+		duration:		400, 
+		typeDelay:		700,
+		loadingClass:	'loading', 
+		onSlideUp:		function () {}, 
+		uptadePosition:	false
+	}, conf);
+
+
+	var liveSearch	= jQuery('#' + config.id);
+
+
+	// Create live-search if it doesn't exist
+	if (!liveSearch.length) {
+		liveSearch = jQuery('<div id="' + config.id + '"></div>')
+						.appendTo(document.body)
+						.hide()
+						.slideUp(0);
+
+		// Close live-search when clicking outside it
+		jQuery(document.body).click(function(event) {
+			var clicked = jQuery(event.target);
+
+			if (!(clicked.is('#' + config.id) || clicked.parents('#' + config.id).length || clicked.is('input'))) {
+				liveSearch.slideUp(config.duration, function () {
+					config.onSlideUp();
+				});
+			}
+		});
+	}
+
+	return this.each(function () {
+		var input							= jQuery(this).attr('autocomplete', 'off');
+		var liveSearchPaddingBorderHoriz	= parseInt(liveSearch.css('paddingLeft'), 10) + parseInt(liveSearch.css('paddingRight'), 10) + parseInt(liveSearch.css('borderLeftWidth'), 10) + parseInt(liveSearch.css('borderRightWidth'), 10);
+		var myObj							= this;
+		
+		var getObjText =function (){
+			return myObj;
+		};
+						
+		
+		// Re calculates live search's position
+		var repositionLiveSearch = function () {
+			var tmpOffset	= input.offset();
+			var inputDim	= {
+				left:		tmpOffset.left, 
+				top:		tmpOffset.top, 
+				width:		input.outerWidth(), 
+				height:		input.outerHeight()
+			};
+
+			inputDim.topPos		= inputDim.top + inputDim.height;
+			inputDim.totalWidth	= inputDim.width - liveSearchPaddingBorderHoriz;
+
+			liveSearch.css({
+				position:	'absolute', 
+				left:		inputDim.left + 'px', 
+				top:		inputDim.topPos + 'px',
+				width:		inputDim.totalWidth + 'px'
+			});
+		};
+
+		// Shows live-search for this input
+		var showLiveSearch = function () {
+			// Always reposition the live-search every time it is shown
+			// in case user has resized browser-window or zoomed in or whatever
+			repositionLiveSearch();
+
+			// We need to bind a resize-event every time live search is shown
+			// so it resizes based on the correct input element
+			$(window).unbind('resize', repositionLiveSearch);
+			$(window).bind('resize', repositionLiveSearch);
+
+			liveSearch.slideDown(config.duration);
+		};
+
+		// Hides live-search for this input
+		var hideLiveSearch = function () {
+			liveSearch.slideUp(config.duration, function () {
+				config.onSlideUp();
+			});
+		};
+
+		input
+			// On focus, if the live-search is empty, perform an new search
+			// If not, just slide it down. Only do this if there's something in the input
+			.focus(function () {
+				if (this.value !== '') {
+					// Perform a new search if there are no search results
+					if (liveSearch.html() == '') {
+						this.lastValue = '';
+						input.keyup();
+					}
+					// If there are search results show live search
+					else {
+						// HACK: In case search field changes width onfocus
+						setTimeout(showLiveSearch, 1);
+					}
+				}
+			})
+			// Auto update live-search onkeyup
+			.keyup(function (event) {
+					 
+				//borramos el dato al escribir
+				var objval=$('#' + this.name.replace("txt",""));
+				if (objval.length>0)
+					objval[0].value="";
+				
+				// Stop previous ajax-request
+				if (this.timer) {
+					clearTimeout(this.timer);
+				}
+				hideLiveSearch();
+				
+				// Don't update live-search if it's got the same value as last time
+				if (this.value != this.lastValue && this.value.replace(" ","").length>0) {
+					var q="";
+					if (this.value=="*")
+						q="";
+					else
+						q = this.value;
+					input.addClass(config.loadingClass);
+
+					this.timer = setTimeout(function () {						
+							$.getJSON(config.url + q, function(data) {
+								  var datos_html="";
+								  var items= eval(data);
+								  var objselect=$('#' +  getObjText().name.replace("txt","cri"));
+								  objselect.empty();
+								  var options = objselect[0].options;
+								  for (var i=0;i<items.length;i++)
+										options[i] = new Option(items[i].Nombre, items[i].Id, false, false);										
+								 input.removeClass("loading");
+								})
+							/*
+							.complete(function() { alert("complete"); })
+							.success(function() { alert("second success"); })
+							.error(function() { alert("Ha ocurrido un error"); })*/
+							;								
+					   },config.typeDelay);
+
+				}
+				
+				this.lastValue = this.value;
+			}
+			);
+	});
+};
+
+
+//funcion encargada de añadir al listbox la opcion seleccioado es el caso de TEXTO-MULTIPLE
+function setAjaxValueValor(objeto,name,val){
+	var objtxt=$('#' + objeto);
+	var objval=$('#' + objeto.replace("txt","cri"));
+	if (objval.length>0 && objtxt.length>0 ){ 
+		var options = objval.attr('options');
+		options[options.length] = new Option(name, val, true, true);
+		jQuery(document.body).click();
+	}	
+}
+

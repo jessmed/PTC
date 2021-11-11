@@ -1,0 +1,111 @@
+.visual {
+	margin: 0px;
+}
+.visual, #VisualJSTooltip {
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+	font-size: 13px;
+	background-color: #fff;
+	z-index: 9999;
+}
+.visual h1 {
+	font-size: 13px;
+	margin: 2px 0px 0px 2px;
+}
+.visual p {
+	font-size: 11px;
+	margin: 0 0 0 0;
+}
+#VisualJSleft, #VisualJSright {
+	text-align: center;
+}
+
+#VisualJSTooltip {
+	display: none;
+	position: absolute;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 4px;
+	background-color: #f6f6f6;
+	opacity: 0.90;
+	white-space: nowrap;
+	font-size: 11px;
+}
+#VisualJSTooltip strong, #VisualJSTooltip em {
+	display: block;
+	font-weight: bold;
+}
+#VisualJSTooltip em {
+	font-style: normal;
+	margin-top: 4px;
+}
+
+.visual .VisualJSnw {
+	white-space: nowrap;
+}
+
+/* Flot */
+.visual .VisualJSmini .flot-tick-label {
+	font-size: 8px;
+}
+.visual .flot-tick-label span {
+	display: block;
+}
+/* Avoid x-axis label overlapping in bar charts using styles (since 0.9.6) */
+.visual .flot-tick-label.tickLabel span {
+	padding: 0 2.5em;
+}
+
+/* SVG */
+.VisualJSarea {
+	fill: #ffffff;
+	stroke: #000;
+	stroke-width: 0.5px;
+}
+
+.visual {
+	fill: #ffffff;
+	stroke: #000;
+	stroke-width: 0.5px;
+}
+
+.visual .VisualJSarea > path:hover {
+	stroke: #000;
+	stroke-width: 0.8px;
+}
+
+.visual .VisualJSarea path.cnohover:hover {
+	stroke: #000;
+	stroke-width: 0.5px;
+}
+
+.visual svg g.VisualJSlegend {
+	stroke: #808080;
+	stroke-width: 0.8px;
+}
+.visual svg g.VisualJSlegend text {
+	font-size: 11px;
+	fill: black;
+	stroke: none;
+}
+
+.textoSVG
+{
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	fill :#222222;
+}
+
+.hidden { 
+  display: none; 
+}
+
+div.tooltip {
+  color: #222; 
+  font-size: 1em;
+  background: #fff; 
+  padding: .5em; 
+  text-shadow: #f5f5f5 0 1px 0;
+  border-radius: 2px; 
+  box-shadow: 0px 0px 2px 0px #a6a6a6; 
+  opacity: 0.9; 
+  position: absolute;
+}

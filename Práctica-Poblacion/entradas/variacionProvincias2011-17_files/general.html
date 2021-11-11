@@ -1,0 +1,323 @@
+var general_numLoadUrl = 0;
+
+
+function Is ()
+{   // convert all characters to lowercase to simplify testing
+    var agt=navigator.userAgent.toLowerCase();
+
+    // --- BROWSER VERSION ---
+    this.major = parseInt(navigator.appVersion);
+    this.minor = parseFloat(navigator.appVersion);
+
+    this.nav  = ((agt.indexOf('mozilla')!=-1) && ((agt.indexOf('spoofer')==-1) && (agt.indexOf('compatible') == -1)));
+    this.nav2 = (this.nav && (this.major == 2));
+    this.nav3 = (this.nav && (this.major == 3));
+    this.nav4 = (this.nav && (this.major == 4));
+	this.nav5 = (this.b=="ns" && this.v==5)
+ 
+
+    this.ie   = (agt.indexOf("msie") != -1);
+    this.ie3  = (this.ie && (this.major == 2));
+    this.ie4  = (this.ie && (this.major == 4));
+    this.ie5 = (agt.indexOf('msie 5')>0);
+
+	if (this.ie){
+		aux=parseInt(agt.substr(agt.indexOf('msie')+5,agt.indexOf(';',agt.indexOf('msie'))-agt.indexOf('msie')-5));
+		this.ieVersion   = aux;
+	}else
+		this.ieVersion   = null;
+		
+    this.opera = (agt.indexOf("opera") != -1);
+     
+    this.NN =	this.nav && (this.major >= 4);
+    this.IE  = this.ie  && (this.major >= 4);
+	if (this.ie5) this.v = 5
+    this.min = (this.NN||this.IE)
+
+}
+
+var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+	Mobile: function() {
+        return navigator.userAgent.match(/Mobile/i);
+    },
+	GooglebotMobile: function() {
+        return navigator.userAgent.match(/Googlebot-Mobile/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows() || isMobile.Mobile() || isMobile.GooglebotMobile());
+    }
+};
+
+function general_isLoaded(){
+
+	if (jQuery.ui && isMobile.any()) {	
+		loadUrlScript(HM_Menu_Dir +"/js/jquery.ui.touch-punch.min.js",null,null);
+	}
+	
+	if ( typeof HM_idioma != 'undefined') {
+		loadUrlScript( HM_DirJs+ "/" + HM_idioma +  "/general.js",null,"UTF-8");
+	}
+}
+
+
+
+
+function findObj(n, d) { 
+  var p,i,x;  
+  if(!d) d=document; 
+  if((p=n.indexOf("?"))>0&&parent.frames.length) 
+  {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; 
+  for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=findObj(n,d.layers[i].document); return x;
+}
+if (Menu_TituloFavoritos==null)
+	var Menu_TituloFavoritos="INE";
+	 
+if (Menu_UrlFavoritos==null)
+	var Menu_UrlFavoritos="www.ine.es";
+
+function AgregarFavoritos(titulo,url){
+ title =titulo; 
+ url = url;
+  try{
+	if (window.sidebar) { // Mozilla Firefox Bookmark
+		window.sidebar.addPanel(title, url,"");
+	} else if( window.external ) { // IE Favorite
+		window.external.AddFavorite( url, title); 
+	} else if(window.opera && window.print) { // Opera Hotlist
+		return true; }
+  }catch(e) {
+
+  }	
+}
+
+function Mensaje (fichero,scroll,ancho,alto) {
+
+  var w=ancho;
+  var h=alto;
+  var t=(screen.height-h)/2
+  var l=(screen.width-w)/2
+  if (scroll==0){
+    prop='toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,top='+t+',left='+l+',width='+w+',height='+h
+    msgWindow=window.open(fichero,'legal',prop)
+  } else {
+    prop='toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,top='+t+',left='+l+',width='+w+',height='+h
+    msgWindow=window.open(fichero,'legal',prop)
+  }
+
+}
+
+function changeBackgroundColor(obj,color){
+	document.getElementById(obj).style.background=color;
+}
+
+function changeBackgroundColorObj(obj,color){
+	obj.style.background=color;
+}
+
+function changeColor(obj,color){
+	document.getElementById(obj).style.color=color;
+}
+
+function changeColorObj(obj,color){
+	obj.style.color=color;
+}
+ 
+//Nos devuelve la posicion XY del scroll
+function getScrollXY() {
+  var scrOfX = 0, scrOfY = 0;
+  if( typeof( window.pageYOffset ) == 'number' ) {
+    //Netscape compliant
+    scrOfY = window.pageYOffset;
+    scrOfX = window.pageXOffset;
+  } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+    //DOM compliant
+    scrOfY = document.body.scrollTop;
+    scrOfX = document.body.scrollLeft;
+  } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+    //IE6 standards compliant mode
+    scrOfY = document.documentElement.scrollTop;
+    scrOfX = document.documentElement.scrollLeft;
+  }
+  return [ scrOfX, scrOfY ];
+}
+//Usado para evitar las repetidas pulsaciones de boton y que produzcan envio del formulario
+function noRecarga(btn) { 
+	destino=btn.form.target;
+	if (destino==null || destino=="undefined" || destino.length==0 || destino.toUpperCase() =="_SELF"){		
+		btn.disabled = true;
+		btn.form.submit();
+	}
+}
+
+
+function NVL(val,def){
+  if(typeof val == 'undefined') 
+    return def;
+  else
+   return val;
+}
+typeof HM_idioma != 'undefined'
+Number.prototype.formatMoney = function(c, d, t){
+var n = this, 	
+    c = c==null && n.toString().lastIndexOf(".")>0 ? n.toString().length - 1 - n.toString().lastIndexOf(".") : (isNaN(c = Math.abs(c)) ? 2 : c), 
+    d =  typeof d == 'undefined' ? "." : d, 
+    t = typeof t == 'undefined' ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
+ 
+ 
+ 
+Number.prototype.formatMoneyLang = function(c){
+var n = this, 	
+    c = c==null && n.toString().lastIndexOf(".")>0 ? n.toString().length - 1 - n.toString().lastIndexOf(".") : (isNaN(c = Math.abs(c)) ? 2 : c), 
+    d = typeof general_charDecimal == 'undefined' ? "." :  general_charDecimal, 
+    t = typeof general_chatMiles == 'undefined' ? "," : general_chatMiles, 
+    s = n < 0 ? "-" : "", 
+    i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
+
+String.prototype.trim = function() {
+    return this.replace(/^\s+|\s+$/g,"");
+}
+String.prototype.ltrim = function() {
+    return this.replace(/^\s+/,"");
+}
+String.prototype.rtrim = function() {
+    return this.replace(/\s+$/,"");
+}
+
+
+
+function alerta(titulo){
+
+	  if ($( "#tooltipWindowAlert" ).length==0){
+			$("body").append("<div id=\"tooltipWindowAlert\"></div>");	
+		
+			$( "#tooltipWindowAlert" ).dialog({
+			  position:{my: 'center', at: 'center'},
+			  autoOpen: false,
+			  closeOnEscape: true,
+			  modal:true,
+			  title: Txt_general_aviso,
+			  show: {
+				effect: "fade",
+				duration: 300
+			  },
+			  hide: {
+				effect: "fade",
+				duration: 300
+			  }
+			});	  
+	  }
+	  $( "#tooltipWindowAlert" ).html(titulo);
+	  $( "#tooltipWindowAlert" ).dialog( "open" );
+}
+
+//Usada para añadir un video de youtube
+//Insertar el código que devuelve youtube directamente da errores de accesibilidad
+//Hay que indicar el title del video ya que es necesario por accesibilidad, el identificador del mismo, el ancho y alto del iframe
+function addVideo(idVideo, titulo, alto, ancho ){
+	var urlVideo = "http://www.youtube.com/embed/" + idVideo;
+	if (titulo == null || titulo =="")
+		alert("Es obligatorio indicar un titulo");
+	var chr_lt=String.fromCharCode(60);
+	var chr_gt=String.fromCharCode(62);		
+	try{			
+		document.write(chr_lt + 'iframe frameborder="0" height="' + alto + '" src="' + urlVideo + '" width="' + ancho + '" title="' + titulo + '" allowfullscreen ' + chr_gt + chr_lt + '/iframe' + chr_gt);	
+	}catch(e){
+		alert(e);
+	}			
+}
+
+function loadUrlScript(url,callback,charset){
+	return loadUrlScriptSync(url,callback,charset,true);
+}
+
+var genLoadTimeOut;
+
+function loadUrlScriptSync(url,callback,charset,sync){	
+	var script = document.createElement('script');
+	script.setAttribute('type', 'text/javascript');
+	
+	if(charset!=null)
+		script.setAttribute('charset', charset);
+	var funcLoad=callback;		
+	if (typeof sync != 'undefined' && sync==true){		
+		if (window.jQuery && general_numLoadUrl==0) {			
+			$.holdReady( true );
+			genLoadTimeOut=setTimeout(function(){ 
+						general_numLoadUrl=0;
+						if ( console && console.log ) 
+							console.log("Se esta intentado cargar un archivo vacio ");
+						$.holdReady( false ); 
+						}, 5000);
+		}
+		general_numLoadUrl++;
+		funcLoad= function(){
+			general_numLoadUrl--;
+			if (window.jQuery && general_numLoadUrl==0) {
+				clearTimeout(genLoadTimeOut);
+				$.holdReady( false );
+			}
+			if (typeof callback!= 'undefined' && callback!=null)
+				callback();
+			};	
+	}
+
+	if (script.addEventListener){
+		script.addEventListener('load', funcLoad,false);
+	} else if (script.attachEvent){
+		script.attachEvent('load', funcLoad);	
+	}	
+	script.setAttribute('src', url);	
+	document.head.appendChild(script);
+
+}
+
+function loadUrlStyle(url,callback,charset){
+	var script = document.createElement('style');
+	script.setAttribute('type', 'text/css');
+	script.setAttribute('src', url);
+	if(charset!=null)
+		script.setAttribute('charset', charset);
+	if(callback!=null)
+		script.addEventListener('load', callback);
+	document.head.appendChild(script);
+}
+
+
+general_isLoaded();	
+var is = new Is();
+
+if (is.ieVersion<8){
+	$(document).ready(function(){			
+		$("label>input:submit").each(function(  key, obj ) {	
+			$(obj).parent("label").click(function(event){
+				$(this).children("input:submit")[0].click();
+			});
+		});
+	});
+	}

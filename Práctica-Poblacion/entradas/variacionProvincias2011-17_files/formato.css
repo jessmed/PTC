@@ -1,0 +1,915 @@
+br.limpia{
+	clear:both;
+}
+
+form{
+	page-break-after: avoid;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	page-break-before: avoid;
+	display:inline;
+}
+
+.minWidth{
+	width:1%;
+}
+
+.maxWidth{
+	width: 100%;
+}
+
+div.espacio {	
+  font-size:0%;
+	height: 5px;
+  padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;	
+}
+
+.espacio {
+	width: 10px;
+	height: 10px;	
+	clear: both;
+	
+	padding-left: 10px;
+}
+
+
+
+img.sinborde{
+	border: none;
+	padding-left: 0px;
+	padding-right: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+img.alineaizquierda{
+	float: left;
+	vertical-align: top;
+	margin: 0 1em 0 1em;
+}
+
+img.alineaderecha{
+	float: right;
+	vertical-align: top;
+	margin: 0 1em 0 1em;
+}
+
+img.alineaderechatotal{
+	float: right;
+	vertical-align: top;
+	margin: 0 0em 0 0em;
+}
+
+
+TD.FondoPagina{
+	background-color: #FFF;	
+}
+
+TD.FondoMenuBotones{
+	background-color: #FFF;
+}
+
+
+
+br.lineanueva {
+	clear: both;
+}
+
+.fuente_rojoine {
+color: #333333;
+}
+
+.baseline{
+	vertical-align: bottom;
+}
+
+.arriba {
+	vertical-align: top;
+}
+
+.alineaderecha {
+	text-align : right;
+}
+
+.oculto {
+  position:absolute;
+  left:-9999px;
+}
+
+.centrar
+{
+	text-align:center;
+}
+
+.textizquierda
+{
+	text-align:left;
+}
+
+.no_margen_izq
+{
+   padding-left: 10px;
+}
+
+.no_margen{
+	margin:0px;
+}
+
+/*Formato de los botones INE*/
+/**
+
+Viernes 11/1/13 --> cambiado background. añadido font-size y text-align
+*/
+a.boton  {
+    background: none repeat scroll 0 0 #B6C5DF;
+    border: 1px solid #B6C5DF;
+    color: #333333;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 2px 7px;
+    text-decoration: none;
+}
+
+a.boton:hover {
+	background: #e5e7f3;
+	color: #333333;
+}
+
+a.boton-hover {
+	background: #e5e7f3;
+	color: #333333;
+}
+
+a.botonRojo  {
+	text-decoration: none;
+	color:#ffffff;
+	background: #b6c5df;
+	padding: 2px 7px 2px 7px;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top:0px;
+	margin-bottom:0px;
+}
+
+a.botonRojo:hover {
+	background: #b6c5df;
+	color: #333333;
+}
+
+a.botonRojo-hover {
+	text-decoration: none;
+	background: #b6c5df;
+	color: #333333;
+	cursor: pointer;
+	border: 1px solid #b6c5df;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top:0px;
+	margin-bottom:0px;
+	padding: 2px 7px 2px 7px;
+}
+
+input {
+	text-decoration: none;
+}
+
+input.rojo {
+	border: 1px solid #b6c5df;
+	vertical-align: middle;
+}
+
+select{
+	text-decoration: none;
+	font-size: 1em;
+				font-family: Arial, helvetica, sans-serif;
+}
+
+select.rojo{
+	text-decoration: none;
+	background: White;
+	border: 1px solid #b6c5df;
+}
+
+SELECT.download{
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #ffffff;
+	padding: 0px 0px 0px 3px;
+}
+/**
+
+Viernes 11/1/13 --> añadido font-size;
+*/
+input.boton, button.boton	 {
+	font-size: 0.9em;
+	text-decoration: none;
+	color: #333333;
+	background: #b6c5df;
+	padding: 1px 3px 1px 3px;
+	margin: 0px;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	overflow: visible;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+input.boton:hover, button.boton:hover {
+	text-decoration: none;	
+	background: #e5e7f3;
+	color: #333333;
+	overflow: visible;
+}
+
+input.boton-hover, button.boton-hover {
+	text-decoration: none;
+	color: #333333;
+	background: #e5e7f3;
+	padding: 1px 3px 1px 3px;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: auto;
+	overflow: visible;
+}
+
+input.botonRojo	 {
+	color: #333333;
+	background: #b6c5df;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px 3px 0px 3px;
+	overflow: visible;
+}
+
+input.botonRojo:hover {
+	border: 1px solid #b6c5df;
+	background: #e5e7f3;
+	color: #333333;
+	overflow: visible;
+}
+
+input.botonRojo-hover {
+	color: #333333;
+	background: #e5e7f3;	
+	border: 1px solid #b6c5df;	
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px 3px 0px 3px;
+	overflow: visible;
+}
+
+.cursorMano{
+	cursor:pointer;
+}
+
+.noresize{
+		font-size: 0%;
+}
+
+
+.tam95{font-size:0.95em;}
+.tam90{font-size:0.90em;}
+.tam85{font-size:0.85em;}
+.tam80{font-size:0.80em;}
+.tam75{font-size:0.75em;}
+.tam70{font-size:0.70em;}
+.tam65{font-size:0.65em;}
+.tam60{font-size:0.60em;}
+
+
+/*  TOOLTIP para una capa DIV */
+
+div.Ntooltip {color:#2b2d73; /* forzar color del texto */
+}
+
+div:Ntooltip hover {
+	background:#eef2f8; /*BG color is a must for IE6*/
+	text-decoration:none;
+	} 
+	
+div.Ntooltip span {
+ 	display:none; 
+	padding:5px 5px; 
+   margin-top:-3px;
+	/* 			margin-top: 15px\9;   /*IE8 and below  */	
+	/* margin-left:-130px; */
+	width:300px; 
+	text-align:left;
+	cursor: default;
+	}
+	
+div.Ntooltip:hover span {
+	border-radius: 5px 5px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	 box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); 
+	-webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); 
+	-moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+	display:block;
+	position:absolute;
+	border:1px solid #2b2d73;
+	text-decoration:none; 
+	background:#eef2f8; 
+	color:#333333;
+	z-index: 999;
+	padding:0.5em;
+
+	}
+ /*  Fin Tooltip para CAPA DIV */
+
+
+
+ /*  TOOLTIP para una capa DIV con lista descripción operaciones INEbase */
+
+div.Ntooltip_tablaOper {
+    margin-left: 40%;
+    vertical-align: middle;
+    width: 20px;
+    color:#2b2d73; /* forzar color del texto */
+}
+
+div:Ntooltip_tablaOper hover {
+	background:#eef2f8; /*BG color is a must for IE6*/
+	text-decoration:none;
+	} 
+	
+div.Ntooltip_tablaOper dl {
+    display: none;
+    margin-left: -430px;
+    margin-top: -3px;
+    padding: 5px;
+    text-align: left;
+    width: 450px;
+	}
+	
+div.Ntooltip_tablaOper:hover dl {
+	border-radius: 5px 5px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	 box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); 
+	-webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); 
+	-moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+	display:block;
+	position:absolute;
+	border:1px solid #2b2d73;
+	text-decoration:none; 
+	background:#eef2f8; 
+	color:#333333;
+	z-index: 999;
+	padding:0.8em;
+
+	}
+ /*  Fin TOOLTIP DIV con lista descripción operaciones INEbase  */
+
+
+
+
+
+
+/*  TOOLTIP para Descripcion Operacion INEBASE -- VALE PARA CUALQUIER TOOPTIL*/
+
+/*a.Ntooltip {
+		position:relative;
+}
+*/
+a:Ntooltip hover {
+	background:#eef2f8; /*BG color is a must for IE6*/
+	text-decoration:none;
+	} 
+	
+a.Ntooltip span {
+ 	display:none; 
+	padding:5px 5px; 
+   margin-top:-3px;
+	 			margin-top: 15px\9; /* IE8 and below  */	
+	/* margin-left:-130px; */
+	width:300px; 
+	text-align:left;
+	cursor: default;
+	}
+	
+a.Ntooltip:hover span {
+	border-radius: 5px 5px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	 box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); 
+	-webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); 
+	-moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+	display:block;
+	position:absolute;
+	border:1px solid #2b2d73;
+	text-decoration:none; 
+	background:#eef2f8; 
+	color:#333333;
+	z-index: 999;
+	padding:0.5em;
+
+	}
+ /*  Fin Tooltip  */
+
+/*Comienzo Ntooltip FICHA TECNICA  */
+
+a.NtooltipFicha {
+position: relative; /* es la posición normal */
+text-decoration: none; /* forzar sin subrayado */
+color:#2b2d73; /* forzar color del texto */
+font-weight: normal; /* forzar negritas */
+background-color: transparent;
+}
+
+a.NtooltipFicha:hover {
+z-index:999; /* va a estar por encima de todo */
+background-color:#fff; /* DEBE haber un color de fondo */
+color: #2b2d73 ; /* forzar color del texto */
+}
+
+a.NtooltipFicha span {
+display: none; /* el elemento va a estar oculto */
+}
+
+a.NtooltipFicha:hover span {
+display: block; /* se fuerza a mostrar el bloque */
+position: absolute; /* se fuerza a que se ubique en un lugar de la pantalla */
+top:1.2em; left:2em; /* donde va a estar */
+width:350px; /* el ancho por defecto que va a tener */
+padding:10px; /* la separación entre el contenido y los bordes */
+background-color: white; /* el color de fondo por defecto */
+color: #333333; /* el color de los textos por defecto */
+border: 1px solid #b6c5df;
+font-weight: normal;
+}
+
+/*  Fin  Ntooltip FICHA TECNICA */
+
+/*  TOOLTIP ACCESIBLE para notas cortas  mensu INEbase BASE DE DATOS */
+
+a.NtooltipVacio {
+position: relative; /* es la posición normal */
+text-decoration: none !important; /* forzar sin subrayado */
+color:#ffffff !important; /* forzar color del texto */
+font-weight:bold !important; /* forzar negritas */
+background-color: #b6c5df;
+}
+
+a.NtooltipVacio:hover {
+z-index:999; /* va a estar por encima de todo */
+background-color:#b6c5df; /* DEBE haber un color de fondo */
+}
+
+a.NtooltipVacio span {
+display: none; /* el elemento va a estar oculto */
+text-decoration: none !important; /* forzar sin subrayado */
+}
+
+
+a.NtooltipVacio:hover span {
+display: block; /* se fuerza a mostrar el bloque */
+position: absolute; /* se fuerza a que se ubique en un lugar de la pantalla */
+top:2em; left:4em; /* donde va a estar */
+width:250px; /* el ancho por defecto que va a tener */
+padding:10px; /* la separación entre el contenido y los bordes */
+background-color: white; /* el color de fondo por defecto */
+color: #b6c5df; /* el color de los textos por defecto */
+border: 1px solid #b6c5df;
+font-weight: normal;
+font-size:0.75em;
+}
+
+/*  Fin Ntooltip Vacio con CAJA mas Ancha*/
+
+/*  TOOLTIP ACCESIBLE para notas cortas  mensu INEbase BASE DE DATOS */
+
+a.NtooltipVacioAncho {
+position: relative; /* es la posición normal */
+text-decoration: none !important; /* forzar sin subrayado */
+color:#ffffff !important; /* forzar color del texto */
+font-weight:bold !important; /* forzar negritas */
+background-color: #b6c5df;
+}
+
+a.NtooltipVacioAncho:hover {
+z-index:999; /* va a estar por encima de todo */
+background-color:#b6c5df; /* DEBE haber un color de fondo */
+}
+
+a.NtooltipVacioAncho span {
+display: none; /* el elemento va a estar oculto */
+text-decoration: none !important; /* forzar sin subrayado */
+}
+
+
+a.NtooltipVacioAncho:hover span {
+display: block; /* se fuerza a mostrar el bloque */
+position: absolute; /* se fuerza a que se ubique en un lugar de la pantalla */
+top:2em; left:4em; /* donde va a estar */
+width:450px; /* el ancho por defecto que va a tener */
+padding:10px; /* la separación entre el contenido y los bordes */
+background-color: white; /* el color de fondo por defecto */
+color: #b6c5df; /* el color de los textos por defecto */
+border: 1px solid #b6c5df;
+font-weight: normal;
+font-size:0.75em;
+}
+
+/*  Fin Ntooltip Vacio Ancho */
+
+
+/*  estilos para que el rastro de migas no subraye enlaces  .........*/
+
+.anosubrayado:link {
+    text-decoration: none;
+}
+
+.anosubrayado {
+    text-decoration: none;
+}
+/*  fin  */
+
+
+
+/*********************************************************/
+/**            BARRA DE HERAMIENTAS APLICACION           */
+/*********************************************************/
+.AppToolBarFondo{
+	display: block;
+	float:left;
+	width:100%;
+	background-repeat: no-repeat;
+	background-position: top left;
+	margin: 0px 0px 5px 0px;
+	border-bottom: 3px solid #b6c5df;
+}
+ 
+.AppToolBarContent{
+	min-height: 42px;
+	float:left;
+	display: block;	
+	margin: 0px -160px 0px 0px;
+	padding: 2px 0px 0px 0px;
+/* joseba 170615	width: 100%;  */
+}
+
+
+.AppToolBarContent .Sup{
+	min-height: 20px;
+	padding: 2px 0px 0px 60px;
+	margin: 0px 110px 0px 0px;
+	float:left;
+	clear: both;
+}
+
+.AppToolBarContent .Sup >*{
+	display:	inline-block;
+}
+
+.AppToolBarContent .Inf{
+	
+	padding: 0px 0px 0px 60px;
+	margin: 0px 110px 0px 0px;
+	display: block;	
+	position: relative;
+	float:left;
+	clear: both;
+/*	.position: inherit;  */
+}
+
+.AppToolBarContent .Inf>a{
+	float:left;
+	margin-left:5px;
+	margin-top:2px;
+}
+
+.AppToolBarContent .Inf div{ 
+   margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+/*	.position: inherit;  */
+	bottom: 2px;
+}
+
+.AppToolBarContent .Inf img.sinborde{ 
+   margin-right: 7px;
+}
+
+.AppToolBarContentRight{
+	float:right;
+}
+.AppToolBarContentRight span{
+	float:left;
+	margin: 3px;
+}
+
+
+.AppToolBarLogo{
+	float:right;	
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	width:100px;
+	height:46px;
+}
+
+.AppToolBarImg1{
+   background-image: url(../img/cab1_num.gif);
+}
+
+.AppToolBarImg2{
+   background-image: url(../img/cab2_num.gif);	
+}
+
+.AppToolBarImg3{
+   background-image: url(../img/cab3_num.gif);
+}
+
+.AppToolBarImg4{
+   background-image: url(../img/cab4_num.gif);
+}
+
+.AppToolBarImg5{
+   background-image: url(../img/cab5_num.gif);
+}
+
+.AppToolBarImg6{
+   background-image: url(../img/cab6_num.gif);
+}
+
+.AppToolBarImg7{
+   background-image: url(../img/cab7_num.gif);
+}
+
+.AppToolBarImg8{
+   background-image: url(../img/cab8_num.gif);
+}
+
+/* INICIO ToolTip*/
+#dhtmlgoodies_tooltip{
+		background-color:#FFFFFF;
+		border:0.1em solid #000;
+		position:absolute;
+		display:none;
+		z-index:20000;
+		padding:0.2em;
+		font-size:0.75em;
+		font-family: Arial, helvetica, sans-serif;
+		margin-left:-0.1em;
+
+}
+
+#dhtmlgoodies_tooltipClose{
+	background-color: #b6c5df;	
+}
+
+#dhtmlgoodies_tooltipShadow{
+		position:absolute;
+		background-color:#BBB;
+		display:none;
+		z-index:10000;
+}
+
+.tooltipContent{
+	padding: 5px;
+	float:left;
+	width: 100%;
+}
+
+#dhtmlgoodies_tooltipClose {
+float:left;
+width:100%;
+padding:0px 0px 0px 0px;
+ }
+
+#dhtmlgoodies_tooltipClose a{
+	float: left;
+	margin-right: -25px;
+	padding: 2px 0px 2px 2px;
+}
+#dhtmlgoodies_tooltipClose strong{
+	float: left;
+	margin-left: 25px;
+	margin-top: 3px;
+}
+
+a.MenuImprimir{
+	background: url(../img/printer.gif) no-repeat 50% 50%;
+	margin:  0px; 
+	padding: 0px;
+	text-decoration: none;
+	height:16px;
+	width:16px;
+} 
+
+a.MenuImprimir:hover{
+	background-color: #f4f7fb;
+}
+
+/* FIN ToolTip*/
+
+/* Arbol */
+.expand  {
+	cursor : pointer;
+	background-image: url(../img/plus.gif);
+	background-repeat: no-repeat;
+	background-position: 0% 50%;
+	padding-left: 16px;
+}
+
+.collapse  {
+	cursor : pointer;
+	background-image: url(../img/minus.gif);
+	background-repeat: no-repeat;
+	background-position: 0% 50%;
+	padding-left: 16px;
+}
+/* Fin Arbol */
+
+.ui-widget-overlay {
+	opacity: .3;
+}
+
+#DIVloading{
+	background: url(../img/loading32.gif) no-repeat center;
+	min-height: 32px;
+	min-width: 32px;
+	display: table;	
+}
+
+#DIVloading span{
+  vertical-align: middle;
+  display: table-cell;
+  padding-top: 80px;/*evitar la img de loading*/
+  text-align: center;
+}
+
+/** Tooltip*/
+.tooltip {
+	margin: 0px 3px;
+	padding: 0px;
+}
+
+.tooltip .texto{
+	text-decoration: underline;
+	cursor: pointer;
+}
+ 
+.tooltip:hover > .tooltip-content{
+	display:inline;
+}
+
+.tooltip:hover + .tooltip-content{
+	display:inline-table;;
+}
+.tooltip-content:hover{
+	display:inline;
+}
+
+.tooltip-content{
+   display:none;	
+	z-index: 99999;
+	background-color: #eef2f8;
+	margin:0px;	
+	border: 1px solid #2b2d73;
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+	position: absolute;	
+	padding: 3px;
+	max-width: 60em;
+	font-size: 10pt;
+	font-weight: normal;
+}
+
+#thickBoxINETxt
+{
+	text-align: left;
+	padding: 0px 3px;
+}
+
+#enlaceAddAllSeries
+{
+	cursor: pointer;
+	width: 100%;
+	text-align: center;
+	display: inline-block;
+}
+
+
+#infoGraph{
+	font : 0.9em Arial, sans-serif;
+	max-width: 200px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	visibility: visible;
+	z-index: 99999;
+	padding: 5px 5px;
+}
+
+/** FIN  Tooltip*/
+
+/**ulTree **/
+.ulTree{
+	padding: 0px;
+}
+
+.ulTreeNode {
+	border: 0px none;
+	cursor:pointer;
+}
+
+.ulTree span{
+	color:inherit;
+}
+
+.ulTreeNodeTxt{
+	cursor: pointer;
+}
+
+img.ulTreeNode {
+	cursor: pointer;
+}
+
+
+.ulTree_plusimageapply{
+	list-style: none;
+	background-image: url(../img/ulTree_plus.gif);
+   background-repeat: no-repeat;
+   background-position:  0% 0%;
+   cursor:pointer;
+	vertical-align: middle;
+   margin: 0px 6px 0px 0px;
+ }
+ 
+.ulTree_minusimageapply{
+  	 list-style: none;
+	 background-image: url(../img/ulTree_minus.gif);
+	 background-repeat: no-repeat;
+	 background-position: 0% 0%;
+	 cursor:pointer;
+    vertical-align: middle;
+    margin: 0px 6px 0px 0px;
+ }
+ 
+ .ulTree_emptyimageapply{
+  	 list-style: none;
+	 cursor:pointer;
+	 vertical-align: middle;
+ }
+ 
+
+
+/* FIN ulTree*/
+
+img.loading{
+	width:16px;
+	height:16px;
+	background: url(../img/loading.gif) no-repeat center;
+}
+.marcoINE{
+	border: 1px solid #E5E7F3;
+	display: block;
+   float: left;
+   margin: 2px;
+   padding: 0px;
+}
+
+.marcoINE>fieldset, fieldset.marcoINE{	
+	border-top: 25px solid #E5E7F3;
+	border-left-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	margin: 3px;
+	padding: 5px;
+	float: left;
+	display: block;
+}
+
+.marcoINE>fieldset>legend, fieldset.marcoINE>legend{
+  margin: 0px;
+  padding: 5px 0px 0px 0px;
+  background-color: #E5E7F3;
+  height: 20px;
+}
+
+.margincenter{
+	margin-left: auto;
+	margin-right: auto;
+	display: table;
+}
+
+.borde_inf_tabla {
+display:block; 
+border-bottom: 1px solid #b6c5df;}

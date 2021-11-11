@@ -1,0 +1,1212 @@
+//var nombreClassColor = "grupo";
+var servidor=INE_Servidor;
+var tProceso;
+if (INE_Servidor.indexOf("http")<0)
+	servidor=document.location.protocol + servidor;
+
+var tituloMapa = "";
+var VisualINEJS={};
+var mapaCache={}; 
+
+var capaDestinoWidh = "";
+
+var durationMap= 1500;
+
+var colorMapAzulCom = new Object();
+colorMapAzulCom[0] = "#E5E9EF";
+colorMapAzulCom[1] = "#CAD1DE";
+colorMapAzulCom[2] = "#A5B1C7";
+colorMapAzulCom[3] = "#7E8FAE";
+colorMapAzulCom[4] = "#576A8B";
+
+var colorMapAzulProv = new Object();
+colorMapAzulProv[0] = "#E5E9EF";
+colorMapAzulProv[1] = "#CAD1DE";
+colorMapAzulProv[2] = "#A5B1C7";
+colorMapAzulProv[3] = "#7E8FAE";
+colorMapAzulProv[4] = "#576A8B";
+colorMapAzulProv[5] = "#374257";
+colorMapAzulProv[6] = "#151921";
+
+var  colorMapDefault = colorMapAzulProv;
+var colorMap = new Object();
+
+colorMap['map70'] = colorMapAzulCom;
+
+var colorMapRojo = new Object();
+colorMapRojo[0] = "#ffe6e6";
+colorMapRojo[1] = "#ffb3b3";
+colorMapRojo[2] = "#ff8080";
+colorMapRojo[3] = "#ff4d4d";
+colorMapRojo[4] = "#ff1a1a";
+
+var colorMapVerde= new Object();
+colorMapVerde[0] = "#ebfaeb";
+colorMapVerde[1] = "#c2f0c2";
+colorMapVerde[2] = "#99e699";
+colorMapVerde[3] = "#70db70";
+colorMapVerde[4] = "#47d147";
+
+
+
+var paleta_colores_size;
+var paleta_colores = [];
+
+
+paleta_colores[0] =['#CAD1DE','#7E8FAE','#576A8B','#374257'];
+paleta_colores[1] =['#E4EAC4','#9FB240','#6C792B','#424A1A'];
+paleta_colores[2] =['#FDBCB5','#FA887C','#D51905','#730E03'];
+paleta_colores[3] =['#FFD966','#FFC000','#BF8F00','#806000'];
+paleta_colores[4] =['#F4B084','#ED7D31','#C65911','#833C0C'];
+paleta_colores[5] =['#C9C9C9','#A5A5A5','#7B7B7B','#525252'];
+
+paleta_colores[6] =['#CAD1DE','#A5B1C7','#7E8FAE','#576A8B','#374257'];
+paleta_colores[7] =['#E4EAC4','#C7D488','#9FB240','#6C792B','#424A1A'];
+paleta_colores[8] =['#FDBCB5','#FA887C','#FA4A38','#D51905','#730E03'];
+paleta_colores[9] =['#FFE699','#FFD966','#FFC000','#BF8F00','#806000'];
+paleta_colores[10] =['#F8CBAD','#F4B084','#ED7D31','#C65911','#833C0C'];
+paleta_colores[11] =['#DBDBDB','#C9C9C9','#A5A5A5','#7B7B7B','#525252'];
+
+paleta_colores[12] =['#CAD1DE','#A5B1C7','#7E8FAE','#576A8B','#374257','#151921'];
+paleta_colores[13] =['#E4EAC4','#C7D488','#9FB240','#6C792B','#424A1A','#191C14'];
+paleta_colores[14] =['#FDBCB5','#FA887C','#FA4A38','#D51905','#A01304','#730E03'];
+paleta_colores[15] =['#FFE699','#FFD966','#FFC000','#BF8F00','#806000','#463400'];
+paleta_colores[16] =['#F8CBAD','#F4B084','#ED7D31','#C65911','#833C0C','#492207'];
+paleta_colores[17] =['#DBDBDB','#C9C9C9','#A5A5A5','#7B7B7B','#525252','#383838'];
+
+paleta_colores[18] =['#E5E9EF','#CAD1DE','#A5B1C7','#7E8FAE','#576A8B','#374257','#151921'];
+paleta_colores[19] =['#F3F6E6','#E4EAC4','#C7D488','#9FB240','#6C792B','#424A1A','#191C14'];
+paleta_colores[20] =['#FEE1DE','#FDBCB5','#FA887C','#FA4A38','#D51905','#A01304','#730E03'];
+paleta_colores[21] =['#FFF2CC','#FFE699','#FFD966','#FFC000','#BF8F00','#806000','#463400'];
+paleta_colores[22] =['#FCE4D6','#F8CBAD','#F4B084','#ED7D31','#C65911','#833C0C','#492207'];
+paleta_colores[23] =['#E6E6E6','#DBDBDB','#C9C9C9','#A5A5A5','#7B7B7B','#525252','#383838'];
+
+
+
+
+var key_selected;
+
+function getColorMap(key){
+	key_selected = key;
+	if (colorMap[key]==null)
+		return colorMapDefault;
+	else 
+		return colorMap[key];
+}
+
+//Usada para conocer si el mapa se esta cargando
+var loading = new Object();
+var objHashTableLast = {};
+var hashTenLast = {};
+var topeHash = 20;
+
+VisualINEJS.setup={    
+	urlMapaJson: "",
+	urlDataJson: "",
+	urlExtraMap: "",
+	callback : null,
+	propiedades:
+			{
+				divDestino : "DivMapa",
+				tituloDestino : "tituloMapa",
+				size:"[800,800]",
+				titulo: "",
+				legend: false,
+				footer: ""
+			},
+	extraSvg: {} ,
+	convertir_regiones:[
+	{id: "9001",latitud: "8",longitud: "4"},
+	{id: "35",latitud: "8",longitud: "4"},	
+	{id: "38",latitud: "8",	longitud: "4"},
+	{id: "16544",latitud: "8",longitud: "4"},
+	{id: "17219",latitud: "8",longitud: "4"},
+	{id: "8608",latitud: "8",longitud: "4"},
+	{id: "8568",latitud: "8",longitud: "4"},
+	{id: "6835",latitud: "8",longitud: "4"},
+	{id: "6834",latitud: "8",longitud: "4"},
+	{id: "6833",latitud: "8",longitud: "4"},
+	{id: "6832",latitud: "8",longitud: "4"},
+	{id: "6831",latitud: "8",longitud: "4"},
+	{id: "6830",latitud: "8",longitud: "4"},
+	{id: "6829",latitud: "8",longitud: "4"},
+	{id: "6828",latitud: "8",longitud: "4"},
+	{id: "6827",latitud: "8",longitud: "4"},
+	{id: "6826",latitud: "8",longitud: "4"},
+	{id: "6825",latitud: "8",longitud: "4"},
+	{id: "6824",latitud: "8",longitud: "4"},
+	{id: "6823",latitud: "8",longitud: "4"},
+	{id: "6822",latitud: "8",longitud: "4"},
+	{id: "6821",latitud: "8",longitud: "4"},
+	{id: "6820",latitud: "8",longitud: "4"},
+	{id: "6819",latitud: "8",longitud: "4"},
+	{id: "6818",latitud: "8",longitud: "4"},
+	{id: "6817",latitud: "8",longitud: "4"},
+	{id: "6816",latitud: "8",longitud: "4"},
+	{id: "6815",latitud: "8",longitud: "4"},
+	{id: "6814",latitud: "8",longitud: "4"},
+	{id: "6813",latitud: "8",longitud: "4"},
+	{id: "6812",latitud: "8",longitud: "4"},
+	{id: "6811",latitud: "8",longitud: "4"},
+	{id: "6810",latitud: "8",longitud: "4"},
+	{id: "6809",latitud: "8",longitud: "4"},
+	{id: "6808",latitud: "8",longitud: "4"},
+	{id: "6807",latitud: "8",longitud: "4"},
+	{id: "1228",latitud: "8",longitud: "4"},
+	{id: "1411",latitud: "8",longitud: "4"},
+	{id: "1410",latitud: "8",longitud: "4"},
+	{id: "1409",latitud: "8",longitud: "4"},
+	{id: "1408",latitud: "8",longitud: "4"},
+	{id: "1407",latitud: "8",longitud: "4"},
+	{id: "1406",latitud: "8",longitud: "4"},
+	{id: "1405",latitud: "8",longitud: "4"},
+	{id: "1404",latitud: "8",longitud: "4"},
+	{id: "1403",latitud: "8",longitud: "4"},
+	{id: "1402",latitud: "8",longitud: "4"},
+	{id: "1401",latitud: "8",longitud: "4"},
+	{id: "1400",latitud: "8",longitud: "4"},
+	{id: "1399",latitud: "8",longitud: "4"},
+	{id: "1398",latitud: "8",longitud: "4"},
+	{id: "1397",latitud: "8",longitud: "4"},
+	{id: "1396",latitud: "8",longitud: "4"},
+	{id: "1395",latitud: "8",longitud: "4"},
+	{id: "1394",latitud: "8",longitud: "4"},
+	{id: "1393",latitud: "8",longitud: "4"},
+	{id: "1392",latitud: "8",longitud: "4"},
+	{id: "1391",latitud: "8",longitud: "4"},
+	{id: "1390",latitud: "8",longitud: "4"},
+	{id: "17215",latitud: "8",longitud: "4"},
+	{id: "6519",latitud: "8",longitud: "4"},
+	{id: "6518",latitud: "8",longitud: "4"},
+	{id: "6517",latitud: "8",longitud: "4"},
+	{id: "6516",latitud: "8",longitud: "4"},
+	{id: "6515",latitud: "8",longitud: "4"},
+	{id: "6514",latitud: "8",longitud: "4"},
+	{id: "6513",latitud: "8",longitud: "4"},
+	{id: "6512",latitud: "8",longitud: "4"},
+	{id: "6511",latitud: "8",longitud: "4"},
+	{id: "6510",latitud: "8",longitud: "4"},
+	{id: "6509",latitud: "8",longitud: "4"},
+	{id: "6508",latitud: "8",longitud: "4"},
+	{id: "6507",latitud: "8",longitud: "4"},
+	{id: "6506",latitud: "8",longitud: "4"},
+	{id: "6505",latitud: "8",longitud: "4"},
+	{id: "6504",latitud: "8",longitud: "4"},
+	{id: "6503",latitud: "8",longitud: "4"},
+	{id: "6502",latitud: "8",longitud: "4"},
+	{id: "6501",latitud: "8",longitud: "4"},
+	{id: "6500",latitud: "8",longitud: "4"},
+	{id: "6499",latitud: "8",longitud: "4"},
+	{id: "6498",latitud: "8",longitud: "4"},
+	{id: "1436",latitud: "8",longitud: "4"},
+	{id: "1435",latitud: "8",longitud: "4"},
+	{id: "1434",latitud: "8",longitud: "4"},
+	{id: "1433",latitud: "8",longitud: "4"},
+	{id: "1432",latitud: "8",longitud: "4"},
+	{id: "1431",latitud: "8",longitud: "4"},
+	{id: "1430",latitud: "8",longitud: "4"},
+	{id: "1429",latitud: "8",longitud: "4"},
+	{id: "1428",latitud: "8",longitud: "4"},
+	{id: "1427",latitud: "8",longitud: "4"},
+	{id: "1426",latitud: "8",longitud: "4"}
+	]
+
+};
+
+function DesplazaRegiones(data,config){
+
+	var poligonos;
+	var coordenadas;
+	for (i=0;i<config.convertir_regiones.length;i++){
+		for (j=0;j<data.length;j++){
+			if (data[j].properties.id_region==config.convertir_regiones[i].id){				
+					poligonos = data[j].geometry.coordinates[0];
+					if(data[j].geometry.type=='MultiPolygon'){
+						for (z=0;z<poligonos.length;z++){
+							coordenadas=poligonos[z];
+							for (y=0;y<coordenadas.length;y++){
+								coordenadas[y][0] = coordenadas[y][0] +parseInt(config.convertir_regiones[i].longitud);
+								coordenadas[y][1] = coordenadas[y][1] + parseInt(config.convertir_regiones[i].latitud);
+							}
+						}
+					}else{
+						for (z=0;z<poligonos.length;z++){
+							coordenadas=poligonos[z];
+							coordenadas[0] = coordenadas[0] +parseInt(config.convertir_regiones[i].longitud);
+							coordenadas[1] = coordenadas[1] + parseInt(config.convertir_regiones[i].latitud);
+						}
+					}								
+			}
+		}
+	}
+}
+
+
+
+function PintarExtra(config){
+	var destino = config.divDestino;
+	if(destino===undefined)
+		destino = VisualINEJS.setup.propiedades.divDestino;
+	 
+	 //The SVG Container
+	var svgContainer = d3.select("#"+destino+" svg");
+									   /*.attr("id", "miMapa");
+										.attr("height", 200);*/	
+	 
+	if (ModoVisual(config )){
+		//var lineData = [ { "x": 15*config.f_w,   "y": 250*config.f_h},  { "x": 170*config.f_w,  "y": 250*config.f_h}, { "x": 180*config.f_w,  "y": 260*config.f_h}, { "x": 180*config.f_w,  "y": 320*config.f_h}];
+		var lineData = [ { x: (25*config.f_w*config.f_x),   y: (240*config.f_h*config.f_y)},  
+						 { x: (180*config.f_w*config.f_x),  y: (240*config.f_h*config.f_y)},
+						 { x: (185*config.f_w*config.f_x),  y: (250*config.f_h*config.f_y)},
+						 { x: (185*config.f_w*config.f_x),  y: (310*config.f_h*config.f_y)}];
+						  
+						  //L260,380 270,390 270,500
+		 
+		 //This is the accessor function we talked about above
+		 var lineFunction = d3.svg.line()
+								  .x(function(d) { return d.x; })
+								  .y(function(d) { return d.y; })
+								 .interpolate("linear")
+								 .tension(1);
+
+		var lineGraph = svgContainer.append("path")
+									.attr("d", lineFunction(lineData))
+									.attr("stroke", "grey")
+									.attr("stroke-width", 0.5)
+									.attr("fill", "none");
+
+		node = svgContainer.selectAll("#"+config.divDestino+" svg g.VisualJSarea path");
+		var mapa = VisualJS.map[config.idMapa];
+		node.each(function(w, val_w) {
+			single = d3.select(this);
+			single.attr("class","id_" + mapa.features[val_w].properties.id_region);		
+			single.attr("title", mapa.features[val_w].properties.nom_region);		
+		});		
+	}
+	//Pinta el titulo en el propio svg
+	//pintaTextoSVG(tituloMapa, destino, svgContainer);
+	personalizaSVG(config, destino, svgContainer);
+}
+
+
+function ordenarArray(arr)
+{
+	var vals = [];
+	$.each(arr, function( index, value ) {
+	  vals.push( value.val);
+	});
+
+	vals.sort(function(a, b){return a-b});
+    var uniqueVals = [];
+	
+    $.each(vals, function(i, el){
+        if($.inArray(el, uniqueVals) === -1) uniqueVals.push(el);
+    });	
+    return uniqueVals;
+}
+
+
+function getListaRangos(config)
+{
+	var regiones = config.dataMap.regiones;
+	var  tam_regiones = regiones.length;
+	var intervalos = config.intervalos;
+    var numElem = parseInt(tam_regiones/intervalos);
+	if (tam_regiones%intervalos>0) numElem++;
+	var lstTamRangos = []; //lista que indica el número de elementos a insertar en cada rango
+	for ( var i= 0; i < intervalos; i++ ) {
+		if(tam_regiones>=numElem)
+			lstTamRangos[i] = numElem;
+		else
+			lstTamRangos[i] = tam_regiones;
+		tam_regiones = tam_regiones - numElem;
+	 }
+	 
+	 	var valsRegOrdenadas = [];
+		$.each(regiones, function() {
+		  valsRegOrdenadas.push( this.val);
+		});
+
+		valsRegOrdenadas.sort(function(a, b){return a-b});
+	 
+	 
+	 
+	 return lstTamRangos;
+	 //console.log(lstTamRangos);
+}
+
+
+
+
+function crearListaRangos(arrayOrdenado, valoresMapa, numElementosGrupo, config)
+{
+	var listaRangos = [];
+	var maxDecimal=0;
+	var maxDecTemp;
+	for ( var i = 0; i < arrayOrdenado.length; i++ ) {
+		maxDecTemp = 0;
+		if((arrayOrdenado[i]+"").split(".")[1]!=undefined)
+			maxDecTemp = (arrayOrdenado[i]+"").split(".")[1].length;		
+		if (maxDecTemp>maxDecimal) maxDecimal=maxDecTemp;
+	}
+
+	var aux = "1";
+	for ( var i = 0; i < maxDecimal; i++ ) {
+		aux+= "0";
+	}
+	var cantSum = 1/parseInt(aux);
+
+	var rango = new Object();
+	var pos = 0;
+	
+		var aux_intervalos = config.intervalos;
+		var aux_elementos_rest = arrayOrdenado.length;
+		var aux_elementos = parseInt(aux_elementos_rest/aux_intervalos);
+		if (aux_elementos_rest%aux_intervalos>0) aux_elementos++;		
+		numElementosGrupo = aux_elementos;
+
+		for ( var j = 0; j < arrayOrdenado.length; j++ ) {
+			if (pos==numElementosGrupo){
+				aux_elementos_rest = aux_elementos_rest - aux_elementos;
+				aux_intervalos--;
+				aux_elementos = parseInt(aux_elementos_rest/aux_intervalos);
+				if (aux_elementos_rest%aux_intervalos>0) aux_elementos++;		
+				if (j!=0) numElementosGrupo = aux_elementos;
+				pos=0;
+				rango = new Object();
+			}
+			if(pos < numElementosGrupo){
+				if(pos==0) rango.minValue = arrayOrdenado[j]
+				if(listaRangos.length>0){
+					rango.minValue = listaRangos[listaRangos.length-1].maxValue+cantSum;
+					rango.minValue = +rango.minValue.toFixed(maxDecimal);
+				}
+				if( (pos==numElementosGrupo-1) || (j == arrayOrdenado.length-1) ){
+					rango.maxValue = arrayOrdenado[j];
+					rango.datos = [];
+					listaRangos.push(rango);
+				}
+				pos++;
+			}	
+
+		}
+
+	
+	$.each(valoresMapa, function( i, val_i ) {		
+		$.each(listaRangos, function( j, val_j ) {		
+			if( (valoresMapa[i].val>=listaRangos[j].minValue) &&  (valoresMapa[i].val<=listaRangos[j].maxValue)  )
+				listaRangos[j].datos.push(valoresMapa[i]);
+		});
+	});
+	config.decimales = maxDecimal; 
+	return listaRangos;
+}
+
+
+function crearListaRangosOLD(arrayOrdenado, valoresMapa, numElementosGrupo, config)
+{
+	var listaRangos = [];
+	var maxDecimal=0;
+	var maxDecTemp;
+	for ( var i = 0; i < arrayOrdenado.length; i++ ) {
+		maxDecTemp = 0;
+		if((arrayOrdenado[i]+"").split(".")[1]!=undefined)
+			maxDecTemp = (arrayOrdenado[i]+"").split(".")[1].length;		
+		if (maxDecTemp>maxDecimal) maxDecimal=maxDecTemp;
+	}
+
+	var aux = "1";
+	for ( var i = 0; i < maxDecimal; i++ ) {
+		aux+= "0";
+	}
+	var cantSum = 1/parseInt(aux);
+
+	var rango = new Object();
+	var pos = 0;
+	for ( var j = 0; j < arrayOrdenado.length; j++ ) {
+		if (pos == numElementosGrupo){
+			pos = 0;
+			rango = new Object()
+		}
+		if(pos < numElementosGrupo){
+			if(pos==0) rango.minValue = arrayOrdenado[j]
+			if(listaRangos.length>0){
+				rango.minValue = listaRangos[listaRangos.length-1].maxValue+cantSum;
+				rango.minValue = +rango.minValue.toFixed(maxDecimal);
+			}
+			if( (pos==numElementosGrupo-1) || (j == arrayOrdenado.length-1) ){
+				rango.maxValue = arrayOrdenado[j];
+				rango.datos = [];
+				listaRangos.push(rango);
+			}
+			pos++;
+		}			
+	}
+
+	
+	
+	
+	
+	
+	$.each(valoresMapa, function( i, val_i ) {		
+		$.each(listaRangos, function( j, val_j ) {		
+			if( (valoresMapa[i].val>=listaRangos[j].minValue) &&  (valoresMapa[i].val<=listaRangos[j].maxValue)  )
+				listaRangos[j].datos.push(valoresMapa[i]);
+		});
+	});
+	config.decimales = maxDecimal; 
+	return listaRangos;
+}
+
+
+function calculaResize(config)
+{
+	var porc=1;
+    var svg = d3.select("#"+config.divDestino+" svg");
+		
+	var anchoSvgOrig = svg.attr("width");
+	var altoSvgOrig = svg.attr("height");
+	
+	var altoCapa = config.area[1]>0 ? config.area[1] : $("#"+config.divDestino)[0].clientHeight>0 ?  $("#"+config.divDestino)[0].clientHeight: $("#"+config.divDestino).height();
+	var anchoCapa = config.area[0]>0? config.area[0] :$("#"+config.divDestino)[0].clientWidth>0 ?  $("#"+config.divDestino)[0].clientWidth:  $("#"+config.divDestino).width();	
+	
+	if ( config.area[1]!=null )
+		altoCapa = altoCapa<=0 ? config.area[1] : altoCapa< config.area[1] ? altoCapa : config.area[1];
+	if ( config.area[0]!=null )
+		anchoCapa =  anchoCapa<=0 ? config.area[0] : anchoCapa< config.area[0] ? anchoCapa : config.area[0];
+	
+	if (config.maxArea!=null){
+		/*Evaluamos el tamaño maximo*/
+		if (config.maxArea[1]!=null )
+			altoCapa = altoCapa<=0 ? config.maxArea[1] : altoCapa< config.maxArea[1] ? altoCapa : config.maxArea[1];
+		if ( config.maxArea[0]!=null )
+			anchoCapa =  anchoCapa<=0 ? config.maxArea[0] : anchoCapa< config.maxArea[0] ? anchoCapa : config.maxArea[0];
+	}
+	
+	
+	if (altoCapa>0 || anchoCapa>0){
+			var porcAncho = anchoCapa / anchoSvgOrig;
+			var porcAlto = altoCapa / altoSvgOrig;
+			
+			porc =porcAncho==0 ?  porcAlto : (porcAlto==0) ? porcAncho : (porcAncho<porcAlto? porcAncho :porcAlto); 			
+		}
+		
+		return porc;
+}
+
+
+function redimensionaSVG(config)
+{
+	var svg = d3.select("#"+config.divDestino+" svg");
+	var anchoSvgOrig = svg.attr("width");
+	var altoSvgOrig = svg.attr("height");
+	
+	porc=calculaResize(config);
+	
+
+	var altoDestino= altoSvgOrig*porc ;	
+	var anchoDestino=anchoSvgOrig*porc;
+
+	d3.select("#"+config.divDestino+" svg g").attr("transform","matrix("+(porc-0.01)+",0,0,"+(porc-0.01)+",0,0)");	
+	
+	
+	if (config.area[1]==null || config.area[0]==null || config.area[1]==0 || config.area[0]==0){
+		svg.attr("height", altoDestino);
+		svg.attr("width", anchoDestino);
+	}else{
+		svg.attr("height", config.area[1]);
+		svg.attr("width", config.area[0]);
+	}
+		
+	
+}
+
+function personalizaSVG(config, destino, svgContainer)
+{		
+try{	
+	//Ordenamos y limpiamos el array de valores repetidos
+	var arrayOrdenado = ordenarArray(config.dataMap.regiones); 
+	
+	var numColors ;
+	if(config.intervalos !=undefined) 
+		numColors = eval(config.intervalos);
+	else
+		numColors = Object.keys(getColorMap(config.idMapa)).length;
+	
+	if(numColors==undefined) numColors = Object.keys(getColorMap(config.idMapa)).length;
+	
+	if (config.colorMapa!=undefined && config.colorMapa!='') {	
+		if (colorMap[config.idMapa]!=null){
+			colorMap[config.idMapa] = paleta_colores[config.colorMapa];
+		}else
+			colorMapDefault = paleta_colores[config.colorMapa];
+	}
+
+	if (config.intervalos === undefined)
+		config.intervalos=Object.keys(colorMapDefault).length;
+
+	//Calculamos el número máximo de valores que entrarían en un rango dado un número de rangos (colores)	
+	var numElementosGrupo;	
+	if ( (arrayOrdenado.length % numColors) == 0){
+		numElementosGrupo = parseInt(arrayOrdenado.length/numColors)
+	}else
+		numElementosGrupo = parseInt(arrayOrdenado.length/numColors)+1;	
+	
+	//Construimos un array de objetos con los siguientes campos:
+	//minValue: límite inferior del rango
+	//maxValue: límite superios del rango
+	//datos: array de objetos que se encuentren dentro de dicho rango
+	var listaRangos = crearListaRangos(arrayOrdenado, config.dataMap.regiones, numElementosGrupo, config);
+
+	//Borramos la antigua personalizaSVG
+	d3.select(".VisualJSlegend").remove();
+	
+	//Personalizamos los contornos extras
+	
+	$( "#" + config.divDestino + " path.id_CCAA").css("fill","none");
+	
+	//Localizamos el nodo que contiene al svg
+	node = $("#" + config.divDestino + " svg g.VisualJSarea")
+	//node = svgContainer.selectAll("#DivMapa svg g.VisualJSarea path");	
+
+
+	//$.each(regiones, function( i, val_i ) {
+	path=$("#" + config.divDestino + "> svg");
+		
+	var res;
+		$.each(listaRangos, function( j, val_j ) {
+			$.each(listaRangos[j].datos, function( z, val_z ) {
+				res=$(path).find(".id_"+this.id);
+				if (res.length>0){
+					single = d3.select(res[0]);
+					single.style( "fill", getColorMap(config.idMapa)[j] );
+				}
+			});
+		});			
+	//Pintamos la leyenda
+
+	var svgContainer = d3.select("#"+destino+" svg");
+	var porc = calculaResize(config);
+
+	var x_svg=1600*porc;
+	var y_svg=800*porc;
+	var leyenda = "";
+	var texto;
+	var grupoRangos = svgContainer.append("g").attr("id","grupoRangos");
+	var maxwidth=0;
+	var maxheight=0;
+
+		for(i=0;i<listaRangos.length;i++){
+			grupoRangos.append("rect")
+									 .attr("x", x_svg)
+									 .attr("y", y_svg)
+									 .attr("width", 35*porc)
+									 .attr("height", 35*porc)
+									 //.attr("class", "grupo"+i);
+									 .style( "fill", getColorMap(config.idMapa)[i] );
+	
+			if (config.declegend==undefined){
+				if(listaRangos[i].minValue==listaRangos[i].maxValue && i==0){
+					leyenda+=listaRangos[i].minValue.formatMoney(config.decimales,config.sepDec,config.sepMil);
+				}else{
+					leyenda+=listaRangos[i].minValue.formatMoney(config.decimales,config.sepDec,config.sepMil)+" - "+listaRangos[i].maxValue.formatMoney(null,config.sepDec,config.sepMil);
+				}
+			}else{
+				if(listaRangos[i].minValue==listaRangos[i].maxValue && i==0){
+					leyenda+=listaRangos[i].minValue.formatMoney(config.declegend,config.sepDec,config.sepMil);
+				}else{
+					leyenda+=listaRangos[i].minValue.formatMoney(config.declegend,config.sepDec,config.sepMil)+" - "+listaRangos[i].maxValue.formatMoney(config.declegend,config.sepDec,config.sepMil);
+				}
+			}
+			texto = grupoRangos.append('text');
+			texto.text(leyenda)
+						.attr('id', 'textoSVGid')
+						.attr('x', x_svg+45*porc)
+						.attr('y', y_svg+28*porc)
+						.attr('class','textoSVG')
+						.style("font-size",30*porc+"px");				
+			leyenda="";
+			if (maxwidth<x_svg+20+$(texto[0][0]).width())
+				maxwidth=x_svg+20+$(texto[0][0]).width();
+			if (maxheight<(y_svg+12*porc+$(texto[0][0]).height()))
+				maxheight=(y_svg+12*porc+$(texto[0][0]).height());			
+			y_svg+=60*porc;
+		}
+		if (ModoVisual(config )){
+			if (maxwidth >svgContainer.attr("width") || maxheight>svgContainer.attr("height")){
+				svgContainer.attr("width",maxwidth);
+				svgContainer.attr("height",maxheight);
+			}
+		}else{
+			 svg=$("#"+destino+" svg");
+		}
+}catch(ex){}
+}
+
+
+/**
+	Pinta en dos lineas el titulo del mapa si no cabe en el ancho del mapa en una sola linea
+**/
+function pintaTextoSVG(texto, destino, svgContainer)
+{
+
+	var svgSize = $("#"+destino+" svg").prop("clientWidth");//capaDestinoWidh;//
+	text = svgContainer.append('text').text(texto)
+			.attr('id', 'textoSVGid')
+			.attr('x', 5)
+			.attr('y', 10)
+			.attr('class','textoSVG');
+			
+	var textoSVGsize = $(".textoSVG").prop("clientWidth");
+	
+	if (svgSize < textoSVGsize){
+		svgContainer.select("#textoSVGid").remove();
+		var titulo = tituloMapa.split (",");
+		var salir = false;
+		var i=0;
+		var cadenaTemp = "";
+		while (i<=titulo.length && !salir){
+			cadenaTemp+=titulo[i];
+			if(cadenaTemp.length>0)
+				cadenaTemp+=",";
+			text = svgContainer.append('text').text(cadenaTemp)
+					.attr('id', 'textoSVGid')
+					.attr('x', 5)
+					.attr('y', 10)
+					.attr('class','textoSVG');
+			textoSVGsize = $("#textoSVGid").prop("clientWidth");
+			if (svgSize > textoSVGsize){
+				svgContainer.select("#textoSVGid").remove();
+				if(i>=titulo.length){
+					salir=true;
+				}
+				i++;				
+			}else{
+				svgContainer.select("#textoSVGid").remove();
+				text = svgContainer.append('text').text(cadenaTemp.substr(0,cadenaTemp.length-titulo[i].length))
+						.attr('id', 'textoSVGid2')
+						.attr('x', 5)
+						.attr('y', 10)
+						.attr('class','textoSVG');
+				var str2= "";
+				for (j=i;j<titulo.length;j++){
+					str2+=titulo[j];
+					if(str2.length>0 && j<titulo.length-1)
+						str2+=",";					
+				}
+				text = svgContainer.append('text').text(str2)
+						.attr('id', 'textoSVGid2')
+						.attr('x', 5)
+						.attr('y', 25)
+						.attr('class','textoSVG');				
+
+				salir=true;
+				}
+			}
+		}	
+}
+
+function InicilizaParams( config ){
+	if (ModoVisual(config )){
+		var xforms = $("#" + config.divDestino + " svg g")[0].transform.baseVal; 
+		var firstXForm = xforms.getItem(0);
+		var firstX = 1;
+		var firstY = 1;
+		if (firstXForm.type == SVGTransform.SVG_TRANSFORM_SCALE){
+		  config.f_x = firstXForm.matrix.a;
+		  config.f_y = firstXForm.matrix.d ;
+		}
+	}else if (ModoSVG(config )){
+		config.f_x=1;
+		config.f_y=1;
+	}
+	return config;
+}
+
+var myTimeOuttooltipMap;
+
+function CallbackVisualINE(config){	
+  try{	
+    ShowLoading(config.divDestino,"Pintando detalles de mapa.");
+	$("#"+config.divDestino + " svg").css({"margin":"0px"});	
+	HideLoading(config.divDestino);
+	$( "#"+config.divDestino ).show();	
+	config = InicilizaParams(config);
+	PintarExtra(config);		
+	loading[config.divDestino]=false;
+
+	if (ModoSVG(config )){
+		redimensionaSVG(config);
+		if ($("#tooltipMap").length==0)
+			$( "body" ).append("<div id =\"tooltipMap\" class=\"tooltip\"></div>");	
+		$( "#tooltipMap" ).hide();
+		var svg = d3.select("#"+config.divDestino+" svg g").attr('class','VisualJSarea');
+		region = $("#"+config.divDestino).find(".VisualJSarea path").each(function (i,val){
+			$(val).bind('mousemove', function(d,i) {	
+				var regionSelec = $(config.dataMap.regiones).filter(function()
+					 {
+						 return this.id == $(d.target).attr("key");
+					 });
+										
+				if(regionSelec.length>0 && !$( "#tooltipMap" ).is(":visible")){
+					var decdato = config.decimales;
+					if (regionSelec.attr("decimal")!==undefined && regionSelec.attr("decimal")!==null)
+						decdato = regionSelec.attr("decimal");
+					
+					if (regionSelec.attr("unidad")!==undefined && regionSelec.attr("unidad")!==null){
+						$( "#tooltipMap" ).html("<span>"+$(d.target).attr("title")+"</span><br><strong>"+regionSelec.attr("val").formatMoney(decdato,config.sepDec,config.sepMil)+regionSelec.attr("unidad")+"</strong>");
+					}else{
+						$( "#tooltipMap" ).html("<span>"+$(d.target).attr("title")+"</span><br><strong>"+regionSelec.attr("val").formatMoney(decdato,config.sepDec,config.sepMil)+"</strong>");
+					}
+					
+					var posX=d.pageX;				
+					var posY=d.pageY;
+					
+					var capaWidth=$('#tooltipMap').outerWidth();
+					var contenedorWidth=$(window).width();
+					
+					if(capaWidth <= (contenedorWidth - (posX+10)))
+						posX=posX+10					
+					else {
+						if( capaWidth < (posX-20))
+							posX= posX-capaWidth-20;
+						else{
+							posX= posX-(capaWidth/2);
+							posY= posY+20
+						}
+					}
+					$( "#tooltipMap" ).attr("style", "left:"+posX+"px;top:"+posY+"px;z-index: 2000");
+					$( "#tooltipMap" ).show();
+					}					
+			});
+			$(val).bind('touchstart',function(d) {		
+				var regionSelec = $(config.dataMap.regiones).filter(function()
+					 {
+						 return this.id == $(d.target).attr("key");
+					 });
+				var posX=d.touches[0].pageX;				
+				var posY=d.touches[0].pageY;
+				
+				var capaWidth=$('#tooltipMap').width();
+				var contenedorWidth=$(window).width();
+				
+				if(capaWidth <= (contenedorWidth - (posX+16)))
+					posX=posX+16					
+				else {
+					if( capaWidth < (posX-16))
+						posX= posX-capaWidth-16;
+					else
+						posX= posX-(capaWidth/2);
+				}
+							
+				if(regionSelec.length>0 ){
+					if (myTimeOuttooltipMap!=null)
+						clearTimeout(myTimeOuttooltipMap);
+					$( "#tooltipMap" )				  
+					  .attr("style", "left:"+posX+"px;top:"+posY+"px;z-index: 2000")
+					  .html("<span>"+$(d.target).attr("title")+"</span><br><strong>"+regionSelec.attr("val").formatMoney(config.decimales,config.sepDec,config.sepMil)+"</strong>")
+					  .show();		
+					 myTimeOuttooltipMap=setTimeout(function(){ $( "#tooltipMap" ).hide(); }, 3000);
+					}
+					
+			});
+			$(val).bind("mouseout", function(d,i) {
+					$( "#tooltipMap" ).hide();
+			});
+			
+		});
+	}
+    try{
+		if (typeof svgPanZoom=='function' && !isMobile.any()){
+	var beforePan
+
+			beforePan = function(oldPan, newPan){				
+				try{
+					$( "#tooltipMap" ).hide();
+					  var stopHorizontal = false
+						, stopVertical = false
+						, sizes = this.getSizes()
+						, gutterWidth = sizes.viewBox.width
+						, gutterHeight = sizes.viewBox.height
+						  // Computed variables				
+						, leftLimit = -((sizes.viewBox.x + sizes.viewBox.width) * sizes.realZoom) + gutterWidth
+						, rightLimit = sizes.width - gutterWidth - (sizes.viewBox.x * sizes.realZoom)
+						, topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + gutterHeight
+						, bottomLimit = sizes.height - gutterHeight - (sizes.viewBox.y * sizes.realZoom)
+
+					  customPan = {}
+					  customPan.x = Math.max(leftLimit, Math.min(rightLimit, newPan.x))
+					  customPan.y = Math.max(topLimit, Math.min(bottomLimit, newPan.y))
+
+					  return customPan
+				}catch(e){
+					return {};
+				}
+			}
+			
+			window.zoomTiger = svgPanZoom("#"+config.divDestino + " svg", {
+				controlIconsEnabled: false,
+				zoomEnabled: true,
+				minZoom: 1,
+				maxZoom: 50,
+				refreshRate: 'auto',
+				fit: false,
+				center: false,
+				beforePan: beforePan
+			});	
+		}
+	}catch (e){}
+    if (config.callback!==undefined && config.callback!==null)
+		config.callback(config);
+  }catch (e){
+	loading[config.divDestino]==null;
+	alert("Error en el proceso de pintado. " + e);		
+  }
+ }
+
+function PostPeticionDatos(config){
+	ShowLoading(config.divDestino,"Pintando mapa");
+				
+				if (ModoVisual(config )){							
+						visual({
+								title: titulo,
+								width: config.area[0],
+								height: config.area[1],
+								fixed: config.area,
+								dec: data.decimales, //Number of decimal positions of the data.
+								by: config.idMapa,
+								type: "cmap",
+								legend:true,
+								data: data.regiones,
+								id: destino,
+								callback : function () {CallbackVisualINE(config); }
+								//footer:"Pie de mapa"
+
+							});
+
+				}else if (ModoSVG(config )){
+						if (mapaCache[config.urlSVGJson]!=undefined){
+							$("#"+config.divDestino).html(mapaCache[config.urlSVGJson]);
+							CallbackVisualINE(config);													
+						}else{
+							var jqxhr = $.ajax({
+								url: config.urlSVGJson,
+								dataType: 'text',		
+								type: 'get',
+								context: { 	config : config},
+								statusCode: {
+										404:function(){										
+											var jqxhr = $.ajax({
+												url: config.urlSVGDefJson,
+												dataType: 'text',		
+												type: 'get',
+												context: { 	config : config}
+												}).success(function(data) {
+													if (data!=null ){
+														mapaCache[config.urlSVGDefJson]= data;													
+														$("#"+config.divDestino).html(data);											
+														CallbackVisualINE(config);
+													}
+												})		
+												.fail(function(textStatus){									
+													loading[config.divDestino]=false;
+													alert("Error al solicitar datos del mapa por defecto");		
+												});	
+											}
+									}
+								}).success(function(data) {
+									if (data!=null ){
+										mapaCache[config.urlSVGJson]= data;									
+										$("#"+config.divDestino).html(data)
+										CallbackVisualINE(config)
+									}
+								})		
+								.fail(function(textStatus){
+
+								});	
+						}
+					}
+}
+
+function PeticionDatos(config){
+	if (config.dataMap==null){
+		var destino = config.divDestino;
+		if(destino===undefined)
+			destino = VisualINEJS.setup.propiedades.divDestino;
+		var titulo = config.titulo;
+		if(destino===undefined)
+			destino = VisualINEJS.setup.propiedades.titulo;
+		
+		ShowLoading(config.divDestino,"Recuperando datos del mapa");
+		
+		//recorremos hashTenLast a ver si existe config.nombre con config.sexo o con config.tipo
+		var existe = false;
+		for (var i = 0; i < topeHash; i++) {
+			if(hashTenLast[i] != undefined && hashTenLast[i].nombre != undefined && hashTenLast[i].nombre.toUpperCase() == config.nombre.toUpperCase()){
+				if(config.sexo != undefined){
+					if(hashTenLast[i].sexo == config.sexo){
+						data = hashTenLast[i];
+						existe = true;
+					}
+				}
+				if(config.tipo != undefined){
+					if(hashTenLast[i].tipo == config.tipo){
+						data = hashTenLast[i];
+						existe = true;
+					}
+				}
+			}
+		}
+		
+		if (existe){
+			//Datos de hashTable
+			config.dataMap=data;
+			PostPeticionDatos(config);
+			return 1;
+		}else{
+			var jqxhr = $.ajax({
+			url: config.urlDataJson,
+			dataType: 'json',
+			type: 'post',
+			data: config.urlDatajsonPOST,
+			context: { 	config : config}
+			}).success(function(data) {
+				if (data!=null && data.regiones!=null && data.regiones.length>0){
+					config.dataMap=data;
+					if ($('#'+VisualINEJS.setup.propiedades.tituloDestino).length>0){
+						tituloMapa = data.titulo;
+						$('#'+VisualINEJS.setup.propiedades.tituloDestino).append(tituloMapa);
+						if ($('#' + config.divDestino).parent().find('#'+VisualINEJS.setup.propiedades.tituloDestino).length>0){
+							if ((dif=($('#'+VisualINEJS.setup.propiedades.tituloDestino).height()+ $('#' + config.divDestino).height() - $('#' + config.divDestino).parent().height()))>0){
+								config.area[1]-=dif;
+							}
+						}
+					}
+					//Ponemos los resultados en el hashtable
+					var added = false;
+					
+					//Vemos si hay sitio en el hashtable
+					for (var h = 0; h < topeHash; h++) {
+						if(hashTenLast[h] == undefined){
+							hashTenLast[h] = data;
+							added = true;
+							break;
+						}
+					}
+					//Si no hemos podido a�adirlo: hashtable lleno: borramos primero y a�adimos al final
+					if(!added){
+						for (var t = 0; t < topeHash-1; t++) {
+							hashTenLast[t] = hashTenLast[t+1];
+						}
+						hashTenLast[topeHash-1] = data;
+					}
+					
+					mapaCache[objHashTableLast]= hashTenLast;
+					PostPeticionDatos(config);
+				}else{
+					config.errorStatus="No hay datos suficientes para representar el mapa";
+					ShowLoading(config.divDestino,config.errorStatus);
+					loading[config.divDestino]=false;
+					if (config.callback!==undefined  &&	config.callback!==null)
+						config.callback(config);
+				}					
+			})		
+			.fail(function(textStatus){				
+				loading[config.divDestino]=false;
+				if (config.callback!==undefined  &&	config.callback!==null){
+						config.errorStatus=textStatus;
+						config.callback(config);
+				}else{
+					alert("Error al solicitar datos del mapa");		
+				}
+			});
+		}
+	}else{
+		PostPeticionDatos(config);		
+	}
+	return 0;
+}
+
+function PintarExtraMap(config, indice ){
+	ShowLoading(config.divDestino,"Solicitando datos extras de mapa");
+	var jqxhr = $.ajax({
+		url: config.urlExtraMap[indice],
+		dataType: 'json',		
+		type: 'post',
+		context: { 	config : config, indice: indice}
+		}).success(function(datosExtra) {
+			if (datosExtra!=null){
+				if (VisualJS.map[this.config.idMapa].features!=undefined)
+					VisualJS.map[this.config.idMapa].features.push(datosExtra);
+				else
+					VisualJS.map[this.config.idMapa].features=datosExtra;
+				if(this.indice<(this.config.urlExtraMap.length-1))
+					PintarExtraMap(this.config,  this.indice+1);
+			}
+		}).fail(function(textStatus){
+			loading[config.divDestino]=false;
+			alert.text("Error al solicitar las coordenadas extras");			
+		});		
+
+}
+
+function visualINE(config){
+	if ($.isReady)
+		visualINE_ready(config)
+	else{
+		$( document ).ready(function() {
+			visualINE_ready(config)
+		});
+	}
+}
+
+function visualINE_ready(config){
+	var cojoCache = 0;
+if(!VisualINE_cumpleRequisitos()){
+	alert(avisoGrafico);
+}else{	
+  //console.log("INICIO VisualINE" +   ((new Date().getTime())-tProceso).toString());
+  tProceso=new Date().getTime();
+  if (loading[config.divDestino]==null || !loading[config.divDestino]){
+    loading[config.divDestino]=true;
+	capaDestinoWidh =  $("#"+config.divDestino).prop("clientWidth");
+	ShowLoading(config.divDestino,"Inicializando entorno de mapas.");
+	//$( "#"+config.divDestino ).hide();
+	
+	//Solicito la geojson
+	var coordenadasJson;
+	var destino = config.divDestino;
+	var escala;
+	var leyenda;	
+	var centro;
+	var parametros
+	var parametro;
+
+	if (config.scale===undefined)
+		escala=1620;		
+	else
+		escala = config.scale;
+		
+	if (leyenda===undefined){
+		leyenda = config.legend;
+		}
+	if (centro===undefined){
+		centro = config.center;
+		}		
+	VisualJS.setup.map[config.idMapa]={
+					js: null,
+					exists: function(){ return typeof VisualJS.map[config.idMapa]!=="undefined";}											
+			};
+	VisualJS.setup.colors.map.base= "#ffffff";
+	VisualJS.setup.colors.map.max=1;
+
+    if (config.area===undefined){
+		alert ("Es obligatorio indicar el tamaño del area");
+		return;
+	}
+	
+	var v_w=config.area[0];
+	var v_h=(v_w/1.7);
+	var f_w=v_w/600;
+	var f_h=(v_w/1.7)/350;
+	var min_f= f_w<f_h? f_w: f_h;
+	config.f_w=f_w;
+	config.f_h=f_h;
+	
+	VisualJS.map[config.idMapa]={
+				area: [v_w,v_h],
+				projection: "mercator",
+				scale: (escala * min_f),
+				center: [-5 , 39.5 ],
+				legend: [420 *f_w, 280* f_h],
+				id: "id_region",
+				label: "nom_region"
+				};
+	if(destino===undefined)
+		destino = VisualINEJS.setup.propiedades.divDestino;
+		
+	if(config.convertir_regiones===undefined)
+		config.convertir_regiones = VisualINEJS.setup.convertir_regiones;
+	if (ModoVisual(config )){
+		if (mapaCache[config.urlMapaJson]!=undefined){
+			VisualJS.map[config.idMapa].features=mapaCache[config.urlMapaJson];
+			PeticionDatos(config);
+			cojoCache = 1;
+		}else{	
+			var jqxhr = $.ajax({
+				cache: true,
+				url:  config.urlMapaJson,
+				dataType: 'json',		
+				type: 'get',
+				context: { 	config : config}
+				}).success(function(data) {
+					if (data!=null && data.length>0){												
+						DesplazaRegiones(data,config);
+						
+						//cacheamos las coordenadas del JSON
+						mapaCache[config.urlMapaJson]= data;
+
+						VisualJS.map[this.config.idMapa].features=data;
+						
+						//Peticion a Datos
+						if (config.urlExtraMap!=null || config.urlExtraMap.length>0){
+							PintarExtraMap(this.config, 0);
+						}
+
+						PeticionDatos(this.config);
+					}else{
+						if (config.callback!==undefined &&	config.callback!==null)
+							config.callback(config);
+					}
+				}).fail(function(textStatus){
+					loading[config.divDestino]=false;
+					alert("Error al solicitar las coordenadas");
+				});	
+			}
+		}else if (ModoSVG(config )){
+			cojoCache = PeticionDatos(config);		
+		}
+	if(cojoCache==0)
+		$( "#"+destino ).hide();
+  }
+  //console.log( "FIN VisualINE" +  ((new Date().getTime())-tProceso).toString());  
+}
+}
+
+function VisualINE_cumpleRequisitos() {
+	return is.ieVersion>8 || !is.IE
+}	
+
+function loadSetUp(){
+	loadUrlScript( HM_Menu_Dir +"/js/mapasINE/visual.setup.js",null,null);
+}
+
+if (VisualINE_cumpleRequisitos()){
+	loadUrlScript( HM_Menu_Dir +"/js/mapasINE/lazyload.js",null,null);
+	loadUrlScript( HM_Menu_Dir +"/js/mapasINE/d3.v3.js",null,null);
+	loadUrlScript( HM_Menu_Dir +"/js/mapasINE/visual.js",loadSetUp,null);
+	
+}
+
+function ShowLoading(capa,text){
+	var nameCapaLoad=capa+"_loading";
+	if ($("#" + nameCapaLoad).length==0){
+		$("#" + capa ).before("<div id=\"" + nameCapaLoad + "\" ></div>");
+	}
+	$( "#"+nameCapaLoad ).addClass( "loadingOp" );	
+	$( "#"+nameCapaLoad ).text( text);
+	$( "#"+nameCapaLoad ).show();
+}
+
+function HideLoading(capa){
+	var nameCapaLoad=capa+"_loading";
+	$( "#"+nameCapaLoad ).hide();	
+}
+
+
+function ModoVisual(config ){	
+	return config.urlMapaJson!=null && config.urlMapaJson.length>0;
+}
+function ModoSVG(config ){
+	return config.urlSVGJson!=null && config.urlSVGJson.length>0;
+}

@@ -1,0 +1,473 @@
+var idTdatoExcluido=1;
+var SSO_error="";
+
+var LoadToolTipAuto=true;
+
+loadUrlScript( HM_DirJs+ "/" + HM_idioma + "/consul.js",null,null);
+if(typeof $.jqplot != 'undefined' && $.jqplot !=null) 
+	loadUrlScript( HM_DirJs+"/grafico.js",null,null);
+else
+	LoadToolTipAuto=false;
+
+	 var Cesta_error="";
+	 var Cesta_init=false;
+	 var ShowAddAllCesta=false;
+	 var tamSeriesPage=0;
+	 var JsConsulServidor=INE_Servidor;
+	  if (INE_Servidor!=null && INE_Servidor.length>0 && INE_Servidor.indexOf("http")<0)
+		JsConsulServidor=document.location.protocol + JsConsulServidor;
+	 var ServerWebSwervice=INE_Servidor + "/wstempus";
+	 var logot3=HM_Menu_Dir+"/img/t3.gif";
+	 var cesta=HM_Menu_Dir+"/img/cesta.gif";	 
+	 var cestaAddImg=HM_Menu_Dir+"/img/cestaAdd.gif";
+	 var cestaErrorImg=HM_Menu_Dir+"/img/cestaError.gif";
+	 var cestaLoadingImg=HM_Menu_Dir+"/img/loading.gif";
+	 var mostrarCesta=true;
+	 var listaSeriesParam;
+	 
+	 //Para solucionar problemas de Explorer y crosdomain
+	$.ajaxSetup({});
+    $.support.cors = true;
+	 function paintCesta(){
+	  try{
+		if (mostrarCesta){ 
+			var request = $.ajax({
+				url: JsConsulServidor+"/consul/addCesta",
+				cache:false,
+				type: "get",			
+				dataType: "json",
+				async:true
+			}).done( function (data){	  				
+					if ( (data.Numero>0 || (ShowAddAllCesta && tamSeriesPage>0)) && window.location.href.indexOf("nocab=1")<0 && $("#CestaTab").size()==0){
+					var capaCesta = "<div id=\"CestaTab\"><img class=\"Detalles\" src=\""+logot3+"\"><a title=\""+Txt_Tooltip_TitleT3+"\" target=\"_blank\" href=\""+JsConsulServidor+"/consul/cesta.do\"><span id=\"tituloT3\" class=\"consul Detalles\" >"+Txt_Tooltip_TitleT3+"</span>";
+						capaCesta+= "<a target=\'_blank\' href='"+JsConsulServidor+"/consul/cesta.do'><img class=\"\" src=\""+cesta+"\" style=\"vertical-align:middle;text-decoration: none;\"></a>(<span id='DlgCestaNumSeries'></span>)";
+						if (ShowAddAllCesta && tamSeriesPage>0){
+						   capaCesta+= "<span class=\"Detalles\"><br><img  id='addAllCestaImg' src=\""+cestaAddImg+"\"></span>"						  
+						   }							
+						capaCesta+="</div>";
+					$("body").append(capaCesta);
+					}
+				$( "#CestaTab").offset({top: $(".AppToolBarFondo").prop("offsetTop") + $(".AppToolBarFondo").prop("offsetHeight")})
+				
+				$( "#CestaTab" )
+						  .mouseenter(function() {   						
+							$( "#CestaTab .Detalles" ).show();														
+						  })
+						  .mouseleave(function() {
+							$( "#CestaTab .Detalles" ).hide();
+						  });
+				$("#DlgCestaNumSeries").html(data.Numero);
+				$("#cestaNumSeries").html(data.Numero);
+				$( "#addAllCestaImg" ).click(function() {
+				  addAllSeries();
+				});								
+			})
+			.fail(function(textStatus){
+			SSO_error+=textStatus 
+			$("#CestaTab .pieSD .Detalles img").attr("src", cestaErrorImg);
+			});
+		}		
+	  }catch(err){
+		SSO_error+=err;
+	  }
+	}
+
+function ttAddAllCesta(series){
+		$("#tooltipWindow .pieSD .Cesta img").attr("src",cestaLoadingImg);
+		var request;
+		request = $.ajax({
+			url: JsConsulServidor+"/consul/addCesta?accion=",
+			cache:false,
+			type: "post",
+			data: series,
+			dataType: "json",
+			async:true
+		});		
+		
+		request.done(function (response, textStatus, jqXHR){		
+			if(response.Numero<99){
+				$("#DlgCestaNumSeries").html(response.Numero);
+				$("#cestaNumSeries").html(response.Numero);
+			}else
+				$("#DlgCestaNumSeries").html("+99");
+				$("#cestaNumSeries").html(response.Numero);
+	
+		if ($("#CestaTab").length<=0)
+				paintCesta();
+			return series;			
+		});		
+		request.fail(function (jqXHR, textStatus, errorThrown){
+			$("#tooltipWindow .pieSD .Cesta img").attr("src", cestaErrorImg);
+		});		
+}
+
+function addAllSeries()
+{
+	ttAddAllCesta(listaSeriesPantalla());
+}
+
+
+function listaSeriesPantalla()
+{
+	var listaSeries = "";
+	var myArray = [];
+	var tam = tamSeriesPage;
+
+	$( ".serieDato, .serieDatoNota, .sd, .sdn, .sse" ).each(function(  key, obj ) {
+		  vuelta=true;
+		  var txt=$(obj).html()
+		  txt=txt.substr(txt.indexOf("<!--") +4,(txt.indexOf("-->") - txt.indexOf("<!--") -4));
+		  var objSd= $.parseJSON($.trim(txt));
+		  var serie;
+		  if(typeof(objSd.serie)  === "undefined")
+				serie=objSd.s
+			else
+				serie=objSd.serie;
+		  if(jQuery.inArray( objSd.s, myArray )<0){
+			myArray.push(serie);
+			listaSeries+="serie="+serie;
+		    if (key<tam-1)
+			listaSeries+="&";
+		  }
+
+	});	
+	return listaSeries;
+
+}
+
+
+function showToolTipSerie( evento, cabecera, serie, fecha, target){
+	var url= ServerWebSwervice + "/js/" + HM_idioma.toUpperCase() + "/DATOS_SERIE/" + serie + "?date=" + fecha +"&det=2"  ;	
+
+	return showToolTipJsonSD( url, evento, cabecera, null, target)
+}
+
+function showToolTipSerieLast( evento, cabecera, serie, petic,target){
+	var url= ServerWebSwervice + "/js/" + HM_idioma.toUpperCase() +"/DATOS_SERIE/" + serie + "?nult=1&det=2";
+	
+	return showToolTipJsonSD( url, evento, cabecera, petic, target)
+}
+
+var cestaAddImg=HM_Menu_Dir+"/img/cestaAdd.gif";
+var cestaErrorImg=HM_Menu_Dir+"/img/cestaError.gif";
+var cestaLoadingImg=HM_Menu_Dir+"/img/loading.gif";
+
+var lastNumSerCesta=0;
+function ttAddCesta(serie){
+	$("#tooltipWindow .pieSD .Cesta img").attr("src",cestaLoadingImg);
+	var request = $.ajax({
+				url: JsConsulServidor+"/consul/addCesta?serie="+serie+"&accion=",
+				cache:false,
+				type: "get",			
+				dataType: "json",
+				async:true
+			}).done( function( data ) {
+				var win=null;
+				if(window.parent==null || window.parent==window)
+						win=window;
+					else{
+						win=window.parent;
+						}
+				if ($(win.document).contents().find("#cestaNumSeries").length>0)
+					$(win.document).contents().find("#cestaNumSeries").html(data.Numero);
+				if ($(win.document).contents().find("#DlgCestaNumSeries").length>0)
+					$(win.document).contents().find("#DlgCestaNumSeries").html(data.Numero);			
+				$(win.document).contents().find("#tooltipWindow .pieSD .Cesta img").attr("src", cestaAddImg);
+				if ($(win.document).contents().find("#CestaTab").length<=0)
+						win.paintCesta();
+			}).fail(function() {
+				$("#tooltipWindow .pieSD .Cesta img").attr("src", cestaErrorImg);
+			});
+}
+
+
+function showToolTipJsonSD(url, evento, cabecera, petic, target)
+{
+	try{
+	var jqxhr = $.ajax({
+		url: url,
+		dataType: 'json',		
+		cache:false,
+		type: 'get',
+		contentType: "charset=UTF-8", 
+		context: { destino: target,peticion:petic }
+		}).success(function(data) {      
+	  if (cabecera!= null && cabecera.trim().length>0)
+		cabecera = " <strong>"+cabecera+"</strong>"	  	  
+	  else
+	    cabecera = " <strong>"+data.Nombre+"</strong>"	  
+		
+	  //var cadena="<div class=\"title\">"+cabecera+"<strong>" + Txt_Tooltip_tituloSerDat +"</strong><br>";
+	  var cadena="<div class=\"title\" id=\"serieSD\">"+cabecera;
+	  
+	  //Serie
+	  var serie = data.COD; 
+	  var showdata=true;
+	  if (this.peticion!=null && this.peticion.nd==1)
+	   showdata=false;
+  	  //Datos
+	  if (showdata){
+		  var datos= data.Data[0];
+
+		  cadena+= "<dl id='serieDatoToolTip'>";
+		  nombrePeriodo = datos.NombrePeriodo;
+		  
+		  if(nombrePeriodo != ""){
+			cadena+="<dt>" + txtFecha + ":</dt><dd>"+nombrePeriodo+"</dd>";
+		  }else{
+			  var fecha = datos.Fecha;
+			  var fechaDate = new Date(fecha); 
+			  var day = fechaDate.getDate();
+			  var month = fechaDate.getMonth() + 1;
+			  if(day.toString().length==1)
+				 day="0"+day; 			  
+			  if(month.toString().length==1)
+				 month="0"+month;
+			  var year = fechaDate.getFullYear();			  
+
+			  var fechaStr = ""+year+""+month+""+day; 		
+			cadena+="<dt>" + txtFecha +": </dt><dd>"+fechaStr+"</dd>";
+		  }
+		  
+		  var Tdato="";
+		  if (datos.TipoDato!=null && datos.TipoDato.Id!=idTdatoExcluido){
+			Tdato= "(" + datos.TipoDato.Nombre + ")";
+		  }
+		  
+		  var secreto = datos.Secreto;
+		  if(secreto)
+			cadena+="<dt>" + txtDatos + ": </dt><dd>. " + Txt_Tooltip_secreto + "</dd>";
+		  else{				
+			if(datos.Valor!=null){
+				var valor ;
+				var escala = "";
+				var unidad = "";
+				valor = HM_idioma.toUpperCase()=="EN" ? datos.Valor.formatMoney(null, '.', ',') : datos.Valor.formatMoney(null, ',', '.');
+				escala = data.Escala.Abrev==null? "" :data.Escala.Abrev;;		  	    
+				unidad = data.Unidad.Abrev==null? "" :data.Unidad.Abrev;
+				cadena+="<dt>" + txtDatos + ":</dt> <dd><em>"+valor+"</em> "+escala+" "+unidad+ " " + Tdato + "</dd>";
+			}else{
+			cadena= ".. " + Txt_Tooltip_NoDispo;
+			}
+		  }
+		  if(datos.hasOwnProperty("Notas")){
+			  //	el campo Notas puede no aparecer en el json, si aparece completado se añade las notas
+			  var notas = datos.Notas;
+			  var txturl;
+			  
+			  if(notas.length>0)
+			  {
+				cadena+="<dt>" + txtNotas + ":</dt><dd class=\"Notas\"><ul>";
+				for(var i=0;i<notas.length;i++)
+				{
+					switch( notas[i].Fk_TipoNota){
+						case 3 :
+							txturl = notas[i].texto.split("#~#"); 
+							for (var j=0;j<txturl.length;j++)
+								cadena+="<a href=\"" + txturl[j] + "\"><img src=\"../img/url.gif\" class=\"icoNote\"></a>";
+							break;
+						case 6 :
+							txturl = notas[i].texto.split("#~#");
+							for (j=0;j<txturl.length;j++)
+								cadena+="<a href=\"" + txturl[j] + "\" target=\"_blank\"><img src=\"../img/url.gif\" class=\"icoNote\"></a>";
+							break;
+						default: 
+							cadena+="<li>"+ notas[i].texto.replace(/\\n/gi,"<br>").replace(/\\r/gi,""),+"</li>";
+					}
+				}		
+				cadena+="</ul></dd>"; 		
+			  }
+		  }		  
+		  cadena+= "</dl>";
+	  }	  
+	  cadena+= "</div>"// fin del div que contiene la informacion;
+	  //  se agrega un div para incluir la grafica de Lineas de la serie - modificacion 10/11/16	
+	  cadena+= "<div id=\'lineChartToolTip\'></div>"
+	  cadena+="<div class=\"pieSD\">";
+	  cadena+="<a class=\"consul\" title='" + txtBanSeries + "' target=\'_blank\' href='/consul/serie.do?s="+serie+"'>" + txtBanSeries + "("+serie+")</a>";
+	  //cadena+="<a class=\"TabSer\" href=\"/dynt3/TablasBySerie/BySerie.htm?s="+serie+"&dh=10\" title=\"Ver las tablas que contienen la cesta\"><img src=\""+HM_Menu_Dir+"/img/tabla.gif\"></a>";	  
+   	  cadena+="<a class=\"APIJson\" title='Descarga json' target=\'_blank\' href='/wstempus/js/ES/DATOS_SERIE/"+serie+"?date=:&download="+serie+".json'><img src=\"/menus/img/jsond.png\"></a>";
+  	  cadena+="<a class=\"Cesta\" href=\"#\" onclick=\"ttAddCesta('" + serie + "')\" title=\"" + txtAddCesta + "\"><img src=\""+ cestaAddImg +"\"></a>";
+	  	 
+	  cadena+="</div>";
+  	  close=false;
+	  window.status=cadena;
+	  if ($( "#tooltipWindow" ).length==0){
+			$("body").append("<div id=\"tooltipWindow\"></div>");
+  
+			$( "#tooltipWindow" ).dialog({			  
+			  autoOpen: false,
+			  closeOnEscape: true,
+			  modal:true,
+			  minWidth: 200,
+			  minHeight: 0,
+			  show: {
+				effect: "blind",
+				duration: 300
+			  },
+			  hide: {
+				effect: "blind",
+				duration: 300
+			  }
+			});
+	  }
+	  $( "#tooltipWindow" ).dialog({
+					position:{
+						my: 'left top', 
+						at: 'right',
+						of: this.destino
+					},
+					title: Txt_Tooltip_Title});
+	  $( "#tooltipWindow").html(cadena);
+	  $( "#tooltipWindow").dialog("open");
+	  showLineChart("lineChart" ,url,13);		// 	Pido los últimos 13 periodos
+	  /*
+	  function abrirToolTiptWindow(){
+		$( "#tooltipWindow" ).dialog("open");
+	  }
+	  var callbacks = $.Callbacks();
+	  callbacks.add(abrirToolTiptWindow);
+	  callbacks.fire();
+	  callbacks.add(showLineChart);
+	  callbacks.fire("lineChart" ,url,13);		// 	Pido los últimos 13 periodos	
+	  */
+	}).fail(function(xhr, status, errorThrown) {
+                window.status=status;				
+            });		
+	}catch(err){
+				tooltip_error+=err;
+	}			
+}
+//	método añadido - modificación 10/11/16
+function showLineChart(target, url, numPeriodos){
+	var url2= url.substring(0, url.indexOf('?')) + "?nult="+numPeriodos+"&det=2";
+	try{
+		var jqxhr = $.ajax({
+			url: url2,
+			dataType: 'json',		
+			cache:false,
+			type: 'get',
+			contentType: "charset=UTF-8"
+			}).success(function(data){	
+				//	construcción de la variable plotData que contiene la serie para después llamar al método de grafico.js
+				var datosX=[];
+				var valores=[];
+				var hayDatos=false;
+				for(var j=0;j<data.Data.length;j++){					
+					datosX.push(data.Data[j].NombrePeriodo);
+					valores.push(data.Data[j].Valor);
+					if(!data.Data[j].Secreto) hayDatos=true;//	 si no existe ningún dato, no pinto el gráfico
+				}
+				if(hayDatos){
+					var plotData={
+						ticks:datosX,
+						values:[valores],
+						series:[{label:data.Nombre}]
+					};	
+					var alturaPlot=($("#tooltipWindow").parent().width()-$("#tooltipWindow").parent().height());
+					if(alturaPlot<150) alturaPlot=150;
+					var alturaToolTip=$("#tooltipWindow").parent().height()+alturaPlot;
+					$('#lineChartToolTip').css('height',alturaPlot+"px");					
+					//	la altura de la ventana es menor que el tooltipWindow, entonces lo coloca arriba del todo
+					if($(window).height()<$('#tooltipWindow').parent().height())
+						$('#tooltipWindow').parent().css({top:0});
+					else
+					{
+						
+						var diferencia=$('#tooltipWindow').parent().position().top+alturaToolTip-$(window).height();
+						if(diferencia>0)	//	el tooltipwindow se sobrepasa por abajo
+						{	
+							//$('#tooltipWindow').parent().css({top:$('#tooltipWindow').parent().position().top-diferencia-30});
+							// $( "#tooltipWindow").dialog( "option", "position", $("#tooltipWindow" ).dialog( "option", "position" ) );
+							$('#tooltipWindow').parent().offset({ top: $('#tooltipWindow').parent().position().top-diferencia-30 });
+						}
+					}					
+					pintaGraficaDet("lineas","lineChartToolTip",plotData,false,"", true);					
+				}					
+			}).fail(function(xhr, status, errorThrown) {
+                window.status=status;				
+            });
+	}catch(err){
+		alert("error "+err);
+		tooltip_error+=err;
+	}	
+}
+
+function mostrarSerieDato(evento , obj)
+{					
+	mostrarSerieDatoTit(evento , "", obj);
+}
+
+function mostrarSerieDatoTit(evento , titaux, target)
+			{						  				
+			  	  	
+			  //Extrae el comentario			  
+			  var txt=$(target).html()
+			  txt=txt.substr(txt.indexOf("<!--") +4,(txt.indexOf("-->") - txt.indexOf("<!--") -4));
+			  var objSd= $.parseJSON($.trim(txt));				  
+			  var titulo=titaux;			  
+			  titulo= titaux!=null || (objSd.titulo==null && objSd.t==null) ? titaux : objSd.titulo + objSd.t;
+			  if (objSd.fecha ==null && objSd.f ==null){
+			    showToolTipSerieLast( evento, titulo , NVL(objSd.serie,"")+NVL(objSd.s,"") ,objSd, target);			    
+			  }else{
+			    var regLong=new RegExp("(\\d+)L$");	
+				var regFecha=new RegExp("^([0-9]{4})([0-1][0-9])([0-3][0-9])$");				
+				if (typeof objSd.fecha === 'number' || typeof objSd.f === 'number' )	{
+						var fechaDate = new Date(typeof objSd.fecha === 'number'? objSd.fecha : objSd.f); 
+						var day = fechaDate.getDate();
+						var month = fechaDate.getMonth() + 1;
+						if(day.toString().length==1)
+						 day="0"+day; 			  
+						if(month.toString().length==1)
+						 month="0"+month;
+						var year = fechaDate.getFullYear();			  
+
+						var fechaStr = ""+year+""+month+""+day; 
+				}else{				
+						if (regLong.test(NVL(objSd.fecha,"") + NVL(objSd.f,""))){
+							match = regLong.exec(NVL(objSd.fecha,"") + NVL(objSd.f,""))
+							var fechaDate = new Date(parseInt(match[1])); 
+							var day = fechaDate.getDate();
+							var month = fechaDate.getMonth() + 1;
+							if(day.toString().length==1)
+							 day="0"+day; 			  
+							if(month.toString().length==1)
+							 month="0"+month;
+							var year = fechaDate.getFullYear();			  
+
+							var fechaStr = ""+year+""+month+""+day; 
+						}else {
+							if (regFecha.test(NVL(objSd.fecha,"") + NVL(objSd.f,"")))
+								fechaStr=NVL(objSd.fecha,"") + NVL(objSd.f,"");
+						}
+				}
+				  showToolTipSerie( evento, titulo , NVL(objSd.serie,"")+NVL(objSd.s,""), fechaStr, target);				  
+			}				  
+} 
+
+
+
+	$(document).ready(function(){
+		try{		
+			if (!Cesta_init){				
+				SSO_init=true;
+				tamSeriesPage = $( ".serieDato, .serieDatoNota, .sd, .sdn, .sse" ).size();				
+				setTimeout("paintCesta()",500);				
+			}
+		}catch(err){
+			Cesta_error+=err;
+		}
+	try{
+		if (LoadToolTipAuto){
+					$(".serieDato, .serieDatoNota, .sd, .sdn").bind('click', function(event){
+													mostrarSerieDato(event,this);
+												}
+					);
+		}	
+	}catch(err){
+			tooltip_error+=err;
+	}		
+		
+	});
+
+

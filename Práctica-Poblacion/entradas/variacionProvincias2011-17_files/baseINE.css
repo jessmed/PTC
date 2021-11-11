@@ -1,0 +1,458 @@
+BODY  {
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: #FFFFFF;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	color: #333333;
+	font-size: 0.9em;
+	padding: 0px 10px 0px 10px;	
+}
+
+form{
+	page-break-after: avoid;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	page-break-before: avoid;
+	display:inline;
+}
+
+A:visited {
+	color: #2b2d73;
+}
+
+A:hover {
+	text-decoration: underline;
+}
+
+A{
+	color: #2b2d73;	
+	text-decoration: none;
+}
+
+IMG{
+	border: 0px;
+}
+
+
+HR  {
+	color: #b6c5df;
+}
+
+HR.fina {
+	color: #b6c5df;
+	border-style: solid none none none;
+	height:1px;
+}
+
+SPAN  {
+/*	color : #000;  */
+}
+
+/*añadido por Joseba 90113 */
+a span {
+	color: #2b2d73;
+}
+/*fin */
+
+IMG  {
+	border : none;
+}
+
+/* Elementos de web INE */
+.fondoINE{
+	background-color: #b6c5df;
+}
+.colorINE{
+	color: #9E1B34;
+}
+
+.raya {
+	height: 1px;
+}
+
+.rayacorta {
+	height: 1px;
+	width: 5%;
+	text-align: left;
+	margin-right: 95%;
+}
+
+.border  {
+	border : none;
+}
+
+.sinesp {
+	margin-bottom : -2px;
+	margin-top : -2px;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+.left {
+	text-align: left;
+}
+
+br.left {
+	clear: left;
+}
+
+.right {
+	text-align: right;
+}
+
+/*  ESTILOS para los Rastros de miga     ------------...........*/
+/*  Se recomienda usarlos con párrafos <p>                      */
+
+.fondo_rastro_ayuda {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab0_num.gif) no-repeat top left;
+    min-height:46px;	
+}
+
+.fondo_rastro_ine {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;	 
+    background: url(../img/cab1_num.gif) no-repeat top left;	
+	 min-height:46px;
+}
+
+.fondo_rastro_inebase {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab2_num.gif) no-repeat top left;
+    min-height:46px;	 
+}
+
+.fondo_rastro_metodos {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab3_num.gif) no-repeat top left;
+    min-height:46px;	
+}
+
+.fondo_rastro_empleo {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab4_num.gif) no-repeat top left;
+    min-height:46px;	
+}
+
+.fondo_rastro_prensa {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab5_num.gif) no-repeat top left;
+    min-height:46px;	
+}
+
+.fondo_rastro_pys {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab6_num.gif) no-repeat top left;
+    min-height:46px;	
+}
+
+.fondo_rastro_oce {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab7_num.gif) no-repeat top left;
+    min-height:46px;	
+}
+
+.fondo_rastro_sede {
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab8_num.gif) no-repeat top left;
+    min-height:46px;	
+}
+
+
+
+/* Este estilo, en particular, es necesario usarlo con capas <div>  */
+#capa_rastroMigasInebase{
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;
+    background: url(../img/cab2_num.gif) no-repeat top left;
+    min-height:46px;
+} 
+
+.miga {
+	font-family: Arial,Helvetica,sans-serif;
+	font-weight: normal;
+	font-size: 1em;
+	float:left;
+	display: inline-block;	
+}
+
+div.miga {
+	padding: 0 0 0 4.5em;
+}
+
+/*miga en modo lista */
+ul.miga{
+	margin:0px 0px 0px 0px;
+	padding:0px;
+	
+
+}
+
+ul.miga > li{
+	font-weight: normal;
+	margin:0px;
+	padding:0px 3px;
+   white-space: nowrap;	
+	max-width: none;
+	overflow: show;
+   text-overflow: none; 
+	display: inline-block;
+	float: left;
+}
+
+ul.miga > li.medio{
+	max-width:5em;
+	overflow: hidden;
+   text-overflow: ellipsis; 
+	display: inline-block;
+}
+
+ul.miga > li.medio:hover{
+	 max-width: none ;
+	 overflow: visible;
+}
+
+ul.miga > li.medio:last-child{
+    max-width: none ;
+ 	 overflow: visible;
+	 white-space: inherit;	 
+}
+
+ul.miga > li.title{
+	 max-width: none ;
+	 white-space: inherit;	 
+}
+
+ul.miga li.medio{
+	background: url(/menus/img/MigaSep.gif) no-repeat 0% 50%;
+	padding-left: 9px;
+}
+
+ul.miga > li > h1{
+	font-size: 1em;
+	margin: 0px;
+	padding: 0px;
+	font-weight: bold;
+	font-size: inherit;
+}
+
+ul.miga a{
+	text-decoration: none;
+}
+
+
+
+/*  FIN MIGA */
+
+
+h1.docenob {
+	font-size: 1em;
+	font-weight: normal;
+	margin-top: 0;
+	padding-top: 0.5em;
+} 
+
+.oculto {
+display: none;
+}
+
+.serieDato, .sd {
+	padding-right: 5px;
+	background-image : url(../img/marcador.gif);
+	background-position : top right;
+	background-repeat : no-repeat;
+	cursor: pointer;
+}
+
+.serieDatoNota, .sdn {
+	padding-right: 5px;
+	background-image : url(../img/marcadorNota.gif);
+	background-position : top right;
+	background-repeat : no-repeat;
+	cursor: pointer;
+}
+
+
+
+dl#serieDatoToolTip{
+	list-style-type: none;	
+	margin: 0.5em 0px 0.5px 1em;
+	float:left;
+	width: 95%;	
+}
+
+
+dl#serieDatoToolTip dt{
+	float:left;
+	clear:both	;
+	min-width: 50px;
+	font-weight: bolder;
+	}
+
+dl#serieDatoToolTip dd{
+	margin:0px 0px 0px 0px;
+
+}
+
+dl#serieDatoToolTip dd em{
+	font-weight: bolder;
+	font-size: 1.1em;
+	font-style: normal;
+}
+dl#serieDatoToolTip dd ul{
+  float:left;
+  margin: 10px 0px 0px 0px;
+  padding: 0px 0px 0px 15px;
+  list-style: decimal;
+  list-style-position: outside;
+}
+
+dl#serieDatoToolTip dd.Notas{
+ overflow:auto;
+ max-height:50px;
+ width: 80%;
+}
+
+#dhtmlgoodies_tooltip .pieSD {
+	clear:both;
+	width:100%;
+	border-top-color: #2b2d73;
+	border-top-style: dotted;
+	border-top-width: thin;
+	float:left;
+	padding: 2px 0px;
+}
+#dhtmlgoodies_tooltip .pieSD a{	
+	vertical-align: middle
+}
+#dhtmlgoodies_tooltip .pieSD a img{	
+	vertical-align: middle
+}
+
+#dhtmlgoodies_tooltip .pieSD a.consul{	
+	background-image : url(../img/grafico.gif);
+	background-position : top right;
+	background-repeat : no-repeat;
+	padding: 0px 18px 0px 0px;
+	margin: 1px 3px;
+	float:right;
+}
+#tooltipWindow {
+	padding: 0px 5px;
+	text-align: left;
+	font-size: 0.75em;
+}
+
+#tooltipWindow > .title > strong{
+	margin: 0.5em;
+	display:block;
+	text-align: justify;	
+}
+
+#tooltipWindow .pieSD {
+	clear:both;
+	width:100%;
+	border-top-color: #2b2d73;
+	border-top-style: dotted;
+	border-top-width: thin;
+	float:left;
+	padding: 2px 0px;
+}
+#tooltipWindow .pieSD a{	
+	vertical-align: middle
+}
+#tooltipWindow .pieSD a img{	
+	vertical-align: middle
+}
+#tooltipWindow .pieSD a{	
+	float:right;
+	margin:0px 1px;
+}
+#lineChartToolTip {
+	margin: 0.5em 0px 0.5px 1em;
+	float:left;
+	width: 90%;
+} 
+
+#tooltipWindow .pieSD a.consul{	
+	min-height:18px;
+	background-image : url(../img/t3.gif);
+	background-position : top left;
+	background-repeat : no-repeat;
+	padding: 0px 0px 0px 18px;
+	margin: 1px 3px;
+	float:left;
+}
+
+.ui-widget {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+
+}
+
+.ui-widget-header {
+	margin: 0.2em;
+	height:auto;
+	border: 1px solid #aaaaaa;
+   background-color: #B6C5DF; 
+	background: #B6C5DF url(../img/btnfondo.gif);
+	font-weight: bold;
+}
+
+.ui-dialog {
+	position: fixed;
+}
+
+.ui-dialog .ui-dialog-title {
+padding: 2px 5px;
+}
+
+.ui-draggable .ui-dialog-titlebar { 
+	background-color: #EEF2F8;
+	padding: .1em .3em;
+}
+
+.ui-dialog .ui-dialog-content {
+	position: relative;
+	border: 0;
+	padding: 0.3em;
+	background: none;
+	overflow: auto;
+}
+
+.ui-dialog-content iframe{
+	 width: 100%; 
+	 height: 100%;
+	 margin: 0em;
+	border-width: 0px;
+	border-style: none;
+}
+
+.ui-icon-minimizethick{
+	display: block;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-image: url(../img/minimizar_flecha_24x24.png);
+}	

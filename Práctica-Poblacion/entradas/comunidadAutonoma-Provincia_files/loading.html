@@ -1,0 +1,208 @@
+﻿var p_mostro=null;
+var p_loadingActivo=true;
+var p_checkAnchor=true;
+var p_desactivarMostrarOnUnload=false;
+var p_ext=new Array(".xls",".pdf",".px",".doc",".zip",".ics",".xml");
+var p_lstAppTestUnload=new Array("/ss/","/cs/","/SID/","/censo/","/SID/","/SID_MNP/","/SID_EVR/","/CA/","/Censo2011/","/censos2011/tablas/", "/censo91/");
+var p_tiempo=500
+var p_textoProblema="Existen problema al cargar la página, inténtelo pasados unos minutos.";
+var p_timetest=60;//tiempo que espera para mostrar el mensaje de problema
+var p_ThreadTest;
+var p_opacity=0.75;
+function MoveLoading() {
+try{
+	var capa = document.getElementById("DIVloading");
+	if (capa){
+		var valorTop=Math.max(document.documentElement.scrollTop,document.body.scrollTop) +"px";
+		var valorLeft=Math.max(document.documentElement.scrollLeft,document.body.scrollLeft) +"px";
+		capa.style.top=valorTop;
+		capa.style.left=valorLeft;
+   }
+}catch(ex){window.status=ex.message}   
+}
+function ocultarLoading(){
+	setTimeout("ocultarLoadingProgress()",1);
+}
+
+function ocultarLoadingProgress(){
+	try{		
+		var tiempo=p_tiempo;
+		$("#DIVloading").clearQueue().stop()
+		tiempo=tiempo*$("#DIVloading").css("opacity");//en caso de solicitar ocultar antes de terminar solo ha devolver atrás el tiempo que uso en cargar
+		$("#DIVloading").animate({ opacity: 0}, tiempo );
+		setTimeout("$(\"#DIVloading\").css('z-index', 0).hide()", tiempo );
+		if (p_ThreadTest!=null){
+			clearTimeout(p_ThreadTest);
+			p_ThreadTest=null;
+		}
+		p_mostro=null;
+}catch(ex){window.status=ex.message}	
+}
+
+function ocultarLoadingClick(){
+try{	
+	if (p_mostro!=null && (p_mostro< ((new Date().getTime()/1000)-5)) ){
+		ocultarLoadingInstant()
+	}
+}catch(ex){window.status=ex.message}		
+}
+
+function ocultarLoadingInstant(){
+try{		
+		$("#DIVloading").animate({ opacity: 0}, 0 );
+		$("#DIVloading").css('z-index', 0).hide();	
+		p_mostro=null;
+}catch(ex){window.status=ex.message}		
+}
+
+function mostrarLoading(tipo)
+{
+mostrarLoading()
+}
+function mostrarLoading(){
+try{
+	if ($("#DIVloading") && (p_mostro==null)){
+		$("#DIVloading").empty();
+		p_ThreadTest=setTimeout(testStatus,p_timetest*1000),
+		MoveLoading();		
+		$("#DIVloading").animate({ opacity: 0}, 0 );
+		$("#DIVloading").css('z-index', 3000).show().animate({ opacity: p_opacity}, p_tiempo );
+		p_mostro=new Date().getTime()/1000;
+	}
+}catch(ex){window.status=ex.message}	
+}
+
+function mostrarLoadingTime(time,tipo){mostrarLoadingTime(time)}
+function mostrarLoadingTime(time){
+	mostrarLoading();
+	setTimeout("ocultarLoadingInstant()", time*1000);
+}
+
+function MostarLoading(){
+	mostrarLoading();
+}
+
+function mostrarLoadingOnUnload(evt){
+  try{
+  var workhide=false;
+	if (!p_desactivarMostrarOnUnload){
+		mostrarLoading();
+
+		i=p_lstAppTestUnload.length-1;
+		while (i>=0 && !workhide)
+		{
+			if (window.location.href.indexOf(p_lstAppTestUnload[i])>0 )
+			workhide=true;
+			i--;
+		}
+		if (workhide){
+			setTimeout("hideIfNotUnloaded()",2000);	
+		}
+	}
+  }catch(ex){window.status=ex.message}	
+}
+
+function desactivarOnUnload(){
+	p_desactivarMostrarOnUnload=true;
+}
+
+function activarOnUnload(){
+	setTimeout("p_desactivarMostrarOnUnload=false",1500);
+}
+
+function checkAnchor(obj){
+var cambiar;
+var i;
+if(p_checkAnchor){
+	try{
+		if (obj.href.length>0){			
+				if ( ( ($.trim(obj.href.toLowerCase()).indexOf("javascript:")>=0) && ($.trim(obj.href.toLowerCase()).length<14) )
+					|| ($.trim(obj.href).indexOf("#")>=0) || obj.onclick!=null){
+					obj.prevOnClick = obj.onclick;
+					obj.onclick = function () {
+						try{
+							if (this.prevOnClick) {
+									desactivarOnUnload(); 
+									var aux= this.prevOnClick();
+									activarOnUnload();
+									return aux;	
+								}
+						}catch(ex){
+							window.status=ex.message
+							return false
+						}		
+					}
+				}else{ 
+					if ( obj!=null && (obj.target!=null || obj.target!="" || obj.target!="_self")){ 
+						cambiar=false;
+						i=p_ext.length-1;
+						while (i>=0 && !cambiar)
+						{
+							if (obj.href.indexOf(p_ext[i])>0 && 
+								(
+								  (obj.href.indexOf("?")>0 && obj.href.indexOf(p_ext[i])==obj.href.indexOf(".",-1*obj.href.lastIndexOf("/",obj.href.indexOf("?")))) ||
+								  (obj.href.indexOf("?")<0 && obj.href.indexOf(p_ext[i])==obj.href.indexOf(".",obj.href.lastIndexOf("/")))
+								)
+							   )
+							cambiar=true;
+							i--;
+						}
+						if (cambiar)
+							obj.target="down"; 
+					}
+				}
+		}
+	}catch(ex){window.status=ex.message}
+}
+}
+
+var pageunloaded=false;
+function detectarUnload(evt){
+	pageunloaded=true;
+}
+
+function hideIfNotUnloaded(){
+if (!pageunloaded){
+	ocultarLoadingInstant();
+	pageunloaded=false;
+}
+} 
+
+function testStatus(){	
+	if (p_mostro!=null) 
+		$("#DIVloading").html("<span>" + p_textoProblema + "<br><a href=\"#\" onclick=\"ocultarLoadingInstant()\">Volver</a></span>");
+	p_ThreadTest=null;
+}
+
+function LoadingPermitido(){
+try{
+		i=p_lstAppTestUnload.length-1;
+		while (i>=0)
+		{
+			if (window.location.href.indexOf(p_lstAppTestUnload[i])>0 )
+				return false;
+			i--;
+		}
+	return true;
+}catch(ex){
+	return true;}
+}
+
+function testA(){
+	$.each( $('a'), function() {checkAnchor(this);});
+}
+
+$(document).ready(function(){
+	try{
+	if (window.location.href.toLowerCase().indexOf("noloading")<0){
+		if (HM_Menu_Dir ==undefined)
+			HM_Menu_Dir ="/menus";
+		if (p_loadingActivo && LoadingPermitido()){	
+			$(window).bind('beforeunload', mostrarLoadingOnUnload);
+			$(window).bind('unload', detectarUnload);
+			$(document).ready(function(){$(window).scroll(function(){MoveLoading();}); setTimeout("testA()",1000)});	
+			$("body").append("<div id=\"DIVloading\" style=\"opacity: 0;background-color:white;display:none;position:absolute; top:0px; left:0px;width:100%; height:100%;z-index:0\" onClick=\"ocultarLoadingClick()\"></div>");				
+		}
+	}
+	}catch(ex){window.status=ex.message}
+});

@@ -1,0 +1,2083 @@
+var str="<SCR" + "IPT type='text" + "/java" + "scr" + "ipt' SRC='" + HM_DirJs+ "/" + HM_idioma + "/textoGrafico.js'><\/SCR" + "IPT>";
+//document.write(str);
+loadUrlScript( HM_DirJs+ "/" + HM_idioma + "/textoGrafico.js",null,null);
+
+
+Array.isArray = function(obj) {
+    return obj instanceof Array;
+}
+
+var webColors= ["#4bb2c5","#EAA228","#c5b47f","#579575","#839557","#958c12","#953579","#4b5de4","#d8b83f","#ff5800","#0085cc","#c747a3","#cddf54","#FBD178","#26B4E3","#bd70c7"];
+var webColorsDef = webColors.slice(0);
+
+
+var pintados = {};
+var plotDataAux;
+var plotDataOrig;
+var anchoDoc = 0;
+var altoDoc = 0;
+
+var mapaGraficos =  [];
+/** Gráficos simples **/
+var barrasHorizontales = "barrashorizontales";
+var barrasVerticales = "barras";
+var lineas = "lineas";
+var circular = "circular";
+var circularEspaciado = "circularEspaciado";
+var barrasApiladas = "barrasapiladas";
+var barrasHorizApiladas = "barrashorizapiladas";
+
+
+
+/** Gráficos compuestos **/
+var barrasYlineas = "barrasylineas";
+var barrasApiYlineas = "barrasapiylineas";
+
+
+var MinXWidthInterval=100;
+var MinYHeightInterval=30;
+
+/*$.jqplot.config.defaultHeight =100;
+$.jqplot.config.defaultWidth=100;*/
+
+	$.jqplot.config.enablePlugins = true;
+
+
+/** Definición de gráficos jqPlot **/
+
+var GraphBarrasApiladas = {
+	animate: false,
+	// Will animate plot on calls to plot1.replot({resetAxes:true})
+	animateReplot: false,
+	cursor: {
+		show: false,
+		zoom: true,
+		looseZoom: true,
+		showTooltip: true
+	},
+	stackSeries: true,
+	captureRightClick: true,
+	seriesDefaults:{
+		renderer:$.jqplot.BarRenderer,
+		rendererOptions: {
+			highlightMouseDown: true,
+			barWidth: 10,
+			fillToZero: true
+		},
+		shadow: false,
+		pointLabels: {show: false}
+	},
+	grid: {
+		drawBorder: false,
+		shadow: false,
+		gridLineColor: '#666666',
+		gridLineWidthd: 0.1,
+		background: '#FFFFFF'
+	},
+	seriesColors: webColors,
+	negativeSeriesColors: webColors,
+	highlighter : {
+		show : false,
+		tooltipAxes : 'y'
+	},
+	legend: {	 
+		location: 's',
+		placement: 'outside',		 
+		show:false			
+	},
+	axesDefaults: {
+		pad: 0,
+		tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+		tickOptions: {
+			fontSize: '8pt'
+		}
+	},
+	axes: {
+		// These options will set up the x axis like a category axis.
+		xaxis: {
+			renderer: $.jqplot.CategoryAxisRenderer,
+			drawMajorGridlines: false,
+			drawMinorGridlines: false,
+			drawMajorTickMarks: false,
+			tickOptions: {
+				angle: -30,
+				fontSize: '7pt'
+			}							
+		},
+		yaxis: {
+			numberTicks :11,
+			rendererOptions: {
+				alignTicks: true,
+				forceTickAt0: true
+			},
+			tickOptions: {
+				showGridline: true,
+				formatString: "%.2f"
+			}
+		}
+	}
+};
+
+var GraphBarrasHorizApiladas = {
+	animate: false,
+	// Will animate plot on calls to plot1.replot({resetAxes:true})
+	animateReplot: false,
+	cursor: {
+		show: false,
+		zoom: true,
+		looseZoom: true,
+		showTooltip: true
+	},
+	stackSeries: true,
+	captureRightClick: true,
+	seriesDefaults:{
+		renderer:$.jqplot.BarRenderer,
+		rendererOptions: {
+			highlightMouseDown: true,
+			barDirection : 'horizontal',
+			barMargin : 4,
+			barPadding : 2,
+			barWidth: 10,			
+			shadowDepth : 0,
+			fillToZero: true
+		},
+		shadow: false,
+		pointLabels: {show: false}
+	},
+	grid: {
+		drawBorder: false,
+		shadow: false,
+		gridLineColor: '#666666',
+		gridLineWidthd: 0.1,
+		background: '#FFFFFF'
+	},
+	seriesColors: webColors,
+	negativeSeriesColors: webColors,
+	highlighter : {
+		show : false,
+		tooltipAxes : 'y'
+	},
+	legend: {	 
+		location: 's',
+		placement: 'outside',		 
+		show:false			
+	},
+	axesDefaults: {
+		pad: 0,
+		tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+		tickOptions: {
+			fontSize: '8pt'
+		}
+	},
+	axes : {
+		// Use a category axis on the x axis and use our custom ticks.
+		yaxis : {
+			renderer : $.jqplot.CategoryAxisRenderer,
+			tickOptions : {
+				showGridline : false,
+				mark : 'inside',
+				fontSize : '10pt'
+			}
+		},
+		// Pad the y axis just a little so bars can get close to, but
+		// not touch, the grid boundaries. 1.2 is the default padding.
+		xaxis : {
+			numberTicks :11,
+			pad : 1.05,
+			tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+			tickOptions : {
+				formatString : '%.2f',
+				angle : 50
+			},
+			min: 0
+		}
+	}
+};
+
+
+var GraphBarras = {
+	canvasOverlay: {
+            show: true,
+            objects: [
+                {horizontalLine: {
+                    name: 'zero',
+                    y: 0,
+                    lineWidth: 1,
+                    color: 'rgb(0, 0, 0)',
+                    shadow: false
+                }}
+            ]
+        },
+	// Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+	animate: !$.jqplot.use_excanvas,	
+	animateReplot: !$.jqplot.use_excanvas,	
+	legend: {	 
+		location: 's',
+		placement: 'outside',		 
+		show:false
+	},			
+	seriesColors : webColors,
+	negativeSeriesColors: webColors,
+    seriesDefaults:{
+		renderer:$.jqplot.BarRenderer,
+		pointLabels: { show: false },				           
+		rendererOptions: {
+			// speed up the animation a little bit.
+			// This is a number of milliseconds.
+			// Default for a line series is 2500.
+			animation: {speed: 2000},
+			barMargin : 2,
+			barPadding : 1,    
+			barWidth: 5	,
+			shadowOffset: 0,
+			fillToZero: true
+			//shadowDepth:0
+		}
+	},
+	grid:{
+			background: '#FFFFFF'     // CSS color spec for background color of grid.
+	},
+	//The series labels can now be supplied.
+	//series:plotData.series,					
+	showMarker:false,
+	pointLabels: { show:false },
+	axes: {
+		// Use a category axis on the x axis and use our custom ticks.
+		xaxis: {
+			renderer: $.jqplot.CategoryAxisRenderer,
+			//ticks:plotData.ticks,
+			tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+			tickOptions: { angle: 50, fontSize: '10pt',  showGridline: false}
+		},
+		// Pad the y axis just a little so bars can get close to, but
+		// not touch, the grid boundaries.  1.2 is the default padding.
+		yaxis: {
+			numberTicks :11,
+			pad: 1.05,
+			tickOptions: {formatString: '%.2f'}
+		}
+	},	
+	cursor: {
+		show: false
+	},
+	highlighter: {
+		show:false,
+		tooltipAxes:'y'
+	}
+};
+
+var GraphBarrasHorizontales = {
+	canvasOverlay: {
+            show: true,
+            objects: [
+                {verticalLine: {
+                    name: 'zero',
+                    x: 0,
+                    lineWidth: 1,
+                    color: 'rgb(0, 0, 0)',
+                    shadow: false
+                }}
+            ]
+        },
+	// Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+	animate: !$.jqplot.use_excanvas,	
+	animateReplot: !$.jqplot.use_excanvas,	
+	legend : {
+		location : 's',
+		placement : 'outside',
+		show : false
+	},
+	seriesColors : webColors,
+	negativeSeriesColors: webColors,
+	seriesDefaults : {
+		shadow : false,
+		renderer : $.jqplot.BarRenderer,
+		/*
+		 * xaxis:'x2axis', yaxis:'y2axis',
+		 */
+		pointLabels : {
+			show : false
+		},
+		rendererOptions : {
+			// speed up the animation a little bit.
+			// This is a number of milliseconds.
+			// Default for a line series is 2500.
+			animation: { speed: 2000 },			
+			barDirection : 'horizontal',
+			barMargin : 4,
+			barPadding : 2,
+			barWidth: 10,			
+			shadowDepth : 0,
+			fillToZero: true
+		}
+
+	},
+	grid:{
+		background: '#FFFFFF'     // CSS color spec for background color of grid.
+	},
+	// The series labels can now be supplied.
+	// series:plotData.series,
+	showMarker : false,
+	pointLabels : {
+		show : false
+	},
+	axes : {
+		// Use a category axis on the x axis and use our custom ticks.
+		yaxis : {			
+			renderer : $.jqplot.CategoryAxisRenderer,
+			tickOptions : {
+				showGridline : false,
+				mark : 'inside',
+				fontSize : '10pt',
+				showGridline: false
+			}
+		},
+		// Pad the y axis just a little so bars can get close to, but
+		// not touch, the grid boundaries. 1.2 is the default padding.
+		xaxis : {
+			numberTicks :11,
+			pad : 1.05,
+			tickRenderer : $.jqplot.CanvasAxisTickRenderer,
+			tickOptions : {
+				formatString : '%.2f',
+				angle : 50
+			}
+		}
+	},
+	cursor : {
+		show : false
+	},
+	highlighter : {
+		show : false,
+		tooltipAxes : 'y'
+	}
+};
+	
+var GraphLineas = {
+	canvasOverlay: {
+            show: true,
+            objects: [
+                {horizontalLine: {
+                    name: 'zero',
+                    y: 0,
+                    lineWidth: 1,
+                    color: 'rgb(0, 0, 0)',
+                    shadow: false
+                }}
+            ]
+        },
+    // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+    animate: !$.jqplot.use_excanvas,	
+	animateReplot: !$.jqplot.use_excanvas,				
+    legend: {
+        show: false,
+        location: 's',
+		placement: 'outside'/*,
+		marginTop :'150'*/
+    },
+	seriesColors : webColors,
+	negativeSeriesColors: webColors,
+	seriesDefaults:{
+		shadow: false,
+		renderer:$.jqplot.LineRenderer,
+		pointLabels: { show: false },
+		rendererOptions: {
+			fillToZero: false,					
+			// speed up the animation a little bit.
+			// This is a number of milliseconds.
+			// Default for a line series is 2500.
+		    animation: {speed: 2000},
+			shadowDepth:0,
+			interval:4
+		},
+		markerRenderer: $.jqplot.MarkerRenderer,    // renderer to use to draw the data
+													// point markers.
+		markerOptions: {
+			show: true,             // whether to show data point markers.
+			style: 'filledCircle',  // circle, diamond, square, filledCircle.
+									// filledDiamond or filledSquare.
+			size: 6                 // size (diameter, edge length, etc.) of the marker.
+		}				
+	},
+	grid:{
+		background: '#FFFFFF'     // CSS color spec for background color of grid.
+	},		
+	//The series labels can now be supplied.
+	//series:plotData.series,					
+	showMarker:false,
+	pointLabels: { show:false },
+	axes: {
+		// Use a category axis on the x axis and use our custom ticks.
+		xaxis: {
+			//ticks:plotData.ticks,				
+			renderer: $.jqplot.CategoryAxisRenderer,			
+			labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+			tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+			tickOptions: { angle: 50, fontSize: '10pt', showGridline: false}			
+		},
+		// Pad the y axis just a little so bars can get close to, but
+		// not touch, the grid boundaries.  1.2 is the default padding.
+		yaxis: {
+			numberTicks :11,
+			pad: 0,
+			tickOptions: {formatString: "%.2f"}
+		}
+	},
+	cursor: {
+		show: false
+	},
+	highlighter: {
+		show:false,
+		tooltipAxes:'y'
+	}
+};
+
+
+var GraphCircular = {
+	seriesDefaults: {
+                shadow: false, 
+                renderer: jQuery.jqplot.PieRenderer, 
+                rendererOptions: { padding: 2, sliceMargin: 2, showDataLabels: true }
+            }
+	, seriesColors : webColors
+	, legend: {
+                show: false,
+                location: 'e',
+                renderer: $.jqplot.EnhancedPieLegendRenderer,
+                rendererOptions: {
+                    numberColumns: 1
+                }
+            }
+    , grid: {
+            drawBorder: false, 
+            drawGridlines: false,
+            background: '#ffffff',
+            shadow:false
+        }
+    , highlighter: {
+      show: false,
+      useAxesFormatters: false,
+      tooltipFormatString: '%s'
+    }
+    ,cursor: {
+		show: false
+	} 
+                   
+};
+
+
+var GraphCircularEspaciado = {
+	seriesDefaults: {
+                shadow: false, 
+                renderer: jQuery.jqplot.PieRenderer, 
+                rendererOptions: { fill: false, padding: 2, sliceMargin: 6, showDataLabels: true }
+            }
+	, seriesColors : webColors
+	, legend: {
+                show: false,
+                location: 'e',
+                renderer: $.jqplot.EnhancedPieLegendRenderer,
+                rendererOptions: {
+                    numberColumns: 1
+                }
+            }
+    , grid: {
+            drawBorder: false, 
+            drawGridlines: false,
+            background: '#ffffff',
+            shadow:false
+        }            
+    , highlighter: {
+      show: false,
+      useAxesFormatters: false,
+      tooltipFormatString: '%s'
+    }
+    ,cursor: {
+		show: false
+	} 
+                   
+};
+
+
+var GraphBarrasYLineas = {
+	// Turns on animation for all series in this plot.
+	animate: true,
+	// Will animate plot on calls to plot1.replot({resetAxes:true})
+	animateReplot: true,
+	cursor: {
+		show: false,
+		zoom: true,
+		looseZoom: true,
+		showTooltip: true
+	},
+	grid: {
+		drawBorder: false,
+		shadow: false,
+		gridLineColor: '#FEECEC',
+		gridLineWidth: 0.1,
+		background: '#FEECEC'
+	},
+	seriesDefaults: {
+		shadow: false,
+		rendererOptions: {
+			barWidth: 10
+		},
+		pointLabels: { show: false }
+	},
+	series: [],
+	seriesColors: webColors,
+	negativeSeriesColors: webColors,
+	axesDefaults: {
+		pad: 0,
+		tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+		tickOptions: {
+			fontSize: '8pt'
+		}
+	},
+	axes: {
+		// These options will set up the x axis like a category axis.
+		xaxis: {
+			renderer: $.jqplot.CategoryAxisRenderer,
+			drawMajorGridlines: false,
+			drawMinorGridlines: false,
+			drawMajorTickMarks: false,
+			tickOptions: {
+				angle: -30
+			}
+		},
+		yaxis: {
+
+			rendererOptions: {
+				alignTicks: true,
+				forceTickAt0: true
+			},
+			tickOptions: {
+				showGridline: true,
+				formatString: '%.1f'
+			}
+		}
+	},
+	highlighter: {
+		show:false,
+		tooltipAxes:'y'
+	},
+	legend: {
+        show: false,
+        location: 's',
+		placement: 'outside'
+    }
+};
+
+var GraphBarrasApiYLineas = {
+	// Turns on animation for all series in this plot.
+	animate: true,
+	// Will animate plot on calls to plot1.replot({resetAxes:true})
+	animateReplot: true,
+	cursor: {
+		show: false,
+		zoom: true,
+		looseZoom: true,
+		showTooltip: true
+	},
+	stackSeries: true,
+	captureRightClick: true,
+	seriesDefaults:{
+		shadow: false,
+		pointLabels: {show: false},
+		rendererOptions:{
+			barWidth: 10
+		}
+	},
+	series: [],
+	grid: {
+		drawBorder: false,
+		shadow: false,
+		gridLineColor: '#666666',
+		gridLineWidth: 0.1
+	},
+	seriesColors: webColors,
+	negativeSeriesColors: webColors,
+	highlighter: {
+		show:false,
+		tooltipAxes:'y'
+	},
+	legend: {
+        show: false,
+        location: 's',
+		placement: 'outside'
+    },
+	axesDefaults: {
+		pad: 0,
+		tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+		tickOptions: {
+			fontSize: '8pt'
+		}
+	},
+	axes: {
+		// These options will set up the x axis like a category axis.
+		xaxis: {
+			renderer: $.jqplot.CategoryAxisRenderer,
+			drawMajorGridlines: false,
+			drawMinorGridlines: false,
+			drawMajorTickMarks: false,
+			tickOptions: {
+				angle: -30,
+				fontSize: '7pt'
+			}							
+		},
+		yaxis: {
+			rendererOptions: {
+				alignTicks: true,
+				forceTickAt0: true
+			},
+			tickOptions: {
+				showGridline: true,
+				formatString: "%.1f"
+			}
+		}
+	}
+};
+
+var bloqueBarras = {
+	renderer: $.jqplot.BarRenderer,
+	showHighlight: false,
+	yaxis: 'yaxis',
+	rendererOptions: {
+		// Speed up the animation a little bit.
+		// This is a number of milliseconds.  
+		// Default for bar series is 3000.  
+		animation: {
+			speed: 2000
+		},
+		fillToZero: true,
+		highlightMouseOver: false
+	}
+};
+
+var bloqueBarrasHorizontales = {
+	shadow : false,
+	renderer : $.jqplot.BarRenderer,
+	pointLabels : {
+		show : false
+	},
+	rendererOptions : {
+		// speed up the animation a little bit.
+		// This is a number of milliseconds.
+		animation: { speed: 2000 },
+		barDirection : 'horizontal',
+		barMargin : 4,
+		barPadding : 2,
+		barWidth: 10,			
+		shadowDepth : 0
+	}
+};
+
+var bloqueLineas = {
+	rendererOptions: {
+		// speed up the animation a little bit.
+		// This is a number of milliseconds.
+		// Default for a line series is 2500.
+		animation: {
+			speed: 2000
+		}
+	},
+	showMarker:false
+};
+
+var bloqueCircular = {
+	rendererOptions: {
+		// speed up the animation a little bit.
+		// This is a number of milliseconds.
+		// Default for a line series is 2500.
+		animation: {
+			speed: 2000
+		}
+	},
+	showMarker:false
+};
+
+var bloqueBarrasApi = {
+	renderer:$.jqplot.BarRenderer,
+	rendererOptions: {
+		highlightMouseDown: true
+	}
+};
+
+var bloqueBarrasHorizApi = {
+	renderer:$.jqplot.BarRenderer,
+	rendererOptions: {
+		highlightMouseDown: true,
+		barDirection : 'horizontal',
+		barMargin : 4,
+		barPadding : 2,
+		barWidth: 10,			
+		shadowDepth : 0
+	}
+};
+
+/** Matriz que asocia a cada tipo de gráfico sus propiedades jqPlot **/
+/** El valor para el campo 'ntipo' corresponde con el número de     **/
+/** representaciones a mezclar (barras, lineas, etc.)				**/
+/** 1: gráfico simple, un sólo tipo                                 **/
+/** 2: gráfico compuesto, dos tipos                                 **/
+/** N: gráfico compuesto, n tipos									**/
+var graficos = { "barras": {'prop': GraphBarras, 'ntipo': 1, 'bloques':[bloqueBarras]},
+				 "barrashorizontales": {'prop': GraphBarrasHorizontales, 'ntipo': 1, 'bloques':[bloqueBarrasHorizontales]},
+				 "lineas": {'prop': GraphLineas, 'ntipo': 1, 'bloques':[bloqueLineas]},
+				 "circular": {'prop': GraphCircular, 'ntipo': 1, 'bloques':[bloqueCircular]},
+				 "circularespaciado": {'prop': GraphCircularEspaciado, 'ntipo': 1, 'bloques':[bloqueCircular]},
+				 "barrasapiladas": {'prop': GraphBarrasApiladas, 'ntipo': 1, 'bloques':[bloqueBarrasApi]},
+				 "barrashorizapiladas": {'prop': GraphBarrasHorizApiladas, 'ntipo': 1, 'bloques':[bloqueBarrasHorizApi]},
+				 "barrasylineas": {'prop': GraphBarrasYLineas, 'ntipo': 2, 'bloques':[bloqueBarras, bloqueLineas]},
+				 "barrasapiylineas": {'prop': GraphBarrasApiYLineas, 'ntipo': 2, 'bloques':[bloqueBarrasApi, bloqueLineas]}				 
+			   };
+
+function getTipoGrafico(vector){
+	if (vector.length < 1){
+		return null;
+	}
+	else if (vector.length == 1){
+		var tipo = null;
+		switch(vector[0]){
+			case 1: tipo = "barras"; break;
+			case 2: tipo = "barrashorizontales"; break;
+			case 3: tipo = "lineas"; break;
+		}
+		return tipo;
+	}
+	else{
+		var p = new Array();
+		for (var k=0; k<vector.length; k++){
+			switch(vector[k]){
+				case 1: if ($.inArray("barras", p)<0) p.push("barras"); break;
+				case 2: if ($.inArray("barrashorizontales", p)<0) p.push("barrashorizontales"); break;
+				case 3: if ($.inArray("lineas", p)<0) p.push("lineas"); break;
+				case 4: if ($.inArray("barrasapiladas", p)<0) p.push("barrasapiladas"); break;
+				case 5: if ($.inArray("barrashorizapiladas", p)<0) p.push("barrashorizapiladas"); break;
+			}
+		}
+		if (p.length < 1 || p.length > 2){
+			return null;
+		}
+		else if (p.length == 1)
+			return p[0];
+		else{
+			if ((p[0] == "barras" && p[1] == "lineas") || (p[1] == "barras" && p[0] == "lineas"))
+				return "barrasylineas";
+			else if ((p[0] == "barrasapiladas" && p[1] == "lineas") || (p[1] == "barrasapiladas" && p[0] == "lineas"))
+				return "barrasapiylineas";
+			else{
+				return null;
+			}
+		}
+	}
+}
+			   
+			   
+/****************************************************************************/
+/* Función:																	*/ 
+/*	sortbyAverageValues														*/
+/*																			*/
+/* Descripción:																*/
+/* 	Función que ordena plotData de mayor a menor o al revés según			*/
+/* 	la función sortFunction pasada como parámetro							*/
+/*																			*/
+/* Parámetros:																*/
+/*	+plotData : objeto jqplot de datos que contiene series,valores y ticks	*/
+/*	+sortFunction: función para ordenar el diccionario						*/
+/*																			*/
+/****************************************************************************/
+function sortbyAverageValues(plotData, sortFunction) {
+	
+	var map = new Array();
+
+	// obtiene la media de los valores de cada tick sobre las series 
+	// guarda en el mapa el indice de cada tick junto con su media aritmética
+	for(var i=0; i<plotData.ticks.length;i++){
+		var average = 0;
+		for(var j=0;j<plotData.values.length;j++){
+			average += plotData.values[j][i];
+		}
+		map.push({index: i, val: average/plotData.values.length});
+
+	}
+	// ordena el mapa de mayor a menor
+	map.sort(sortFunction);
+
+	// reserva memoria para la matriz auxiliar de valores 
+	var valuesAux = new Array(plotData.series.length);
+	for(var i=0;i<valuesAux.length;i++)
+		valuesAux[i] = new Array(plotData.ticks.length);
+
+	var listaTicks = [];
+	// mapea los valores sobre la matrix auxiliar de valores
+	for(var i=0; i<plotData.ticks.length;i++){
+		for(var j=0;j<plotData.series.length;j++){
+			
+			valuesAux[j][i] = plotData.values[j][map[i].index];
+		}
+		var tick = plotDataAux.ticks[map[i].index];
+
+		listaTicks.push(tick);
+	}
+	// finalmente asigna los valores y los ticks ordenados a plotData
+	plotData.values = valuesAux;
+	plotData.ticks = listaTicks;
+}
+
+/**********************************************************************************/
+/* Función:																		  */
+/*	addCommas														  			  */
+/*																				  */
+/* Descripción:																	  */
+/* 	Función que cambia los puntos por las comas y al revés. Es decir, pasa de	  */
+/*  formato inglés a formato español											  */
+/*																				  */
+/* Parámetros:																	  */
+/*	+nStr: cadena que representa un número decimal 								  */
+/*																				  */
+/**********************************************************************************/
+function addCommas(nStr) {
+	try{
+		var numFloat = parseFloat(nStr);
+		var valor = HM_idioma.toUpperCase()=="EN" ? numFloat.formatMoney(null, '.', ',') : numFloat.formatMoney(null, ',', '.');
+		return valor;
+	}catch(e){
+		return null;
+	}
+}
+function pintaGraficaLineas(salida,plotData) {
+	return pintaGrafica("lineas",salida,plotData,false,"")
+}
+
+function pintaGraficaBarras(salida,plotData) {
+	return pintaGrafica("barras",salida,plotData,false,"")
+}
+
+function pintaGrafica(tipo,salida,plotData,verLegend,titulo) {
+	return pintaGraficaDet(tipo,salida,plotData,verLegend,titulo,true) 
+}
+
+/**********************************************************************************/
+/* Función:																		  */
+/*	truncarCadenasPlotData														  */
+/*																				  */
+/* Descripción:																	  */
+/* 	Función que recorta los nombres de las series y de las categorías del eje X   */
+/*	a 30 caracteres, si éstos son más largos									  */
+/*																				  */
+/* Parámetros:																	  */
+/*	+plotData: variable con toda la información de las series pasadas para pintar */
+/*																				  */
+/**********************************************************************************/
+function truncarCadenasPlotData(plotData) {
+	for(var i=0; i<plotData.series.length;i++)
+	{
+		if (plotData.series[i].label!=null && plotData.series[i].label.length>30)
+			plotData.series[i].label= plotData.series[i].label.substr(0,30)+".";
+	}
+	for(var i=0; i<plotData.ticks.length;i++)
+	{
+		if (plotData.ticks[i]!=null && plotData.ticks[i].length>30)
+			plotData.ticks[i] = plotData.ticks[i].substr(0,30)+".";
+	}
+	return plotData;
+}
+
+/**********************************************************************************/
+/* Función:																		  */
+/*	jqplotDataMouseOver_fn														  */
+/*																				  */
+/* Descripción:																	  */
+/* 	Función que controla el evento MouseOver (tooltip)							  */
+/*																				  */
+/* Parámetros:																	  */
+/*	+ev:  																		  */
+/*  +seriesIndex: 															      */
+/*  +pointIndex:															      */
+/*  +data:																		  */
+/*																				  */
+/**********************************************************************************/
+function jqplotDataMouseOver_fn(ev, seriesIndex, pointIndex, data) {
+	
+	var tipo=$(this).prop("tipoGraph");	
+	var plotDataOrig= mapaGraficos[String($(this).prop("id"))];
+	var valor;
+	
+	if (tipo.toLowerCase()=='lineas' && plotDataOrig.values[seriesIndex][pointIndex]!=null )
+		valor=plotDataOrig.values[seriesIndex][pointIndex];
+	else if (tipo.toLowerCase()==barrasVerticales  && data!=undefined)
+		valor=data[1];
+	else if (tipo.toLowerCase()==barrasHorizontales && data!=undefined)
+		valor=data[0];
+	
+	if(!$('#infoGraph').is(":visible") || valor!=$('#infoGraph').attr("dataVal")){
+					
+			
+
+
+			cadena = "<b>Serie:</b> ";
+			
+			
+			
+			if(plotDataOrig.series[seriesIndex] == null)
+				aux = 'asd';
+			else
+				aux = plotDataOrig.series[seriesIndex].label;
+
+			if (tipo.toLowerCase()==barrasVerticales  && data!=undefined){
+
+				aux2 = plotDataOrig.ticks[data[0]-1];
+				$('#infoGraph').attr("dataVal",data[1]);
+				if (aux!=' ' && aux2!=' ')
+					cadena+=aux+', '+aux2+'<br><b>'+txtMsgDato+':</b> '+addCommas(data[1]);	
+				else if (aux!=' ')
+					cadena+=aux+'<br><b>'+txtMsgDato+':</b> '+addCommas(data[1]);	
+				else if (aux2!=' ')
+					cadena+=aux2+'<br><b>'+txtMsgDato+':</b> '+addCommas(data[1]);					
+			}
+			else if (tipo.toLowerCase()==barrasHorizontales && data!=undefined){
+
+				aux2 = plotDataOrig.ticks[data[1]-1];
+				$('#infoGraph').attr("dataVal",data[0]);
+				if (aux!=' ' && aux2!=' ')
+					cadena+=aux+', '+aux2+'<br><b>'+txtMsgDato+':</b> '+addCommas(data[0]);	
+				else if (aux!=' ')
+					cadena+=aux+'<br><b>'+txtMsgDato+':</b> '+addCommas(data[0]);	
+				else if (aux2!=' ')
+					cadena+=aux2+'<br><b>'+txtMsgDato+':</b> '+addCommas(data[0]);		
+	
+			}else{
+				aux2 = plotDataOrig.ticks[pointIndex];
+				$('#infoGraph').attr("dataVal",plotDataOrig.values[seriesIndex][pointIndex]);	
+				if (aux!=' ' && aux2!=' ')
+					cadena+=aux+', '+aux2+'<br><b>'+txtMsgDato+':</b> '+addCommas(plotDataOrig.values[seriesIndex][pointIndex]);
+				else if (aux!=' ')
+					cadena+=aux+'<br><b>'+txtMsgDato+':</b> '+addCommas(plotDataOrig.values[seriesIndex][pointIndex]);									
+				else if (aux2!=' ')					
+					cadena+=aux2+'<br><b>'+txtMsgDato+':</b> '+addCommas(plotDataOrig.values[seriesIndex][pointIndex]);
+			}
+			
+			$('#infoGraph').html(cadena);
+			var capaWidth=$('#infoGraph').width();
+			var contenedorWidth=$(window).width();
+			if(capaWidth <= (contenedorWidth - (ev.pageX+16)))
+				$('#infoGraph').css({ 'top': ev.pageY,'left': ev.pageX+16, 'background': '#e5e7f3', 'border': '1px solid #000000'});
+			else {
+					if( capaWidth < (ev.pageX-16))
+						$('#infoGraph').css({ 'top': ev.pageY,'left': ev.pageX-capaWidth-16, 'background': '#e5e7f3', 'border': '1px solid #000000'});
+					else
+						$('#infoGraph').css({ 'top': ev.pageY+16,'left': ev.pageX-(capaWidth/2), 'background': '#e5e7f3', 'border': '1px solid #000000'});
+				}
+			$('#infoGraph').show();
+		}
+}
+
+
+function getMinValue(plotDataAux){
+	var min=null;
+	try{
+		for (var ser=0;ser<plotDataAux.values.length;ser++){
+			for (var idx=0;idx<plotDataAux.values[ser].length;idx++){
+				if(min==null || (plotDataAux.values[ser][idx]!=null && min>plotDataAux.values[ser][idx]))
+					min=plotDataAux.values[ser][idx];
+			}
+		}
+		if (min==0)
+			return 0;
+		else
+			return min;
+	}catch(e){
+		return null;
+	}
+}
+
+function getMaxValue(plotDataAux){
+	var max=null;
+	try{
+		for (var ser=0;ser<plotDataAux.values.length;ser++){
+			for (var idx=0;idx<plotDataAux.values[ser].length;idx++){
+				if(max==null || (plotDataAux.values[ser][idx]!=null && max<plotDataAux.values[ser][idx]))
+					max=plotDataAux.values[ser][idx];
+			}
+		}
+		if (max==0)
+			return 0;
+		else
+			return max;		
+	}catch(e){
+		return 0;
+	}
+}
+
+
+function getMaxSumValueCat(plotDataAux){
+	var max=null;
+	var SumCat=0;
+	try{
+				for (var idx=0;idx<plotDataAux.ticks.length;idx++){		
+			SumCat=0;
+
+			for (var ser=0;ser<plotDataAux.series.length;ser++){
+				if(plotDataAux.values[ser][idx]!=null)
+					SumCat+=plotDataAux.values[ser][idx];
+			}
+			if(max==null || (SumCat!=null && max<SumCat))
+					max=SumCat;
+		}
+		if (max==0)
+			return 0;
+		else
+			return max;		
+	}catch(e){
+		return 0;
+	}
+}
+
+function getValMinRatio(min,max,ratioSup,ratioInf){
+try{
+	var vuelta;
+	var dif=max-min;
+	if (min<0){
+		vuelta= (min-(dif)*ratioSup);
+	}else{
+		vuelta= (min-(dif)*ratioInf);
+	}
+	if(parseInt(dif).toString().length>2){
+		var pot=Math.pow(10,parseInt(dif).toString().length-2);
+		var resto=dif % pot;
+		if (resto<0)	
+			vuelta=parseInt(vuelta/pot)*pot;
+		else
+			vuelta=parseInt((vuelta/pot)-1)*pot;	
+	}
+	if (vuelta<0 && min>=0){
+		return 0;
+	}else{
+		if (vuelta*100 % 100<0) 
+			return parseInt(vuelta-1);
+		else
+			return parseInt(vuelta);
+	}
+}catch(e){
+		return min;
+}
+}
+
+function getValMaxRatio(min,max,ratioSup,ratioInf){
+try{	
+	var vuelta;
+	var dif=max-min;
+	if (max<0){
+		vuelta= (max+(dif)*ratioInf);
+	}else{
+		vuelta= (max+(dif)*ratioSup);
+	}
+	if(parseInt(dif).toString().length>2){
+		var pot=Math.pow(10,parseInt(dif).toString().length-2);
+		var resto=dif % pot;
+		if (resto>0){
+			vuelta=parseInt(vuelta/pot)*pot;
+			if(vuelta<max)
+				vuelta=vuelta+pot
+		}else{
+			vuelta=parseInt((vuelta/pot)+1)*pot;
+		}
+	}
+	if (vuelta>0 && max<=0){
+		return 0;
+	}else{
+		if (vuelta*100 % 100>0) 
+			return parseInt(vuelta+1);
+		else
+			return parseInt(vuelta);
+	}
+}catch(e){
+		return max;
+}	
+}
+
+function checkAnimacion(jqplot,plotData){
+	/**Chequea si debe quitar la nimación debido al volumen de datos*/
+	if (plotData.series.length>5)
+		jqplot.animate=false;
+}
+
+function checkDecimalsAxis(jqplot,min,max,eje){
+	try{
+		/*verificamos  el formato*/
+		if (sepMil!==undefined && sepMil!=null && sepMil!==undefined && sepMil!=null){
+			$.jqplot.sprintf.thousandsSeparator = sepMil;
+			$.jqplot.sprintf.decimalMark  = sepDec;
+		}else{
+			$.jqplot.sprintf.thousandsSeparator = '.';
+			$.jqplot.sprintf.decimalMark = ',';
+		}
+		var dif=max-min;
+		if(parseInt(dif).toString().length>2){
+			if (eje=='X')
+				jqplot.axes.xaxis.tickOptions.formatString= "%'.0f";
+			else
+				jqplot.axes.yaxis.tickOptions.formatString= "%'.0f";
+		}		
+	}catch(e){
+		
+	}
+
+		
+};
+/**********************************************************************************/
+/* Función: 																	  */
+/*	pintaGraficaDetPublic														  */
+/*																				  */
+/* Descripción:																	  */
+/* 	Función que sirve de switch para monstrar los tipos de gráfico.				  */
+/*	Si el parámetro grafico (formato) es null la función utilziará 				  */
+/*	el formato estándar para pintar, en caso de ser disitinto de null			  */
+/*	se utilizará como formato específico.										  */
+/*																				  */
+/* Parámetros:																	  */
+/*	+tipo : define el tipo de gráfico. 											  */
+/*		Valores: "barrasHorizontales" / "barrasVerticales" / "lineas"			  */
+/*	+salida: div del html sobre el que se mostrará el gráfico					  */
+/*	+plotData: objeto jqplot de datos que contiene series,valores y ticks		  */
+/*	+verLegend: mostrar leyenda o no											  */
+/*	+titulo: titulo del gráfico													  */
+/*	+showAllTicks: true/false para mostrar todos los ticks						  */
+/*	+ordenaDatos: true/false para ordenar los datos o no						  */
+/*	+sortFunction: función para ordenar los datos (ascendente/descendente)		  */
+/*	+formatoGrafico: formato específico, valor null en el caso para el estándar   */
+/*																				  */
+/**********************************************************************************/
+function pintaGraficaDetPublic(tipo,salidaOriginal, salida,plotData,verLegend,titulo,save, showScroll, ordenaDatos, sortFunction, formatoGrafico) {
+
+	var MiGrafico;
+	var plot = null;
+	var pet_simple = graficos[tipo.toLowerCase()]['ntipo'] == 1?true:false;
+	var datos_simple = true;
+	var blqSeriesVal = new Array();
+	
+	var valores = plotData.values;
+	for (var j=0; j<valores.length; j++){
+		blqSeriesVal.push(valores[j]);
+	}
+	
+	// si el primer objeto del bloque 1º es un array y no un dato, entonces llegan N bloques de series
+	// estamos en el caso de un gráfico compuesto
+	if (Array.isArray(blqSeriesVal[0][0])) {
+		datos_simple = false;			
+
+		plotData.values = blqSeriesVal[0];
+		auxSeries = plotData.series[0];
+		for (var j=1; j<valores.length; j++){
+			plotData.values = plotData.values.concat(blqSeriesVal[j]);
+			auxSeries = auxSeries.concat(plotData.series[j]);
+		}
+		plotData.series = auxSeries;
+	}
+	if (datos_simple && !pet_simple) { // Si la petición es de un gráfico compuesto y los datos son simples, devolvemos error
+		console.log("Estructura de datos erronea para una peticion de grafico compuesto");
+		return null;
+	}
+	
+	plotDataAux = jQuery.extend(true, {}, plotData);
+
+	plotDataAux = truncarCadenasPlotData(plotDataAux);
+
+		// Si se ha introducido una función de ordenación como parámetro procede a ejecutarla
+	if(ordenaDatos && sortFunction!=null)
+		sortbyAverageValues(plotDataAux, sortFunction);
+	
+	// Si nos llega algo en este parámetro, suponemos que NO llega en plotData.config, y se lo asignamos
+	if (formatoGrafico!=null) 
+		plotDataAux.config = formatoGrafico;
+		
+	/* Asociamos propiedades al gráfico */
+	MiGrafico = getConfiguracion(tipo, plotDataAux);
+	
+	var direccion=plotDataAux.config.seriesDefaults.rendererOptions.barDirection;
+	/*Establecemos el valor minimo*/
+	var min,max;
+	if (MiGrafico.stackSeries!==undefined){//Apilada
+		min=getMinValue(plotDataAux);
+		max=getMaxSumValueCat(plotDataAux);
+	}else{
+		min=getMinValue(plotDataAux);
+		max=getMaxValue(plotDataAux);
+	}
+	
+	//Verificamos si entran el numero de intervalos dado.
+	var graficaApilada =  tipo.toLowerCase()==barrasApiladas || tipo.toLowerCase()==barrasHorizApiladas;
+	
+	try{
+		if (MiGrafico.axes!=undefined){
+			if (MiGrafico.axes.xaxis.numberTicks!=null){
+				var aux=$.jqplot.config.defaultWidth>$("#"+salida).width() ? $.jqplot.config.defaultWidth: $("#"+salida).width()
+				if ((aux/MiGrafico.axes.xaxis.numberTicks)<MinXWidthInterval)
+					MiGrafico.axes.xaxis.numberTicks=parseInt($("#"+salida).width()/MinXWidthInterval);		
+					
+			}
+			if (MiGrafico.axes.yaxis.numberTicks!=null){
+					var aux=$.jqplot.config.defaultHeight>$("#"+salida).height() ? $.jqplot.config.defaultHeight : $("#"+salida).height()
+					if ((aux/MiGrafico.axes.yaxis.numberTicks)<MinYHeightInterval)
+					MiGrafico.axes.yaxis.numberTicks=parseInt($("#"+salida).height()/MinYHeightInterval);		
+			}
+		}		
+	}catch(e){
+		console.log("Calculando numero de numberTicks:" + e.message);
+	}
+	
+	if(!graficaApilada){
+		if (direccion!==undefined && direccion.toLowerCase()=="horizontal"){				
+			MiGrafico.axes.xaxis.min=getValMinRatio(min,max,0.05,0.05);
+			MiGrafico.axes.xaxis.max=getValMaxRatio(min,max,0.05,0.05);
+		}else{	
+			if (MiGrafico.axes!=undefined){	
+				MiGrafico.axes.yaxis.min=getValMinRatio(min,max,0.05,0.05);
+				MiGrafico.axes.yaxis.max=getValMaxRatio(min,max,0.05,0.05);
+			}
+		}
+	}else{
+		if (direccion!==undefined && direccion.toLowerCase()=="horizontal"){				
+			MiGrafico.axes.xaxis.min=0;
+		}else{	
+			if (MiGrafico.axes!=undefined){	
+				MiGrafico.axes.yaxis.min=0;
+			}
+		}
+	}		
+
+	
+	if (direccion!==undefined && direccion.toLowerCase()=="horizontal"){	
+			checkDecimalsAxis(MiGrafico,min,max,'X');
+		}else{	
+			checkDecimalsAxis(MiGrafico,min,max,'Y');
+		}
+
+
+	checkAnimacion(MiGrafico,plotDataAux);
+	
+	/* Si es algún tipo de gráfico de barras, asignamos el ancho de barra a null */
+	if (tipo.toLowerCase().indexOf('barras')>-1)
+		MiGrafico.seriesDefaults.rendererOptions.barWidth = null;
+	
+	/* Creamos el apartado de series */
+	if (!pet_simple){
+		MiGrafico.series = new Array();
+		var pos = 0; // para la traslación dentro del array de series
+		for (var j=0; j<blqSeriesVal.length; j++){
+			for (var k=0; k<blqSeriesVal[j].length; k++){
+				var blq = jQuery.extend(true, {}, graficos[tipo.toLowerCase()]['bloques'][j]);
+				setPropiedad(blq, plotData.series[pos+k]);
+				MiGrafico.series.push(blq);
+			}
+			pos += blqSeriesVal[j].length;
+		}
+	}
+	else{
+		MiGrafico.series=plotDataAux.series;
+	}
+	
+	/* Mostramos leyenda si el parámetro pasado lo indica */
+	MiGrafico.legend.show=verLegend;
+
+	var listaTicks = []; 
+
+	var tituloTabla = "";
+	if($('.cab3').text()!="")
+		tituloTabla = $('.cab3').text();
+	else
+		tituloTabla = $('.cab2').text();
+	if(titulo!="") MiGrafico.title = "<div id=\"tituloTablaGraficoImg\" >"+tituloTabla+"</div><div id=\"tituloGraficoImg\">"+titulo+"</div>";
+	
+
+	var valor;
+	var numElemTotal = ($("#"+salida).width()*30)/850;
+	var tamTicks = plotDataAux.ticks.length;
+	var numElem = parseInt(tamTicks/numElemTotal) !=0 ? parseInt(tamTicks/numElemTotal):1;
+
+	// Si no se ha elegido que aparezcan todos los ticks
+	// pone un espacio vacío para que no se solapen
+	if(!showScroll){
+
+		for(var i=0; i<tamTicks;i++){
+			if(i%numElem!=0)
+				valor=" ";
+			else
+				valor = plotDataAux.ticks[i];
+			listaTicks.push(valor);
+		}
+	}
+	else{
+		
+		listaTicks = plotDataAux.ticks;
+	}
+	
+	
+
+	/*MiGrafico = jQuery.extend(true, {}, formatoGrafico);	
+	MiGrafico.plotData=plotDataAux;
+	MiGrafico.legend.show=verLegend;
+	MiGrafico.series=plotDataAux.series;*/
+
+	
+	if (direccion!==undefined && direccion.toLowerCase()=="horizontal"){	
+		MiGrafico.axes.yaxis.ticks=listaTicks;
+	}else{
+		if (MiGrafico.axes!=undefined){	
+			MiGrafico.axes.xaxis.ticks=listaTicks;
+		}
+	}
+
+
+	if ( $("div.ui-layout-center").size()==1){
+		MiGrafico.height = $("div.ui-layout-center").height()-40;
+		if ( $("#graficouNevo").size()>=1 ) $("#graficoNuevo").css({ 'height': MiGrafico.height+'px'});
+		if ( $("#tituloGrafico").size()==1 ) MiGrafico.height = MiGrafico.height-$("#tituloGrafico").height();		
+	}
+
+
+	if (tipo.toLowerCase()==circular.toLowerCase() || tipo.toLowerCase()==circularEspaciado.toLowerCase()){
+		var abs_values = [];
+		var abs_values_aux = [];
+		for(var i=0;i<plotDataAux.values[0].length;i++){
+			abs_values[i] = Math.abs(plotDataAux.values[0][i]);
+		}
+		abs_values_aux[0] = abs_values;
+		plot = $.jqplot(salida,abs_values_aux,MiGrafico);
+	}else{
+		plot = $.jqplot(salida,plotDataAux.values,MiGrafico);
+	}
+
+	if(salida != salidaOriginal)
+		salida = salidaOriginal;
+
+	
+	mapaGraficos[String(salida)] = plotDataAux;
+
+	if (save){
+		$('#'+salida).prop("tipoGraph",tipo );
+		$('#'+salida).bind('jqplotDataMouseOver', jqplotDataMouseOver_fn);
+		$('#'+salida).bind('jqplotDataUnhighlight', 
+			function (ev) {
+				$('#infoGraph').html('');
+				$('#infoGraph').hide();
+			}
+		);	
+		pintados[salida]={Data:plotDataAux,tipo:tipo};
+	}
+	
+	return plot;
+}
+
+
+/*******************************************************************************************************/
+/* Función: 																	  					   */
+/*	pintaGraficaDet     														  					   */
+/*																				  					   */
+/* Descripción:																	      				   */
+/* 	Función que pinta el gráfico correspondiente								  					   */
+/*																				  					   */
+/* Parámetros:																	  					   */
+/*	+tipo : define el tipo de gráfico. 										   					  	   */
+/*		Valores: "barrasHorizontales" / "barrasVerticales" / "lineas" / etc.						   */
+/*	+salida: id de la capa html en la que se mostrará el gráfico				 					   */
+/*	+plotData: objeto jqplot de datos que contiene series,valores y ticks							   */
+/*             plotData = {																			   */
+/*							'ticks': array de categorias ejeX,									  	   */
+/*							'values': [[serie1-1, serieg1-2, ...],[serie2-1, serie2-2, ...]],  		   */
+/*							'series': [[{props1-1}, {props1-2}, ...], [{props2-1}, {props2-2}, ...]]   */
+/*									  }																   */
+/*			   Nótese que existen dos bloques diferenciados, que servirá para los gráficos compuestos  */
+/*	+verLegend: mostrar leyenda o no											  					   */
+/*	+titulo: titulo del gráfico													  				   	   */
+/*	+save: 						  					   */
+/*																				  					   */
+/*******************************************************************************************************/
+function pintaGraficaDet(tipo,salida,plotData,verLegend,titulo,save) {
+	//plotNuevo = $.jqplot(salida, datos, opciones );
+	//$.jqplot.config.enablePlugins = true;
+	//Get the data prior to creating the graph.
+
+	var MiGrafico;
+	var plot = null;
+	var pet_simple = graficos[tipo.toLowerCase()]['ntipo'] == 1?true:false;
+	var datos_simple = true;
+	var blqSeriesVal = new Array();
+	
+	var valores = plotData.values;
+	for (var j=0; j<valores.length; j++){
+		blqSeriesVal.push(valores[j]);
+	}
+	
+	// si el primer objeto del bloque 1º es un array y no un dato, entonces llegan N bloques de series
+	// estamos en el caso de un gráfico compuesto
+	if (Array.isArray(blqSeriesVal[0][0])) {
+		datos_simple = false;			
+
+		plotData.values = blqSeriesVal[0];
+		auxSeries = plotData.series[0];
+		for (var j=1; j<valores.length; j++){
+			plotData.values = plotData.values.concat(blqSeriesVal[j]);
+			auxSeries = auxSeries.concat(plotData.series[j]);
+		}
+		plotData.series = auxSeries;
+	}
+	if (datos_simple && !pet_simple) { // Si la petición es de un gráfico compuesto y los datos son simples, devolvemos error
+		console.log("Estructura de datos erronea para una peticion de grafico compuesto");
+		return null;
+	}
+	
+	plotDataOrig= plotData;
+	plotDataAux = jQuery.extend(true, {}, plotData);
+	plotDataAux = truncarCadenasPlotData(plotDataAux);
+	
+	/* Asociamos propiedades al gráfico */
+	MiGrafico = getConfiguracion(tipo, plotData);
+	//Verificamos si entran el numero de intervalos dado.
+	
+	var direccion=plotDataAux.config?plotDataAux.config.seriesDefaults.rendererOptions.barDirection:null;	
+	
+	/*Establecemos el valor minimo*/
+	var min,max;
+	if (MiGrafico.stackSeries!==undefined){//Apilada
+		min=getMinValue(plotDataAux);
+		max=getMaxSumValueCat(plotDataAux);
+	}else{
+		min=getMinValue(plotDataAux);
+		max=getMaxValue(plotDataAux);
+	}
+	
+	try{
+		if (MiGrafico.axes!=undefined){
+			if (MiGrafico.axes.xaxis.numberTicks!=null){
+				var aux=$.jqplot.config.defaultWidth>$("#"+salida).width() ? $.jqplot.config.defaultWidth: $("#"+salida).width()
+				if ((aux/MiGrafico.axes.xaxis.numberTicks)<MinXWidthInterval)
+					MiGrafico.axes.xaxis.numberTicks=parseInt($("#"+salida).width()/MinXWidthInterval);		
+					
+			}else{
+					var aux=$.jqplot.config.defaultHeight>$("#"+salida).height() ? $.jqplot.config.defaultHeight : $("#"+salida).height()
+					if ((aux/MiGrafico.axes.yaxis.numberTicks)<MinYHeightInterval)
+					MiGrafico.axes.yaxis.numberTicks=parseInt($("#"+salida).height()/MinYHeightInterval);		
+			}
+		}
+	}catch(e){
+		console.log("Calculando numero de numberTicks:" + e.message);
+	}
+	
+	//Verificamos si entran el numero de intervalos dado.
+	var graficaApilada =  tipo.toLowerCase()==barrasApiladas || tipo.toLowerCase()==barrasHorizApiladas;
+	
+	if(!graficaApilada){
+		if (direccion!==undefined && direccion!==null && direccion.toLowerCase()=="horizontal"){	
+			MiGrafico.axes.xaxis.min=getValMinRatio(min,max,0.05,0.05);
+			MiGrafico.axes.xaxis.max=getValMaxRatio(min,max,0.05,0.05);
+		}else{
+			MiGrafico.axes.yaxis.min=getValMinRatio(min,max,0.05,0.05);
+			MiGrafico.axes.yaxis.max=getValMaxRatio(min,max,0.05,0.05);
+		}	
+	}
+	
+	if (direccion!==undefined && direccion!==null && direccion.toLowerCase()=="horizontal"){	
+		checkDecimalsAxis(MiGrafico,min,max,'X');
+	}else{	
+		checkDecimalsAxis(MiGrafico,min,max,'Y');
+	}
+
+	
+	checkAnimacion(MiGrafico,plotDataAux);
+	
+	
+	
+	/* Si es algún tipo de gráfico de barras, asignamos el ancho de barra a null */
+	if (tipo.toLowerCase().indexOf('barras')>-1)
+		MiGrafico.seriesDefaults.rendererOptions.barWidth = null;
+	
+	/* Creamos el apartado de series */
+	if (!pet_simple){
+		MiGrafico.series = new Array();
+		var pos = 0; // para la traslación dentro del array de series
+		for (var j=0; j<blqSeriesVal.length; j++){
+			for (var k=0; k<blqSeriesVal[j].length; k++){
+				var blq = jQuery.extend(true, {}, graficos[tipo.toLowerCase()]['bloques'][j]);
+				setPropiedad(blq, plotData.series[pos+k]);
+				MiGrafico.series.push(blq);
+			}
+			pos += blqSeriesVal[j].length;
+		}
+	}
+	else{
+		MiGrafico.series=plotDataOrig.series;
+	}
+	
+	/* Añadimos el titulo del gráfico que nos pasan por parámetro */
+	var tituloTabla = "";
+	if($('.cab3').text()!="")
+		tituloTabla = $('.cab3').text();
+	else
+		tituloTabla = $('.cab2').text();
+	if(titulo!="") MiGrafico.title = "<div id=\"tituloTablaGraficoImg\" >"+tituloTabla+"</div><div id=\"tituloGraficoImg\">"+titulo+"</div>";
+	
+	/* */
+	MiGrafico.plotData=plotDataAux;
+	
+	/* Mostramos leyenda si el parámetro pasado lo indica */
+	MiGrafico.legend.show=verLegend;
+	
+	/* Insertamos las categorias o ticks */
+	var listaTicks = [];
+	var valor;
+	var numElemTotal = ($("#"+salida).width()*30)/850;
+	var tamTicks = plotData.ticks.length;
+	var numElem = parseInt(tamTicks/numElemTotal) !=0 ? parseInt(tamTicks/numElemTotal):1;
+	
+	for(var i=0; i<tamTicks;i++){
+		if(i%numElem!=0)
+			valor=" ";
+		else
+			valor = plotDataAux.ticks[i];
+		listaTicks.push(valor);
+	}
+
+	
+	if (direccion!=null && direccion.toLowerCase()=="horizontal"){	
+		MiGrafico.axes.yaxis.ticks=listaTicks;
+	}else{
+		MiGrafico.axes.xaxis.ticks=listaTicks;
+	}
+	
+	if ( $("div.ui-layout-center").size()==1){
+		MiGrafico.height = $("div.ui-layout-center").height()-40;
+		if ( $("#graficoNuevo").size()>=1 ) $("#graficoNuevo").css({ 'height': MiGrafico.height+'px'});
+		if ( $("#tituloGrafico").size()==1 ) MiGrafico.height = MiGrafico.height-$("#tituloGrafico").height();		
+	}
+
+	plot = $.jqplot(salida,plotData.values,MiGrafico);
+
+	mapaGraficos[String(salida)] = plotData;
+
+	if (save){
+		$('#'+salida).prop("tipoGraph",tipo );
+		$('#'+salida).bind('jqplotDataMouseOver', jqplotDataMouseOver_fn);		
+		$('#'+salida).bind('jqplotDataUnhighlight', function (ev) {
+														$('#infoGraph').html('');
+														$('#infoGraph').hide();
+													}
+		);	
+		pintados[salida]={Data:plotData,tipo:tipo};
+	}
+	
+	return plot;
+}
+
+function pintaGraficoHome(v_tipos, salida, plotData, verLegend, titulo, save){
+	var tipog = getTipoGrafico(v_tipos);
+	if (tipog != null){
+		var fdatos, odatos = plotData.values, fseries, oseries = plotData.series;
+		if (graficos[tipog].ntipo == 1){ // si es tipo simple
+			fdatos = odatos;
+			fseries = oseries;
+		}
+		else{ // si es un tipo compuesto
+			if (tipog == "barrasylineas"){
+				fdatos = new Array(2);
+				fdatos[0] = new Array();
+				fdatos[1] = new Array();
+				fseries = new Array(2);
+				fseries[0] = new Array();
+				fseries[1] = new Array();
+				for (var k=0; k<v_tipos.length; k++){
+					if (v_tipos[k]==1){ // si es barras
+						fdatos[0].push(odatos[k]);
+						fseries[0].push(oseries[k]);
+					}
+					else {
+						fdatos[1].push(odatos[k]);
+						fseries[1].push(oseries[k]);
+					}
+				}
+			}
+			if (tipog == "barrasapiylineas"){
+				fdatos = new Array(2);
+				fdatos[0] = new Array();
+				fdatos[1] = new Array();
+				fseries = new Array(2);
+				fseries[0] = new Array();
+				fseries[1] = new Array();
+				for (var k=0; k<v_tipos.length; k++){
+					if (v_tipos[k]==4){ // si es barras apiladas
+						fdatos[0].push(odatos[k]);
+						fseries[0].push(oseries[k]);
+					}
+					else {
+						fdatos[1].push(odatos[k]);
+						fseries[1].push(oseries[k]);
+					}
+				}
+			}
+		}
+		var fplotData = new Array();
+		fplotData.values = fdatos;
+		fplotData.ticks = plotData.ticks;
+		fplotData.series = fseries;
+		if (plotData.config != null)
+			fplotData.config = plotData.config;
+		
+		pintaGraficaDet(tipog, salida, fplotData, verLegend, titulo, save);
+	}
+	else
+		console.log("El array de tipos no corresponde con ningún tipo de gráfico.");
+}
+
+function isObject(val) {
+    if (val === null) { return false;}
+    return ( /*(typeof val === 'function') || */(typeof val === 'object') );
+}
+
+function getConfiguracion (tipo, plotData) {
+	var MiGrafico = jQuery.extend(true, {}, graficos[tipo.toLowerCase()]['prop']);
+	
+	if (plotData.config!=null){
+		var myConfig = plotData.config;
+		var propiedad = "";
+				
+		setPropiedad(MiGrafico, myConfig);
+	}
+	
+	return MiGrafico;
+}
+
+function setPropiedad (MiGrafico, nivel){
+	if (nivel != null){ //Si nivel es nulo, no hacemos nada
+		for (var k in nivel){ // Recorremos el array u objeto 'nivel'
+			if (!Array.isArray(nivel[k]) && !isObject(nivel[k])){ // Si el contenido no es array ni objeto, lo almacenamos
+				if (MiGrafico[k]!=null){ // Si la posición o la propiedad existe, la sobreescribimos
+					MiGrafico[k] = nivel[k];
+				}
+				else {// Si no existe, la creamos y guardamos el valor
+					// Diferenciamos dos casos, pues ampliar un array y ampliar un objeto, no se hace de la misma manera
+					if (Array.isArray(nivel)){ // Si estabamos recorriendo un array
+						MiGrafico.push(nivel[k]);
+					}
+					else { // Si no, era un objeto
+						MiGrafico[k] = nivel[k];
+					}
+				}
+			}
+			else{
+				if (MiGrafico[k]==null){ // Si la posición o la propiedad no existe, la creamos
+					// Diferenciamos dos casos, pues ampliar un array y ampliar un objeto, no se hace de la misma manera
+					if (Array.isArray(nivel)){ // Si estabamos recorriendo un array
+						MiGrafico = [];
+					}
+					else { // Si no, era un objeto
+						MiGrafico[k] = {};
+					}
+				}
+				// Y continuamos leyendo propiedades
+				setPropiedad(MiGrafico[k], nivel[k]);
+			}
+		}
+	}
+}
+
+function guardarGrafico(salida, tituloGrafica) {
+
+	if (anchoDoc==0 || altoDoc==0){
+		anchoDoc = $( document ).width();
+		altoDoc =  $( document ).height();
+	}
+
+	
+	
+	var ancho = (anchoDoc*0.95)-20;
+	var alto =  ((altoDoc*0.95)-20)/2;	
+	var nameGraph="DlgExp_"+salida+"_div";
+		
+			if ($("#"+ nameGraph).length>0){
+				$("#"+ nameGraph).html("");
+				$("#"+ nameGraph).show();
+			}else
+				$("body").append("<div id=\"" + nameGraph +"\" style=\"z-index:0;display:block;position:absolute;top:-" + alto + "px;left:-" + ancho +"px;width:" + ancho + "px;height:" + alto + "px\"></div>");	  
+			
+			var nameGraphImg="DlgExp_"+salida;
+			if ($("#"+ nameGraphImg).length>0){
+				$("#"+ nameGraphImg +" img").attr("src",null);
+			}else{
+				$("body").append("<div id=\""+ nameGraphImg +"\"><img></div>");	  
+				$( "#"+ nameGraphImg).dialog({
+				  title: txtMsgSaveGraph,
+				  autoOpen: false,
+				  closeOnEscape: true,
+				  modal:true,
+				  width: anchoDoc*0.95,
+				  height: altoDoc*0.95
+				});		
+			}
+
+
+		//$( "#DlgExp_"+ salida +"_div" ).html("");
+		//$("#DlgExp_"+ salida +"_div").css("height",'100%');		
+		//$( "#DlgExp_"+ salida ).dialog("open");
+
+	var formatoGrafico;
+		
+	if(pintados[salida]!=undefined){
+		switch(pintados[salida].tipo.toLowerCase()){
+
+			case barrasVerticales:
+				formatoGrafico = jQuery.extend(true, {}, GraphBarras);
+				//formatoGrafico = GraphBarras;
+				formatoGrafico.seriesDefaults.rendererOptions.barWidth = null;
+			break;
+			case barrasHorizontales:
+				formatoGrafico = jQuery.extend(true, {}, GraphBarrasHorizontales);
+				formatoGrafico.seriesDefaults.rendererOptions.barWidth = null;
+			break;
+			default:
+			formatoGrafico = jQuery.extend(true, {}, GraphLineas);
+			break;
+		}
+	
+		formatoGrafico.seriesColors = objJplot.seriesColors;
+
+		//pintaGraficaDet(pintados[salida].tipo,nameGraph,pintados[salida].Data,true, tituloGrafica,false);
+		pintaGraficaDetPublic(pintados[salida].tipo,nameGraph,nameGraph,
+		pintados[salida].Data,true,tituloGrafica,false,false,false,
+		null,formatoGrafico);
+	//	pintaGraficaDetPublic(tipo,salidaOriginal, salida,plotData,verLegend,titulo,save, showAllTicks, ordenaDatos, sortFunction, formatoGrafico) {
+		//movemos el label
+		$(".jqplot-table-legend").css("top",alto + 'px');
+		//$("body").append("<div id=\"DlgExp_"+ salida +"\" ><span>" + txtMsgSaveGraph +"</span><img style=\"width:100%\"></div>");	  
+		guardarGraficoImg("#" + nameGraph,"#"+ nameGraphImg+ " img",tituloGrafica);
+		//---$("#"+ nameGraph).hide();
+		$( "#"+ nameGraphImg ).dialog("open");
+		/*var myWindow = window.open("","MsgWindow","width=800,height=600");
+			myWindow.document.write($("#DlgExp_"+ salida).html());		*/
+		//$("#DlgExp_"+ salida).html("");
+		//$("#DlgExp_"+ salida).css("height",'0px');
+	}else
+		alert("Debe de pulsar el botón de graficar para poder descargar el gráfico generado");
+}
+   
+function guardarGraficoImg(Grafico,img,tituloTabla) {      
+	 //$(Grafico).show();
+	  var imgData = $(Grafico).jqplotToImageStr({});  
+	  var imgElem = $(img).attr('src',imgData);
+
+	/*  var w = window.open();
+	  $(w.document.body).html("<p>"+tituloTabla+"</span></p>");
+	  $(w.document.body).append(imgElem[0]);*/
+	  
+	 // $(Grafico).hide();
+	   
+}
+
+function grafico_cumpleRequisitos() {
+	return is.ieVersion>6 || !is.IE
+}
+
+$(document).ready(function(){			
+	if ($("#infoGraph").length<=0){
+		$("body" ).append("<div id=\"infoGraph\"></div>");
+	}		
+});
+
+/*****************************************************************
+* Función: 
+*	activaScrollBar
+*
+* Descripción:
+* 	Función que que activa los eventos del scroll, fijando los ejes correspondientes
+*	para que se mantengan constantes mientras se recorre el gráfico.
+*
+* Parámetros:
+*	+reduceObj: objeto que contiene dos valores, width y height, para reducir el gráfico
+		según la posición del scroll (para que no lo pise)
+*	+m_destino: div del html sobre el que se mostrará el gráfico
+*	+m_tipo: define el tipo de gráfico. 
+*		Valores: "barrasHorizontales" / "barrasVeritcales" / "lineas"
+*	+paddingTopAxis: número de pixeles que tendrá el eje correspondiente
+*
+******************************************************************/
+function activaScrollBar(reduceObj, m_destino, m_tipo, paddingTopAxis) {
+
+		var flag =false;//bandera para calculo de fin de scroll
+		var axis = "axis";
+
+		// Se reduce el gráfico un 90% (la altura o la anchura según el tipo de gráfico)
+		// para que el scrollbar no lo pise encima
+
+		if(m_tipo.toLowerCase() == barrasHorizontales){
+			reduceObj.width = 0.9;
+			$('head').append( "<style> #"+m_destino+"{ overflow-x : hidden; overflow-y : visible;}</style>");
+
+			/*De esta forma el eje que se quedará constante al mover el scrollbar quedará por encima de todo el gráfico*/
+			$('head').append( "<style> #"+m_destino+" .jqplot-xaxis{ z-index: 99999; background-color: white;} </style>" );
+			$('head').append( "<style> #"+m_destino+" .jqplot-yaxis{ z-index: 88888; background-color: white;} </style>" );
+		}
+
+		else if(m_tipo.toLowerCase() == barrasVerticales || m_tipo.toLowerCase() == lineas){
+			reduceObj.height = 0.98;
+			$('head').append( "<style> #"+m_destino+"{ overflow-y : hidden; overflow-x : visible;}</style>");
+
+			/*De esta forma el eje que se quedará constante al mover el scrollbar quedará por encima de todo el gráfico*/
+			$('head').append( "<style> #"+m_destino+" .jqplot-yaxis{ z-index: 99999; background-color: white;} </style>" );
+			$('head').append( "<style> #"+m_destino+" .jqplot-xaxis{ z-index: 88888; background-color: white;} </style>" );
+		}
+
+		//instanciamos el evento del scroll
+		$( '#' + m_destino ).scroll(function() {
+
+
+			$(this).find(".jqplot-yaxis").css("left",$(this).scrollLeft());  
+
+
+			var valor_max = $( '#' + m_destino +"> div").height() - document.getElementById(m_destino).clientHeight;//$( '#' + m_destino ).find('#' + $('#' + m_destino).context[m_destino]).height() -$('#' + m_destino).height();
+			// numero magico 10
+			var valor_top =  document.getElementById(m_destino).clientHeight-($('#' + m_destino).find(".jqplot-xaxis").outerHeight()+paddingTopAxis)+$(this).scrollTop();
+
+			if($(this).scrollTop() > (valor_max-5))
+			{
+				if(flag == false)
+				{
+					
+
+					$(this).find(".jqplot-xaxis").css("top",valor_top);  
+					flag = true;
+				}
+				
+			} 
+			else if($(this).scrollTop() < (valor_max-5)){
+				
+				$(this).find(".jqplot-xaxis").css("top",valor_top);  
+				flag = false;
+			}
+
+
+
+		});
+}
+
+function pintaScrollLienzo(m_tipo,  m_destino_ori, m_hFinal, m_wFinal, showScroll, ordena, sortFunction, grafico, MAX_DIV,response) {
+
+
+	var showScrollBool;
+
+	if((typeof showScroll).toLowerCase() == "string")
+		showScrollBool = (showScroll == "true");
+	else
+		showScrollBool = showScroll;
+
+	var formatoGrafico;
+ 
+ 	// Este switch permite seleccionar un formato de gráfico específico
+ 	// pasado como parámetro o por el contrario utilizar utilizar el estándar
+	if(grafico!=null) 
+		response.config = grafico;
+
+	/*else{
+
+		switch(m_tipo.toLowerCase()){
+
+			case barrasVerticales:
+				formatoGrafico = GraphBarras;
+			break;
+			case barrasHorizontales:
+				formatoGrafico = GraphBarrasHorizontales;
+			break;
+			default:
+				formatoGrafico = GraphLineas;
+			break;
+
+		}
+	}
+
+	// Clona el formato de gráfico para no modificar el original, a partir de este momento
+	// se hará uso de esta variable
+	var miFormato = jQuery.extend(true, {}, formatoGrafico);*/
+
+	/* Asociamos propiedades al gráfico */
+	var miFormato = getConfiguracion(m_tipo, response);
+
+	// Si el navegador es IE 7 o menor y el gráfico es de barras
+	// renderiza como antes, sin poner scroll
+	var navegador = get_browser_info();
+	if(navegador.name.toLowerCase() == "msie" &&  parseInt(navegador.version)<= 7 &&
+		(m_tipo.toLowerCase() == barrasHorizontales || m_tipo.toLowerCase() == barrasVerticales )
+		|| m_tipo.toLowerCase() == lineas)
+	{
+		miFormato.seriesDefaults.rendererOptions.barWidth = null;
+		showScroll = false;
+	}
+
+
+	var m_destino = m_destino_ori;
+
+
+	var reduceObj = { width : 1, height : 1 };
+		
+	if(showScrollBool){
+
+		if (m_tipo.toLowerCase() == barrasHorizontales && 
+			miFormato.seriesDefaults.rendererOptions.barWidth != null) {
+
+			// Calcula la altura del gráfico teniendo en cuenta la
+			// anchura de las barras, su margen y padding
+			var m_hfinal = 0;
+
+			m_hfinal = ((miFormato.seriesDefaults.rendererOptions.barWidth * response.series.length)
+					     + (miFormato.seriesDefaults.rendererOptions.barPadding
+							 * response.series.length * 2) 
+					     + 
+						   (miFormato.seriesDefaults.rendererOptions.barMargin * 2))
+					   * response.ticks.length;
+
+			m_hfinal = Math.min(MAX_DIV, m_hfinal);// la altura va a
+													// ser el minimo
+													// valor entres los
+													// 2 valores.
+			// Si la altura calculada es mayor que la altura del div se
+			// actualiza su valor
+			if (m_hfinal > m_hFinal) {
+				m_destino = "div_lienzo" + parseInt(Math.random()*5000);//
+				m_hFinal = m_hfinal;
+
+			} else {
+
+				miFormato.seriesDefaults.rendererOptions.barWidth = null;
+		
+				showScrollBool = false;
+
+			}
+
+		} 
+		else if (m_tipo.toLowerCase() == barrasVerticales
+				&& miFormato.seriesDefaults.rendererOptions.barWidth != null) {
+
+			// Calcula la anchura del gráfico teniendo en cuenta la
+			// anchura de las barras, su margen y padding
+			var m_wfinal = 0;
+
+			m_wfinal = ((miFormato.seriesDefaults.rendererOptions.barWidth * response.series.length)
+					+ (miFormato.seriesDefaults.rendererOptions.barPadding
+							* response.series.length * 2)
+					+ (miFormato.seriesDefaults.rendererOptions.barMargin * 2) + 30)
+					* response.ticks.length;
+
+			Math.min(MAX_DIV, m_wfinal); // la anchura va a ser el
+											// minimo valor entres los 2
+											// valores.
+			// Si la anchura calculada es mayor que la anchura del div
+			// se actualiza su valor
+			if (m_wfinal > m_wFinal) {
+				m_destino = "div_lienzo" + parseInt(Math.random()*5000);//
+				m_wFinal = m_wfinal;
+
+			} else {
+
+
+				miFormato.seriesDefaults.rendererOptions.barWidth = null;
+				showScrollBool = false;
+			}
+
+		} 
+		else if(m_tipo.toLowerCase() == lineas) {
+		
+			var m_wfinal = 0;
+
+			m_wfinal = (4 * response.series.length)
+					+ (1 * 2)
+					+ ((4 * 2) + 30)
+					* response.ticks.length;
+
+			Math.min(MAX_DIV, m_wfinal); // la anchura va a ser el
+											// minimo valor entres los 2
+											// valores.
+			// Si la anchura calculada es mayor que la anchura del div
+			// se actualiza su valor
+			if (m_wfinal > m_wFinal) {
+				m_destino = "div_lienzo" + parseInt(Math.random()*5000);//
+				m_wFinal = m_wfinal;
+
+			} else {
+
+
+				showScrollBool = false;
+			}
+		}
+	}
+	else{
+
+		if (m_tipo.toLowerCase()==barrasHorizontales || m_tipo.toLowerCase()==barrasHorizApiladas){
+
+			miFormato.seriesDefaults.rendererOptions.barWidth = null;
+
+		}
+		else if (m_tipo.toLowerCase() == barrasVerticales){
+			
+			miFormato.seriesDefaults.rendererOptions.barWidth = null;
+
+		}
+
+	}
+
+
+	$('#' + m_destino_ori).html('');
+
+	if (!jQuery.isEmptyObject($(response).prop("values"))) {
+
+		if (showScrollBool) {
+
+			activaScrollBar(reduceObj, m_destino_ori , m_tipo, 10);
+				$('#' + m_destino_ori).append(
+					"<div id=\"" + m_destino + "\" style=\"width:"
+							+ (m_wFinal * reduceObj.width)
+							+ "px;height:"
+							+ (m_hFinal * reduceObj.height)
+							+ "px\"></div>");
+				
+
+		}
+
+			objJplot = pintaGraficaDetPublic(m_tipo, m_destino_ori, m_destino, response, response.legend, "", true, 
+				showScrollBool, ordena, sortFunction, miFormato);
+
+		// el numero magico 10 deberia ser la variable padding
+		var valor_top = document.getElementById(m_destino_ori).clientHeight
+				- ($('#' + m_destino_ori).find(".jqplot-xaxis")
+						.outerHeight() + 10)/* +$(this).scrollTop() */;
+
+		$('#' + m_destino_ori + ">div").find(".jqplot-xaxis").css(
+				"top", valor_top);
+
+	} else
+		$('#' + m_destino_ori).html(
+				"No hay series para los valores seleccionados");
+
+
+	return objJplot;
+
+}
+
+function get_browser_info() {
+    var ua=navigator.userAgent,tem,M=ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || []; 
+    if(/trident/i.test(M[1])){
+        tem=/\brv[ :]+(\d+)/g.exec(ua) || []; 
+        return {name:'IE ',version:(tem[1]||'')};
+        }   
+    if(M[1]==='Chrome'){
+        tem=ua.match(/\bOPR\/(\d+)/)
+        if(tem!=null)   {return {name:'Opera', version:tem[1]};}
+        }   
+    M=M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+    if((tem=ua.match(/version\/(\d+)/i))!=null) {M.splice(1,1,tem[1]);}
+    return {
+      name: M[0],
+      version: M[1]
+    };
+}
+
+
+
+

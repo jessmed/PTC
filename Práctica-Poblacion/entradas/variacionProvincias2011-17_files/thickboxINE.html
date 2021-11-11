@@ -1,0 +1,234 @@
+/*
+LIBRERIA PARA VISUALIZAR THICKBOX
+*/
+
+var propDialogThickboxINE;
+
+function trataPorc(value,basePorc)
+{
+	if (value!=null){
+		pos=value.lastIndexOf("%");
+		if (pos==value.length){
+			return (Integer.parseInt(value.substr(0,pos))/100) * basePorc;
+		}	
+	}
+	return value;
+}
+
+function getPropFromUrl(miurl){
+	var detalle={
+	width:null,
+	heigth:null
+	};
+	var pos=miurl.indexOf("?");
+	if(pos==-1)
+	  pos=miurl.length;
+	else 
+	  pos++;
+	var query=miurl.substring(pos,miurl.length);
+	
+	var valvalue="";
+	var newquery="";
+	if (query.length>0){
+	   var n=query.split("&");
+	   for (var i=0;i<n.length;i++){
+	   	valvalue = n[i].split("=");
+	   	if (valvalue[0]=="width")
+			detalle.width=trataPorc(valvalue[1], $(document).width());
+	   	else if (valvalue[0]=="height") 
+	   		detalle.height=trataPorc(valvalue[1], $(document).height());  	   				
+		else if (valvalue[0]=="position") 
+	   		detalle.position=valvalue[1];  
+		else if (valvalue[0]=="ratio") 
+	   		detalle.ratio=valvalue[1];  			
+	   }
+	}
+	return detalle;
+}
+
+function tbINE_click(){
+	var tipo;
+	var form;
+	var titulo = this.title || this.name || null;
+	var url=null;
+	if ($(this).prop("tagName").toLowerCase()  == "a") {	
+		url = $(this).prop("href");		
+		url+=url.indexOf("?")>0 ? "&" : "?";
+		if(url.indexOf("nocab=1")<=0)
+			url+="nocab=1";
+		else
+			url=url.substr(0,url.length-1);
+		$(this).prop("href",url);	
+		$(this).prop("target","thickBoxINEfrm");	
+		tipo=1;
+	}
+	if ($(this).prop("tagName").toLowerCase()  == "button" || $(this).prop("tagName").toLowerCase()   == "input" ) {
+		form=$(this).parents('form:first');
+		url=$(form).prop("action");						
+		url+=url.indexOf("?")>0 ? "&" : "?";
+		if(url.indexOf("nocab=1")<=0)
+			url+="nocab=1";
+		else
+			url=url.substr(0,url.length-1);			
+		$(form).prop("action",url);
+		$(form).prop("target","thickBoxINEfrm");
+		tipo=2;
+		url+=url.indexOf("?")>0 ? "&" : "?";
+		propi=$(form).attr("tb");
+		url+=propi;
+	}			
+	return tbINE_showData(titulo,tipo, this, form, getPropFromUrl(url));
+}
+//add thickbox to href & area elements that have a class of .thickbox
+function tbINE_init(domChunk){
+	$(domChunk).click(tbINE_click);
+}
+
+function tbINE_initChild(parent){
+	$(parent).find(defTickBoxType).click(tbINE_click);
+}
+
+function autoResizeThickBox(obj){	
+try{
+	//Si el contenido es mas pequeño ajustamos la ventana
+	var url=$(obj).contents().prop("location").href;//$(obj).contents().prop("baseURI")
+	if (url!=null  && url!="about:blank" ){
+		var docHeight=$(obj).contents().children("html").prop("offsetHeight");
+		aux=Math.round($("#thickBoxINE" ).parent().innerHeight() -$("#thickBoxINE" ).outerHeight());	
+		
+		if (docHeight<propDialogThickboxINE.height){	
+			ocultarLoading();
+
+			var heightFinal=docHeight+aux;
+			var topFinal=($(window).innerHeight()-heightFinal)/2;
+			if (docHeight>0){
+				$( "#thickBoxINE" ).height(docHeight);
+				$( "#thickBoxINE" ).parent().height(heightFinal);
+				$( "#thickBoxINE" ).parent().css("top",topFinal);
+			}
+			
+			$( "#thickBoxINE" ).css("overflow","hidden");	
+			$( "#thickBoxINE" ).parent().hide();
+			$( "#thickBoxINE" ).parent().css("opacity",1);		
+			$( "#thickBoxINE" ).parent().fadeIn(200);		
+		}else{
+			 mostrarContenido(obj);
+
+
+		}		
+	}
+}catch(e){
+	 ocultarLoading();
+}
+}
+
+function mostrarContenido(obj){
+	var url=$(obj).contents().prop("location").href;//$(obj).contents().prop("baseURI")
+	if (url!=null  && url!="about:blank" ){
+		ocultarLoading();
+		$( "#thickBoxINE" ).parent().css("opacity",1);				
+	}
+}
+
+function autoResizeFrame(obj){	
+//Cambia el tamaño del iframe para que se vea el scroll del thickbox y no el del iframe
+	if ($(obj).contents().prop("baseURI")!=null  && $(obj).contents().prop("baseURI")!="about:blank" ){
+		var docHeight=$(obj).contents().children("html").prop("scrollHeight");
+		$(obj).css("overflow","hidden");		
+		$(obj).height(docHeight);
+	}
+}
+
+function tbINE_show(titulo, tipo, url, form, prop ) {
+	tbINE_showData(titulo, tipo, null, form, prop );
+	open(url,"thickBoxINEfrm");
+
+}
+
+function tbINE_showData(titulo, tipo, target, form, prop ) {//function called when the user clicks on a thickbox link
+  try {		
+	if (tipo>0){
+		MostarLoading();
+		if ($( "#thickBoxINE" ).length>0){
+			$( "#thickBoxINE" ).remove()
+		}
+		$("body").append("<div id=\"thickBoxINE\" ></div>");	  			
+		aux="<iframe title=\"Contenido emergente - Rising content\" id=\"thickBoxINEfrm\" name=\"thickBoxINEfrm\" frameborder=\"0\" width=\"100%\" height=\"100%\" marginheight=\"0\" marginwidth=\"0\"";
+		aux+=" onload=\"";
+		if (prop.height==null && prop.width==null) 
+			aux+=";autoResizeThickBox(this)";
+		else
+			aux+=";mostrarContenido(this)";
+		aux+="\"";
+		aux+= "></iframe>";
+		$("#thickBoxINE").append(aux);
+		$("#thickBoxINE").hide();
+
+		var ratio=0.5;
+		if (prop.ratio!=null)
+			ratio=prop.ratio;
+		var ancho = $(window).width()*ratio;
+		var alto = $(window).height()*ratio;
+		var propPosition={my: 'left top', at: 'right top'};
+		if (target!=null)
+			propPosition.of= $(target).children().length>0 ? $(target).children().last() : target;
+		
+		var propDialog = {	
+			  open :  function( event, ui ) {
+				  $(this).parent().css("opacity",0.001);
+				  },
+			  position: propPosition,		
+			  autoOpen: true,
+			  title:titulo,
+			  closeOnEscape: true,
+			  modal:true,
+			  resizable: false,
+			  height:  alto,
+			  width:  ancho,			  
+				hide: {
+					effect: 'fade',
+					duration: 200 //at your convenience
+				}
+			};
+		
+		if (target!=null)
+			propDialog.position={at: prop.position, of: window};
+		
+		if (prop.height!=null)
+			propDialog.height=prop.height ;
+		if (prop.width!=null)
+			propDialog.width=prop.width ;	
+		if (prop.position!=null)			
+			propDialog.position={at: prop.position, of: window};
+		
+
+		$("#thickBoxINE" ).dialog(propDialog);	
+		propDialogThickboxINE=propDialog;	
+		
+		return true;
+	}
+  } catch(e) {
+	ocultarLoading();
+	console.log(e);
+  }
+}
+
+function tb_remove() {
+	if ($( "#thickBoxINE" ).length>0){
+		$("#thickBoxINE").dialog( "close" );	
+		//$( "#thickBoxINE" ).remove();
+	}
+	return true;
+}
+
+/*Cargamos la funcionalidad en aquellos elementos indicados
+ othethickbox= Utilizado para
+*/
+var defTickBoxType="a.thickbox, area.thickbox, input.thickbox, button.thickbox";
+$(document).ready(function(){  
+	if (String(othethickbox).length==0) 
+		tbINE_init(defTickBoxType);//pass where to apply thickbox
+	else 
+		tbINE_init(defTickBoxType + othethickbox);//pass where to apply thickbox
+});
+

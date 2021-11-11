@@ -1,0 +1,1781 @@
+var heightMapOrig = "";  //Variable para guardar el tamaño original de la capa de selección del mapa
+var heightGrafOrig = "";  //Variable para guardar el tamaño original de la grafica
+var widthGrafOrig = "";  //Variable para guardar el tamaño original de la grafica
+var capaHeightGrafOrig = "";  //Variable para guardar el tamaño original de la grafica
+var capaWidthGrafOrig = "";  //Variable para guardar el tamaño original de la grafica
+var notas = "";
+
+var svg_selected = null;
+var paleta_colores;
+var graficoSelected;
+var svg_selec;
+var svg_selec_index;
+var baseUrl;
+
+function resizeTabGraph(){
+
+	$("#graficoNuevo").height($('#graph').height()- $('#graph .gFtitulo').height());
+	$("ul.checkItem" ).height(0);
+
+	var altoContent=$( "#tabs-grafico .ui-layout-west .gFContenido" ).height()
+	val=altoContent-$( "#accordion1" ).height()-$('#tabs-grafico .ui-layout-west .gFtitulo').height()-2;//- $('#capaBotonGrafica').height()-2;
+	if (val<100)
+		$("ul.checkItem" ).css({"height": "100px"});
+	else 
+		$("ul.checkItem" ).css({"height": val +"px"});
+		
+}
+
+
+function resizeTabMapa(calculoPorc){
+		$("#btnDescargaForm").hide();
+		$("#descargaGrafico").hide();
+		if(descargaMapa=='1'){
+			$("#descargaMapa").show();
+		}
+		//$("ul.checkItemMapa" ).height(0);
+		var altoContent=$( "#tabs-mapa .ui-layout-west .gFContenido" ).height();
+		val=altoContent-$( "#capaSelecMapa" ).height()-$('#tabs-mapa .ui-layout-west .gFtitulo').height()- $('#capaBotonMapa').height()-2;
+		if(heightMapOrig==''){						
+			if (val<100)
+				$("ul.checkItemMapa" ).css({"height": "100px"});
+			else {
+				$("ul.checkItemMapa" ).css({"height": val +"px"});
+				heightMapOrig = val;
+				}
+		}else{
+			if (val>heightMapOrig)
+				$("ul.checkItemMapa" ).css({"height": val +"px"});
+			else
+				$("ul.checkItemMapa" ).css({"height": heightMapOrig +"px"});
+		}
+
+/*
+		$.each($("#capaSelecMapa").children(), function( index, value ) {		
+			if($(value)[0].style.display=="block"){
+				$("#capaSelecMapa").accordion('option', 'active', index);
+				return false;
+			}
+		});	
+*/
+		if (calculoPorc){
+			var porc = calculaResize("DivMapa");									
+			d3.select("#DivMapa svg g").attr("transform","matrix("+porc+",0,0,"+porc+",0,0)")
+		}	
+}
+
+function muestraMapa(){								
+	$( "#mapaForm" ).submit();
+}
+
+function maximizeTab(){
+		var target = "";
+		var tabSelec = $('#tabs').tabs('option', 'active');
+
+		//titulo = $('#tituloTabla').text();
+		if($('.cab3').text()!="")
+			titulo = $('.cab3').text();
+		else
+			titulo = $('.cab2').text();			
+		if (tabSelec==0){ 
+				target = "#tabs-tabla";
+			}else if (tabSelec==1){
+				target = "#tabs-grafico";
+			}else if (tabSelec==2){
+				target = "#tabs-mapa";
+			}
+
+		if(target=="#tabs-grafico"){
+			if (heightGrafOrig=="") heightGrafOrig=$("#graficoNuevo").height();
+			if (capaHeightGrafOrig=="") capaHeightGrafOrig=$(target+" .ui-layout-center").height();
+		}else if(target=="#tabs-mapa"){
+			if (heightGrafOrig=="") heightGrafOrig=$("#ContentMapa").height();
+			if (capaHeightGrafOrig=="") capaHeightGrafOrig=$(target+" .ui-layout-center").height();
+			if (capaWidthGrafOrig=="") capaWidthGrafOrig=$(target+" .ui-layout-center").width();
+		}
+		
+		 $(target).dialog({	
+			  width: $( document ).width()-20,
+              height: $( document ).height()-20,			 
+			  autoOpen: true,
+			  title:titulo,
+			  draggable: false,
+			  closeOnEscape: false,
+			  modal:true,
+			  resizable: false,			  
+			  open: function(event, ui) {
+					if (target=='#tabs-grafico'){
+						$(target+" .ui-layout-center,.ui-layout-west").css({'height': $(window).height()-$("#tituloGrafico").height()-60});					
+						//$(target+" .ui-layout-center").css({'height': $(window).height()-$("#tituloGrafico").height()-60});
+						//$("#graficoNuevo").css({'height': $(window).height()-$("#tituloGrafico").height()-100});
+						//pintarGrafica();
+						resizeTabGraph();
+						$( "#graficar" ).trigger("click");
+					}else if (target=='#tabs-mapa'){						
+						$(target+" .ui-layout-center,.ui-layout-west").css({'height': $(window).height()-80});	
+						$(".ui-accordion, .ui-accordion-content").css({'padding': '0em 0.2em'});	
+						resizeTabMapa(false);//$( "#mapaForm" ).submit();
+					}								
+					$(target+' .ui-dialog-titlebar-close').html("<img src=\"" + HM_Menu_Dir +"/img/minimizar_flecha_16x16.gif\" title=\""+Txt_Tooltip_minimizar+"\" alt=\""+Txt_Tooltip_minimizar+"\">");
+					},
+			  close: function(event, ui)
+		        {
+					if (target=='#tabs-tabla'){ 
+						$(target).css({'height': + getMinHeight() +'px'});
+					}else if(target=='#tabs-grafico'){				
+						$(target).css({'height':  $('#tabs-tabla').css('height')});						
+						$(target+" .ui-layout-center,.ui-layout-west").css({'height': capaHeightGrafOrig});
+						//$("#graficoNuevo").css({'height': heightGrafOrig});						
+						//pintarGrafica();						
+						resizeTabGraph();
+						$( "#graficar" ).trigger("click");
+		            }
+					else if(target=='#tabs-mapa'){
+						$(target).css({'height':  $('#tabs-tabla').css('height')});											
+						$(target+" .ui-layout-center, .ui-layout-west").css({'height': capaHeightGrafOrig});
+						$("#ContentMapa").css({'width': capaWidthGrafOrig});
+						resizeTabMapa(false);
+					}
+					$(this).dialog('destroy');
+					$(this).show();					
+				}	            
+			});
+
+	}	
+	
+	function resizeTabs(){
+			if ( scr_h==null || scr_w==null || (scr_h-$(window).height())>50 
+				|| (scr_h-$(window).height())<-50
+				|| (scr_w-$(window).width())>50
+				|| (scr_w-$(window).width())<-50
+			){
+				scr_h= $(window).height();
+				scr_w= $(window).width();			
+				if ($(".ui-dialog").size()!=1){	
+					//Redimensiono la tabla en función de la resolución de la pantalla para no hacer scroll en la página				
+					$('#tabs-tabla').css({'height': + getMinHeight() +'px'});
+					//$('#tabs-tabla> *').css({'height': + getMinHeight() +'px'});
+					//Redimensiono la tabla en función de la resolución de la pantalla para no hacer scroll en la página
+					
+					if (graficoEnabled=='1'){
+						$('#tabs-grafico').css({'height':  $('#tabs-tabla').css('height')});
+						$('#tabs-grafico> *').css({'height':  $('#tabs-tabla').css('height')});
+						//$("#tabs-grafico").css({"height":scr_h-25+"px", "width":scr_w-25+"px"});
+					}
+					
+					if ( mapaEnabled=='1' && hayMapa){
+						$('#tabs-mapa').css({'height':  $('#tabs-tabla').css('height')});
+						$('#tabs-mapa> *').css({'height':  $('#tabs-tabla').css('height')});
+					}
+					if(objJplot!=null ){
+						divContent=$('#graficoNuevo').parents("div.ui-layout-center")[0];
+						$('#graficoNuevo').css({'height': $(divContent).height()-30+"px", 'width': $(divContent).width()-30+"px"});
+						//objJplot.replot( {resetAxes: true } );					
+						pintarGrafica();
+					}
+				}else{
+					$( ".ui-dialog" ).css({"width":scr_w+"px","height":scr_h+$("#tituloGrafico").height()+"px"});
+					$("#tabs-grafico").css({"height":scr_h-25+"px"});
+					$('#graficoNuevo').css({'height': scr_h-$("#tituloGrafico").height()-30+"px"});
+				}
+			}		
+	}	
+	
+	
+	
+	function showNotas(titulo,target){
+	
+		 $("#capaListadoNotas" ).dialog({
+			  position:{my: 'left top', at: 'right top', of: target},		
+			  autoOpen: true,
+			  title:titulo,
+			  closeOnEscape: true,
+			  modal:true,
+			  resizable: false				  
+			});
+	
+	}
+	
+	function showListaMetodologia(titulo,target){
+		
+		 $("#capaListaMetodologia" ).dialog({
+			  position:{my: 'left top', at: 'right top', of: target},		
+			  autoOpen: true,
+			  title:titulo,
+			  closeOnEscape: true,
+			  modal:true,
+			  resizable: false				  
+			});
+	
+	}		
+
+
+
+	function hideGraphIconDownload()
+	{
+	 	if(descargaGrafico=='1'){
+			$("#descargaGrafico").hide();
+	 	}
+	 	if(descargaMapa=='1'){
+			$("#descargaMapa").hide();
+	 	}		
+	 	$("#btnDescargaForm").show();
+	}	
+
+	function descargaTab()
+	{
+		var tabSelec = $('#tabs').tabs('option', 'active');
+		if (tabSelec==1){
+        	var titulo = $('#tituloGrafico').text();
+        	//var tituloTabla = $('#tituloTabla').text();
+			
+			//guardarGrafico('graficoNuevo', titulo,$("#tituloTabla").text());
+	        guardarGrafico('graficoNuevo', titulo);
+		}else if (tabSelec==2){
+			guardarMapa('mapa');
+		}
+	}
+	
+	function iluminarFondo(objeto)
+	{
+		
+		$(objeto).addClass("ilumina");
+		if (numTotalCeldasDat>0 && numTotalCeldasDat<maxCeldasJs){
+			  
+			  var fila=$(objeto).parents("tr");
+			  var idxCol=$(objeto).prop("cellIndex");
+			  var celdas=$(fila).prop("cells");
+			  for (var i =0;i<celdas.length;i++){
+				  $(celdas[i]).addClass("ilumrest");
+			  }
+			  var tabla=$(objeto).parents("table");	
+			  var filas=$(tabla).prop("rows");
+			  for (var i =0;i<filas.length;i++){
+				  celdas=$(filas[i]).prop("cells");
+				  if (celdas.length>=idxCol && $(filas[i].cells[idxCol]).prop("nodeName")=="TD")
+					  $(filas[i].cells[idxCol]).addClass("ilumrest");
+			  }
+		}
+	} 
+	
+	function desiluminarFondo(objeto)
+	{
+		
+		$(objeto).removeClass("ilumina");
+		if (numTotalCeldasDat>0 && numTotalCeldasDat<maxCeldasJs){	
+			var fila=$(objeto).parents("tr");
+			  var idxCol=$(objeto).prop("cellIndex");
+			  var celdas=$(fila).prop("cells");
+			  for (var i =0;i<celdas.length;i++){
+				  $(celdas[i]).removeClass("ilumrest");
+			  }
+			  var tabla=$(objeto).parents("table");	
+			  var filas=$(tabla).prop("rows");
+			  for (var i =0;i<filas.length;i++){
+				  celdas=$(filas[i]).prop("cells");
+				  if (celdas.length>=idxCol && $(filas[i].cells[idxCol]).prop("nodeName")=="TD")
+					  $(filas[i].cells[idxCol]).removeClass("ilumrest");
+			  }
+			  
+		}
+	}
+
+	function tableClickPx(event){
+			var target=event.srcElement!=null? event.srcElement : event.target!=null ? event.target: event.toElement ? event.toElement : null;
+			if (target!=null){
+				if ($(target).hasClass( "sd" ) || $(target).hasClass( "sdn" ))
+					showInfoPx(event,target);
+			}				
+	}
+
+
+	
+	function tableClick(event){
+			var target=event.srcElement!=null? event.srcElement : event.target!=null ? event.target: event.toElement ? event.toElement : null;
+			if (target!=null){
+				if ($(target).hasClass( "sd" ) || $(target).hasClass( "sdn" ))
+					showInfo(event,target);
+			}				
+	}
+	
+	function tableOver(event){
+			var target=event.srcElement!=null? event.srcElement : event.target!=null ? event.target: event.toElement ? event.toElement : null;
+			if (target!=null){
+				if ($(target).hasClass( "sd" ) || $(target).hasClass( "sdn" ))
+					iluminarFondo(target);
+			}	
+	}
+	
+	function tableOut(event){
+			var target=event.srcElement!=null? event.srcElement : event.target!=null ? event.target: event.toElement ? event.toElement : null;
+			if (target!=null){
+				if ($(target).hasClass( "sd" ) || $(target).hasClass( "sdn" ))
+					desiluminarFondo(target);		
+			}
+	}
+	
+	 function ajaxDataRenderer(url) {
+			var ret = null;
+			$.ajax({
+			  // have to use synchronous here, else the function 
+			  // will return before the data is fetched
+			  async: false,
+			  url: url,
+			  dataType:"json",
+			  success: function(data) {
+				ret = data;
+			  }
+			});
+			return ret; 
+		  };	
+		  
+	function getMinHeight(){
+		valor = $(window).height()-385;
+		if (valor <200)
+			valor=200;
+		return valor;
+	}
+	
+  function cambiarPlusMinus(obj){
+		if ($(obj).is( ".borderSeccionMinus" ) ) {			    		 
+			$(obj).removeClass( "borderSeccionMinus" );
+			$(obj).addClass( "borderSeccionPlus" );
+		}else{
+			$(obj).removeClass( "borderSeccionPlus" );
+			$(obj).addClass( "borderSeccionMinus" );			    		
+		}
+	}
+	
+	// Elimina los inputs de tipo hidden que indican un color, de aquellas opciones que no estén chequeadas
+	function limpiaColores()
+	{
+		$.each($( ".labelcheck input[name="+$(objVarMultiple).prop("name")+"]" ).parent(), function( index, value ) {
+			if (!this.children[0].checked){
+					$(this).siblings("input[name='p_widget_color']").each(function( index ) {
+						  $( this ).remove();
+					});
+			}
+		});
+	}
+	
+	
+	function changeCheck(checkBox){
+	  var vuelta=null;
+	  if(checkBox!==undefined && checkBox!=null) {
+		vuelta = validarChecks(checkBox);
+		if(!checkBox.checked) {
+			var criterio = $(checkBox).prop("name");
+			var toRemove = 'cri';
+			var cri = criterio.replace(toRemove,'');
+			var variable;
+			for(var i=0; i<listaVariables.length;i++)
+			{
+				if(listaVariables[i]==cri){
+					variable=listaVariables[i];
+				}
+			}	
+			var tam;
+			//Borramos la opción de ambos combos en caso de que tengamos menos de dos opciones checkeadas
+			if (variable!=undefined){
+				tam = $( ".labelcheck input[name='cri"+variable+"']:checked" ).length;
+				if(tam<2){
+					$("#columnas_grafico option[value="+$(checkBox).prop("name")+"]").remove();
+					if ($("#columnas_grafico option").length<2)
+						$('#capa_columnas_grafico').hide();
+					$("#ejeHorizontal option[value="+$(checkBox).prop("name")+"]").remove();
+				}
+			}
+		}
+		//limpiaColores();
+	  }
+	  return vuelta;
+	}
+	
+	var estadoOkCheck=true;
+	var isSelectedMultiple=false;
+	function selectCheckGaf(valor,nombre){		
+	  try{
+		estadoOkCheck=true;
+		var search="name";
+		if (nombre=='operCheck') search="id";
+		isSelectedMultiple=true;
+		$( ".labelcheck input["+search+"='" + nombre +"']" ).each(function()
+				{		
+					if  (estadoOkCheck){
+						this.checked=valor;
+						$(this).trigger( "change" );
+					}else
+						return;
+				});
+		$( "#graficar" ).trigger("click");
+		isSelectedMultiple=false;
+	  }catch(e){
+	  	isSelectedMultiple=false;
+	  }
+	}
+
+
+	
+	function selectCheckGafNew(valor,nombre){
+		var estado=true;
+		var search="name";
+		if (nombre=='operCheck') search="id";
+		$( "input["+search+"='" + nombre +"']" ).each(function()
+		{			
+			$(this).trigger( "click" );
+		});
+	}
+
+	function validarChecks(obj){				
+		
+		if (getDimensionGrafico(graficoSelected)=='1'){
+			var tamOpsVarMultiple = $( ".labelcheck input[name="+$(objVarMultiple).prop("name")+"]:checked" ).size();
+			var tamOpsPer = $( ".labelcheck input[name='periodo']:checked").length;
+			if (tamOpsVarMultiple>1 && tamOpsPer>1){
+				alerta("Solo puede seleccionar varios valores en una de las variables.");
+				$(obj).attr('checked', false);
+				return false;
+			}
+		}
+
+		if ($(obj).prop("name")!='periodo')
+		{
+			listaVariablesNombreSelec = new Array();				
+			$("#graficar").prop("disabled", false);
+			variableMultiple = false;
+			var objAux = objVarMultiple;
+			var posObjAux = posObjVarMultiple;
+			var variable;
+		
+			var tam = $( ".labelcheck input[id='operCheck']:checked" ).length;
+			if (tam>1 && !operMultimple){
+				objVarMultiple = obj;					
+				variableMultiple = true;
+				posObjVarMultiple=0;
+				colGrafico='oper';
+				operMultimple = true;
+				$("#ejeHorizontal").empty().append(firstOptionEje);
+				$("#ejeHorizontal").append($("<option />").attr("value", "operSelec").text("Operación")); 
+			}else if (tam==1) operMultimple = false; 
+			
+			if (!operMultimple) listaVariablesNombreSelec.push($(".labelcheck input[id=operCheck]:checked" ).parent().text());				
+			for(var i=0; i<listaVariables.length;i++)
+			{
+				tam = $( ".labelcheck input[name='cri"+listaVariables[i]+"']:checked" ).length;	
+				//var tam = $("input[name="+$(obj).children().prop("name")+"]:checked" ).length;
+				if(tam>1){
+					if(!variableMultiple && !operMultimple){
+						variableMultiple = true;
+						variable = $(obj).prop("name");
+						if(variable!="periodo" && $(".labelcheck input[name="+$(obj).prop("name")+"]:checked" ).length>1){
+							objVarMultiple = obj;
+							posObjVarMultiple = i+1;
+						}else if (variable=="periodo"){
+							objVarPeriodo = obj;
+							posObjVarPeriodo = listaVariables.length+1;
+						}
+						//$('#capa_columnas_grafico').show();
+						$("#columnas_grafico").empty().append($("<option></option>").attr("value","cri"+listaVariables[i]).text(listaVariablesNombre[i]));
+						$("#columnas_grafico").append(firstOptionCol);
+						$("#columnas_grafico option:first-child").prop("selected", true);
+						$("#ejeHorizontal").empty().append(firstOptionEje);
+						$("#ejeHorizontal").append($("<option></option>").attr("value","cri"+listaVariables[i]).text(listaVariablesNombre[i])); 							
+						if ($( ".labelcheck input[name='periodo']:checked").length==1){
+
+							$.each($("#columnas_grafico option"), function( index, value ) {							
+									if($(this)[0].value=='per'){
+										$(this).prop("selected", true);
+										return;
+									}
+							});
+
+							$.each($("#ejeHorizontal option"), function( index, value ) {							
+									if($(this)[0].value!='per'){
+										$(this).prop("selected", true);
+										return;
+									}
+							});
+
+
+						}
+
+					}else if ( $(obj).prop("name")!="periodo" ){
+						$(obj).attr('checked', false);
+						alert("Solo puede seleccionar varios valores en una de las variables, excepto en los periodos");							
+						objVarMultiple = objAux;
+						posObjVarMultiple = posObjAux;
+						return false;							
+						//$("#graficar").prop("disabled", true);
+					}
+				}else{
+					//Guardamos las variables con valores únicos
+					listaVariablesNombreSelec.push($(".labelcheck input[name=cri"+listaVariables[i]+"]:checked" ).parent().text());
+				}					
+			}
+		}
+		return true;
+	}
+
+	function pintarGrafica(){
+		var puedegraficar = true;
+
+		if($( "#columnas_grafico option:selected" ).text()==$( "#ejeHorizontal option:selected" ).text()){					
+			if($("#capa_columnas_grafico").is(":visible")){
+				puedegraficar = false;					
+				alerta(avisoGrafico_1);
+			}
+		}
+						 
+		for(var i=0; i<listaVariables.length;i++)
+		{
+			tam = $( "#graficoForm input[name='cri"+listaVariables[i]+"']:checked" ).length;
+			if(tam==0){
+				alerta(avisoGrafico_2);
+				puedegraficar = false;
+				$.each($(".labelcheck").children(), function() {
+					 $(this).first().attr("type","checkbox");
+				 });
+				 $("#leyenda_graf").remove();
+				 return false;
+			}
+		}
+		
+		tam = $( "#graficoForm input[name='periodo']:checked" ).length;
+		if(tam==0){
+			puedegraficar = false;
+			alerta(avisoGrafico_3);			
+		}
+		
+		tam = $( "#graficoForm input[id='operCheck']" ).length;
+		if(tam>1){
+			tam = $( "#graficoForm input[id='operCheck']:checked" ).length;
+			if(tam==0){
+				puedegraficar = false;			
+				alerta(avisoGrafico_4);				
+			}				
+		}
+		if(puedegraficar){
+			$.each($( "#graficoForm input[name="+$(objVarMultiple).children().prop("name")+"]" ).parent(), function( index, value ) {
+				$("#capa"+index).remove();
+			});
+		}
+			
+		return puedegraficar;
+	}
+
+	function InitBind(){
+
+		if (numTotalCeldasDat<maxCeldasJs){
+			$("table.general tr th").each(function(  key, obj ) {
+				$(obj).prop('title', $.trim($(obj).text()));											
+				$(obj).children().prop('title', $.trim($(obj).text()));
+			});				
+		}
+	}
+	
+	function getTextHeaders(obj,pintamidato){
+		var dato;
+		var aux;
+	  try{				
+		if (obj!=null){				  
+		  if (pintamidato)
+			  dato= $(obj).text();
+		  var lstHead=obj.headers.split(" ");
+		  for (var i=0;i<lstHead.length;i++){
+			 aux=getTextHeaders(document.getElementById(lstHead[i]),true);
+			 if (aux!=null){
+				 if (dato!=null && dato.length>0)
+					dato= aux+ " > " +dato;
+				else
+					dato=aux;		
+			 }
+		  }				
+		}
+	  }catch(ex){}
+	  return dato;	
+	}
+	
+	
+
+function showToolTipJsonSDPx(evento, cabecera, target)
+{    
+	  cabecera = " <strong>"+cabecera+"</strong>"	  	  	
+	  //var cadena="<div class=\"title\">"+cabecera+"<strong>" + Txt_Tooltip_tituloSerDat +"</strong><br>";
+	  var cadena="<div class=\"title\">"+cabecera;
+
+	  cadena+= "<dl id='serieDatoToolTip'>";
+	  cadena+= "</dl></div>";
+	  cadena+="<div>";
+      cadena+="<dt><strong>" + txtDatos + "</strong>: ";
+      cadena+=target.textContent + "</dt>";	  
+	  cadena+="</div>";
+  	  close=false;
+	  window.status=cadena;
+	  if ($( "#tooltipWindow" ).length==0){
+			$("body").append("<div id=\"tooltipWindow\"></div>");	  
+			$( "#tooltipWindow" ).dialog({			  
+			  autoOpen: false,
+			  closeOnEscape: true,
+			  modal:true,
+			  minWidth: 200,
+			  minHeight: 0,
+			  show: {
+				effect: "blind",
+				duration: 300
+			  },
+			  hide: {
+				effect: "blind",
+				duration: 300
+			  }
+			});
+	  }
+	  $( "#tooltipWindow" ).dialog({
+					position:{my: 'left top', at: 'right', of: target},
+					title: Txt_Tooltip_Title});
+	  $( "#tooltipWindow" ).html(cadena);
+	  $( "#tooltipWindow" ).dialog( "open" );
+
+			
+}
+
+function showToolTipSeriePx( evento, cabecera, serie, fecha, target){
+	return showToolTipJsonSDPx( evento, cabecera, target)
+}
+
+
+function mostrarSerieDatoTitPx(evento , titaux, target)
+{						  				
+	showToolTipSeriePx( evento, titaux , "", "", target);				  
+} 
+
+
+
+	function showToolTipSerie( evento, cabecera, serie, fecha, target){
+		var url= ServerWebSwervice + "/js/" + HM_idioma.toUpperCase() + "/DATOS_SERIE/" + serie + "?date=" + fecha +"&det=2"  ;	
+		return showToolTipJsonSD( url, evento, cabecera, null, target)
+	}
+
+	
+	
+	function showInfoPx(evento ,td)
+	{
+		 mostrarSerieDatoTitPx(evento , getTextHeaders(td,false), td);
+	}
+
+	
+	
+	function showInfo(evento ,td)
+	{
+		 mostrarSerieDatoTit(evento , getTextHeaders(td,false), td);
+	}	  	
+	function submitForm()
+	{
+	  document.forms['excelForm'].submit() ;
+	}
+	
+	function submitForm2()
+	{
+	  document.forms['excelForm2'].submit() ;
+	}	
+	
+	function submitPxForm()
+	{
+	  document.forms['pxForm'].submit() ;
+	}	
+	
+	function submitCsvForm()
+	{
+	  document.forms['csvForm'].submit() ;
+	}		
+
+	function submitCsvForm2()
+	{
+	  document.forms['csvForm2'].submit() ;
+	}
+	
+	function submitCsvForm3()
+	{
+	  document.forms['csvForm3'].submit() ;
+	}
+
+
+	
+	function showGraphIconDownload()
+	{
+		$("#btnDescargaForm").hide();
+	 	if(descargaMapa=='1'){
+			$("#descargaMapa").hide();
+	 	}
+	 	if(descargaGrafico=='1'){
+			$("#descargaGrafico").show();
+	 	}
+		
+			
+		resizeTabGraph();
+			
+		/*	
+		$.each($("#accordion1").children(), function( index ) {		
+			//if($(value)[0].style.display=="block"){
+			if($(this).prop("style").display=="block"){
+				$("#accordion1").accordion('option', 'active', index);
+				return false;
+			}
+		});
+
+		if (pintarGrafica()){
+			pintaFormatoGrafico();
+			$('#graficoForm').trigger('submit');
+		}
+			*/	
+	}	
+	
+function tabs_cumpleRequisitos() {
+	return is.ieVersion>5 || !is.IE
+}
+
+function showIconWidget(tipo){
+	if(tipo=='tabla'){
+		$( "#widgetFormTabla" ).show();	
+		$( "#widgetFormGrafico" ).hide();
+		$( "#widgetFormMapa" ).hide();	
+	}else if(tipo=='grafico'){
+		$( "#widgetFormTabla" ).hide();	
+		$( "#widgetFormGrafico" ).show();
+		$( "#widgetFormMapa" ).hide();	
+	}else if(tipo=='mapa'){
+		$( "#widgetFormTabla" ).hide();	
+		$( "#widgetFormGrafico" ).hide();
+		$( "#widgetFormMapa" ).show();	
+	}
+}
+
+
+function inicializaJaxiDatos()
+{
+	$( "#widgetFormTabla" ).show();	
+	$( "#widgetFormGrafico" ).hide();
+	$( "#widgetFormMapa" ).hide();
+	
+	$( "#descargaGrafico" ).click(function() {
+	  descargaTab();
+	});
+	$( "#descargaMapa" ).click(function() {
+	  descargaTab();
+	});
+	$( "#maximizeTab" ).click(function() {
+	   maximizeTab();
+	});
+	$( "#tablaDatos" ).click(function(event) {
+		var target=event.srcElement!=null? event.srcElement : event.target!=null ? event.target: event.toElement ? event.toElement : null;
+		if (target!=null){
+			if ($(target).hasClass( "sd" ) || $(target).hasClass( "sdn" ))
+				showInfo(event,target);
+		}	
+	});	
+	
+	$( "#tablaDatosPx" ).click(function(event) {
+			var target=event.srcElement!=null? event.srcElement : event.target!=null ? event.target: event.toElement ? event.toElement : null;
+			if (target!=null){
+				if ($(target).hasClass( "sd" ) || $(target).hasClass( "sdn" ))
+					showInfoPx(event,target);
+			}	
+	});	
+
+
+	if($("#capaListadoNotas").text().trim().length<200)
+	{
+		$("#tituloNotas").addClass('borderSeccionPlus');
+		cambiarPlusMinus(this);
+		$("#capaListadoNotas").hide();
+	}else{
+		$("#tituloNotas").addClass('borderSeccionMinus');
+		cambiarPlusMinus(this);
+	}
+}
+
+function selec_svg(obj)
+{
+	svg_selec = (obj.id).substr((obj.id).indexOf("_")+1,(obj.id).length);
+	if (colorMap[key_selected]!=null){
+		colorMap['map70'] = paleta_colores[svg_selec];
+	}else
+		colorMapDefault = paleta_colores[svg_selec];
+
+
+	$("svg[id^='grad']").each(function( index ) {
+		if (obj.id==this.id){
+			svg_selec_index = index;
+			return;
+		}
+	});
+
+	$("svg[id^='grad']").css({"stroke-width": "0"});
+	$("#"+obj.id).css({"stroke": "black", "stroke-width": "2"});
+	$("#p_widget_colorMapa").val(svg_selec);
+	$( "#pintarMapa" ).trigger("click");
+}
+
+function checkOpsFormato()
+{
+	if(svg_selected!=null){
+		if (!svg_selected) alerta('Debe de seleccionar una gama de colores');
+		return svg_selected;
+	}else
+		return true;
+}
+
+function  pintaGradientes (index,num_intervalos)
+{
+	var rango = 100/num_intervalos;
+	var salida="";
+	var offSet = 0;
+	for (var i=0;i<num_intervalos;i++){
+		salida+="<stop offset=\""+offSet+"%\" stop-color=\""+paleta_colores[index][i]+"\"  />";
+		offSet+=rango;
+		salida+="<stop offset=\""+offSet+"%\" stop-color=\""+paleta_colores[index][i]+"\"  />";
+	}
+	return salida;
+}
+
+
+function selec_rango_svg(obj)
+{
+	pintaFormatoMapa();
+	$( "#pintarMapa" ).trigger("click");
+}
+
+
+
+function pintaFormatoMapa()
+{			
+			//var num_intervalos = Object.keys(paleta_colores[0]).length;
+			var intervalo_min = 4;
+			var intervalo_max= 7;			
+			var num_intervalos = "";
+			var salida = "";
+			
+			salida+="<li><span>Seleccionar el n&uacute;mero de intervalos:</span>";
+			salida+="<select id=\"intervalos_svg\" onchange=\"selec_rango_svg(this);\"> ";
+			
+			var grad_selected = eval($("#intervalos_svg").val());
+			num_intervalos = grad_selected!=undefined?grad_selected:intervalo_min;
+			
+			for (var i=intervalo_min;i<=intervalo_max;i++){						
+				salida+="<option value=\""+i+"\"";
+				if(grad_selected!=undefined){
+					if (i==grad_selected) salida+="selected=\"selected\"";
+				}else{
+					if (i==num_intervalos){
+						salida+="selected=\"selected\"";
+					}
+				}
+				salida+=">"+i+"</option>";
+			}
+			salida+="</select>";
+			salida+="</li>";			
+
+			salida+="<li><span>Seleccionar gama de colores:</span></li>";
+			salida+="<li>";	
+
+			for (var i=0;i<=paleta_colores.length-1;i++){	
+				if(paleta_colores[i].length==num_intervalos){
+					salida+="<svg id=\"grad_"+i+"\" width=\"10%\" height=\"33\"  version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" onclick=\"selec_svg(this);\"  >";				
+					salida+="<defs>";
+					salida+="<linearGradient id=\"Gradient"+i+"\"> ";
+					salida+=pintaGradientes(i,num_intervalos);
+					salida+="</linearGradient>";
+					salida+="</defs>";			
+					salida+="<rect x=\"3\" y=\"3\" rx=\"5\" ry=\"5\" width=\"90%\" height=\"28\" fill=\"url(#Gradient"+i+")\" cursor=\"pointer\" />";
+					salida+="</svg>";	
+				}
+			}
+
+			if($("#formato_mapa").children().size()>1){
+				$("#formato_mapa").children().each(function( index ) {
+					if (index!=0)
+						$( this ).remove();
+				});
+				
+			}
+
+			salida+="<li>";	
+			salida+="<div id=\"capaBotonMapa\">" 
+			salida+="<input id=\"pintarMapa\" name=\"pintarMapa\" class=\"botonSel botonGrafica\" type=\"submit\" value=\"Ver mapa\"/>"; 
+			salida+="</div>"								
+			salida+="</li>";	
+
+			$("#formato_mapa").append(salida);
+
+			if (svg_selec==undefined){
+				svg_selec_index = 0;
+				var grad_id = ($("svg[id^='grad']")[0].id).substr();
+				svg_selec = grad_id.substr(grad_id.indexOf("_")+1);
+			}
+
+			$("svg[id^='grad']").css({"stroke-width": "0"});
+			$("#"+$("svg[id^='grad']")[svg_selec_index].id).css({"stroke": "black", "stroke-width": "2"});
+
+			$("svg[id^='grad']").each(function( index ) {
+				if (index==svg_selec_index){
+					svg_selec = (this.id).substr((this.id).indexOf("_")+1);
+					return;
+				}
+			});
+
+
+			$("#p_widget_colorMapa").val(svg_selec);			
+}
+
+function updateJsColor() {
+	var id_capa = $("div[jscolor_selec='yes']")[0].id;
+	$("#"+id_capa).attr("jscolor_selec","no");
+    $("#"+id_capa).css({"background-color":"#"+$("#id_jscolor").val()});
+
+	$("#"+id_capa).siblings("input[type='hidden']").each(function( index ) {
+		$( this ).remove();
+	});
+	($("#"+id_capa).parent()).append("<input type=\"hidden\" name=\"p_widget_color\" value=\""+$("#id_jscolor").val()+"\" >");
+	document.getElementById('id_jscolor').jscolor.hide();
+	$("#dialog_color").dialog("close");
+	$( "#graficar" ).trigger("click");
+}
+
+
+function pintaWidgetMapa()
+{
+	$('.widgetMapa').remove();
+	var serializedData = $("#mapaForm").serialize();
+	var aux=[];
+	var aux2=[];
+	aux =serializedData.split("&")
+	for(var i=0 ;i<aux.length;i++){
+		 aux2 = aux[i].split("=");
+		 $('<input>', {
+				type: 'hidden',
+				name: aux2[0],
+				class: 'widgetMapa',
+				value: aux2[1]
+			}).appendTo('#widgetFormMapa');
+	}
+}
+
+
+/**
+	Se inicializa la leyenda del gráfico la primera vez que se pulsa el tab "Grafico" en jaxiT3
+*/
+function inicializaLeyenda()
+{
+	var nombreVarMult = $(objVarMultiple).prop("name");
+	$.each($("#accordion1").children(), function( index) {		
+		if($(this).prop("style").display=="block"){
+			$.each($(this).find("input[type='checkbox']").parent(), function( index2) {
+				pintaLeyenda(this, index2);
+				if (posObjVarMultiple!=index){
+					$( this ).siblings("div").css({"display":"none"});
+					$( this ).siblings("input").attr("color",$( this ).siblings("input").val());
+					$( this ).siblings("input").val("");
+				}
+			});
+		}
+	});	
+
+	$.each($("#accordion1").children(), function( index ) {		
+		//if($(value)[0].style.display=="block"){
+		if($(this).prop("style").display=="block"){
+			$("#accordion1").accordion('option', 'active', index);
+			return false;
+		}
+	});
+
+	if (pintarGrafica()){
+		pintaFormatoGrafico();
+		$('#graficoForm').trigger('submit');
+	}
+}
+
+
+/**
+* Pinta la leyenda del gráfico de una opción de una variable del gráfico
+* @param {object} obj opción del gráfico 
+* @param {String} index mensaje a mostrar
+*/
+function pintaLeyenda(obj, index)
+{
+	var nombre = $(obj).find("input").val();
+	nombre = nombre.replace("~","_");
+	if($("#capa"+nombre).size()==0){	
+		($(obj).parent()).prepend($("<div id='capa"+nombre+"'></div>"));
+		$("#capa"+nombre).css({"width": "16px", "height": "16px", "margin-top":"2px", "float":"right"});
+		$("#capa"+nombre).css('background-color', webColorsDef[index%webColors.length]);	 
+		$("#capa"+nombre).css('background-image', 'url(' + HM_Menu_Dir +'/plantillas/jaxiT3/img/lapiz2_16x16.png)');
+		//Si la opción de editar colores está habilitada
+		if (graphicColorsEnabled=='1'){
+			$("#capa"+nombre).css({"cursor":"pointer"});
+			$("#capa"+nombre).attr("title", changeColorGraf);									
+			$("#capa"+nombre).parent().append("<input type=\"hidden\" name=\"p_widget_color\" value=\""+(webColorsDef[index%webColors.length]).substring(1)+"\" >");
+			$( "#capa"+nombre ).click(function() {
+				$( "#capa"+nombre ).attr("jscolor_selec","yes");
+				var color = $(this).siblings('input').val();
+				$("#id_jscolor").css({"background-color":"#"+color});
+				$("#id_jscolor").val(color.toUpperCase());
+				$("#dialog_color").dialog();
+			});
+		}
+	}
+}
+
+
+/**
+* Pinta el logo de la leyenda en la cabecera de la variable múltiple, que es donde está la leyenda pintada
+* @param {object} obj variable múltiple 
+*/
+function pintaLogoLeyenda(obj)
+{
+	/*if (getDimensionGrafico(graficoSeleccionado)=='1'){ 
+
+        $.each($("#accordion1").children(), function( index, value ) {							
+    	
+	        	if(posObjVarMultiple==index){
+					$("#leyenda_graf").remove();
+					$(this).children().first().prepend("<img id=\"leyenda_graf\" title=\"Leyenda\" src=\""+HM_Menu_Dir+"/plantillas/jaxiT3/img/leyenda.png\">");																				
+					$("#leyenda_graf").css({"float": "right"});
+					return;
+				}
+		});
+
+
+	}else{*/
+		$("#leyenda_graf").remove();
+		$(obj).children().first().prepend("<img id=\"leyenda_graf\" title=\"Leyenda\" src=\""+HM_Menu_Dir+"/plantillas/jaxiT3/img/leyenda.png\">");																				
+		$("#leyenda_graf").css({"float": "right"});
+
+	//}
+}
+
+
+/**
+* Transforma el tipo de las opciones de una variable a tipo checkbox
+* @param {object} obj variable 
+*/
+function cambiaTipoCheckbox(obj)
+{
+	 $.each($(".labelcheck").children(), function() {
+		 $(obj).first().attr("type","checkbox");
+	 });
+}
+
+/**
+* Transforma el tipo de las opciones de una variable a tipo radio
+* @param {object} obj variable 
+* @param {string} tipo tipo del input (checkbox o radio) 
+*/
+function cambiaTipoOpcion(obj, tipo)
+{
+	 $.each($(obj).find(".labelcheck").children(), function() {
+		 $(this).attr("type",tipo);
+	 });
+}
+
+/**
+* Transforma el tipo de las opciones de las variables que se pasan en lstVariables
+* @param {object} lstVariables lista de variables
+* @param {string} tipo tipo del input (checkbox o radio) 
+*/
+function cambiaAllTipoOpcion(lstVariables, tipo)
+{
+	 $.each(lstVariables, function() {
+		 cambiaTipoOpcion(this, tipo);
+	 });
+}
+
+
+/**
+	Oculta la leyenda de todas las opciones de una variable
+	@param {object} obj variable 	
+*/
+function ocultaLeyenda(obj)
+{
+	$.each($(obj).find(".labelcheck"), function() {
+		if($(this).children("input").is(':checked') && $(this).siblings("input").val()!=''){
+			$(this).siblings("div").css({"display":"none"});
+			$(this).siblings("input").attr("color",$(this).siblings("input").val());
+			$(this).siblings("input").val("");
+		}
+	});
+}
+
+
+/**
+	Muestra la leyenda de todas las opciones de una variable
+	@param {object} obj variable 	
+*/
+
+
+function muestraLeyenda(obj)
+{
+	$.each($(obj).find(".labelcheck"), function() {
+		if($(this).children("input").is(':checked') && $(this).siblings("input").val()==''){
+			$(this).siblings("input").val($(this).siblings("input").attr("color"));
+			$(this).siblings("input").attr("color","");
+			$(this).siblings("div").css({"display":"block"});
+		}
+	});
+}
+
+
+
+function pintarLeyendaPrimerGrupoVisible()
+{
+	var lstVariables = $("#accordion1").children(); 
+	$.each(lstVariables, function( index, value ) {	
+		if ($(this).css('display')!=='none'){
+			posObjVarMultiple = index;
+			muestraLeyenda(this);
+			pintaLogoLeyenda(this);
+			$("#accordion1").accordion('option', 'active', index);
+			return false;
+		}
+	});
+}
+
+
+/**
+* Esta función se utiliza justo despues de pintar la gráfica ( pintaScrollLienzo(...) )
+  Transforma el tipo de selección de checkbox a radio y viceversa en función de si se trata de una variable múltiple o no
+  En caseo de ser una variable múltiple, el tipo es checkbox, si no, radio.
+  Cuando se trata de un tipo radio, se eliminan los botones de seleccionar/deseleccionar todas las opciones
+*/
+function pintaFormatoGrafico()
+{
+	var ejeHorizontal = $("#ejeHorizontal").prop("value");
+    //var tamValChecked = $( ".labelcheck input[name="+$(objVarMultiple).prop("name")+"]:checked" ).size();
+    //Si no se selecciona la operación como variable múltiple
+    //if (colGrafico!='oper') colGrafico = $("#columnas_grafico").prop("value");
+    //var lstOpsOperChecked = $( ".labelcheck input[id='operCheck']:checked" ).length;
+	var lstOpsVarMultChecked = $($("#accordion1").children()[posObjVarMultiple]).find(".labelcheck").children(":checked").size();
+	if (posObjVarPeriodo===undefined) posObjVarPeriodo=listaVariablesNombre.length+1;
+    
+
+	var lstVariables = $("#accordion1").children(); 
+	if (ejeHorizontal=='per'){ 
+
+		$.each(lstVariables, function( index, value ) {							
+	    	if(posObjVarMultiple==index){
+				$(this).find(".tool").css('display','block');
+				muestraLeyenda(this);
+				pintaLogoLeyenda(this);
+				$("#accordion1").accordion('option', 'active', index);																
+				if(lstOpsVarMultChecked<=1){ //ponemos las opciones de todos los grupos a checkbox												 
+					 ocultaLeyenda(this);
+					 pintarLeyendaPrimerGrupoVisible();
+					 cambiaAllTipoOpcion(lstVariables,'checkbox');
+				}
+			}else{
+				ocultaLeyenda(this);
+				if (posObjVarPeriodo!=index){ //Si no es el periodo											
+					if(lstOpsVarMultChecked>1){ 
+						 //$(this).find(".tool").css('display','none');
+						 cambiaTipoOpcion(this,'radio');
+					}else{
+						$(this).find(".tool").css('display','block')
+					}
+				}
+			}	
+		});
+
+	}else{
+		$.each(lstVariables, function( index, value ) {
+			if(posObjVarMultiple==index){
+				ocultaLeyenda(this);
+			}
+			if (posObjVarPeriodo==index){
+				 muestraLeyenda(this);
+				 pintaLogoLeyenda(this);
+				 $("#accordion1").accordion('option', 'active', index);
+
+
+				/*
+				 //cambiamos el orden de los parámetros de p_widget_color ya que se trata de periodo
+				 var arrayColores = [];
+				 $.each($("#widgetFormGrafico").children("[name='p_widget_color'][value!='']"),function( index, value ) {
+					arrayColores.push($(this).val());
+				 	$(this).remove();
+				 });
+
+				 for(var i=arrayColores.length-1;i>arrayColores.length;i--){
+					$('<input>', {
+						type: 'hidden',
+						name: 'p_widget_color',
+						class: 'widgetGrafico',
+						value: arrayColores[i]
+					}).appendTo('#widgetFormMGrafico');
+				}
+				*/
+			}
+		});	
+	}
+
+/*
+	//Limpiamos la leyenda de todas las variables excepto en el periodo
+	$.each(lstVariables, function( index, value ) {
+		if ($(this).css('display')!='none'){
+			variable = $(this).find("input").prop("name");
+			if (ejeHorizontal!='per'){				
+				if( variable != 'periodo' ){
+					$.each($( this ).find(".tool").siblings(), function( index2, value ) {
+						if($( this ).children("input").val()!=''){
+							ocultaCuadroLeyenda(this);
+						}
+					});
+				}else if( variable == 'periodo' ){
+					$.each($(this).find("input[type='checkbox']:checked").parent(), function( index2, value ) {
+						if($(this).siblings("input").attr("color")!=undefined && $(this).siblings("input").attr("color")!=''){
+							muestraCuadroLeyendaPeriodo(this);
+						}
+					});
+				}
+			}
+			else{
+				if( variable != 'periodo' ){
+					$.each($( this ).find(".tool").siblings(), function( index2, value ) {
+						if($( this ).children("input").val()!=''){
+							muestraCuadroLeyenda(this);
+						}						
+					});
+				}else if( variable == 'periodo' ){
+					$.each($(this).find("input[type='checkbox']:checked").parent(), function( index2, value ) {
+						if($(this).siblings("input").attr("color")!=undefined && $(this).siblings("input").attr("color")!=''){
+							ocultaCuadroLeyendaPeriodo(this);
+						}
+					});
+				}
+			}
+		}
+	});
+*/
+
+
+/*
+    var graficoUnidimensional = getDimensionGrafico(tipoGrafico)=='1';
+    
+
+	if (graficoUnidimensional){ 
+		if (ejeHorizontal=='per'){
+		    $.each($( ".labelcheck" ).parent(), function( index, value ) {
+				if($(this).children("label").children("input").attr("name")==$(objVarMultiple).prop("name") ){
+					$(this).children("label").siblings().remove();
+				}
+			});
+		}else{
+		    $.each($( ".labelcheck" ).parent(), function( index, value ) {
+				if($(this).children("label").children("input").attr("name")!=$(objVarMultiple).prop("name") ){
+					$(this).children("label").siblings().remove();
+				}
+			});
+		}
+	}else{
+	    //Limpiamos todos los colores asociados a las variables menos la múltiple a no ser que solo haya un solo periodo seleccionado
+	    $.each($( ".labelcheck" ).parent(), function( index, value ) {
+	    	if(ejeHorizontal=='per'){
+				if($(this).children("label").children("input").attr("name")!=$(objVarMultiple).prop("name") ){
+					$(this).children("label").siblings().remove();
+				}
+			}else{
+				if($(this).children("label").children("input").attr("name")==$(objVarMultiple).prop("name") ){
+					$(this).children("label").siblings().remove();
+				}	
+			}
+		});
+
+	}
+
+	var tamValChecked = $( ".labelcheck input[name="+$(objVarMultiple).prop("name")+"]:checked" ).size();
+	if (graficoUnidimensional){     	
+		if (ejeHorizontal=='per'){	
+			$.each($( ".labelcheck input[name='periodo']:checked" ).parent(), function( index, value ) {
+				pintaLeyenda(this,index);
+			});	
+		}else{
+
+			$.each($( ".labelcheck input[name="+$(objVarMultiple).prop("name")+"]:checked" ).parent(), function( index, value ) {
+				pintaLeyenda(this,index);			
+			});
+		}			        	
+	}else{
+		if(ejeHorizontal!='per'){				        		        				        	
+			$.each($( ".labelcheck input[name='periodo']:checked" ).parent(), function( index, value ) {
+				pintaLeyenda(this,index);
+			});					        	
+		}else{	        	
+			$.each($( "input[name='"+$(objVarMultiple).prop("name")+"'][type='checkbox']:checked" ).parent(".labelcheck"), function( index, value ) {
+				pintaLeyenda(this,index);			
+			});			        	
+		}
+	}
+	*/
+}
+
+
+function muestraPrimeraOpcionMapa(){
+			$.each($("#capaSelecMapa").children(), function( index, value ) {		
+			if($(value)[0].style.display=="block"){
+				$("#capaSelecMapa").accordion('option', 'active', index);
+				return false;
+			}
+		});	
+}
+
+
+function getDimensionGrafico(tipoGraficoSeleccionado)
+{
+	var vuelta;
+	var listaModosGrafico = modosGrafico.split("~")
+	var listaTiposGrafico = tiposGrafico.split("~")
+	var indice = 0;
+	for(var i=0;i<listaTiposGrafico.length;i++){
+		if (tipoGraficoSeleccionado==listaTiposGrafico[i]){
+			indice = i;
+			break;
+		}
+	}
+	vuelta = listaModosGrafico[indice];
+	return vuelta;
+}
+
+function validaTipoGrafico(e, graf_sel)
+{
+	var vuelta = true;
+	var dimensionGrafico = getDimensionGrafico(graf_sel);
+	var numVarMult = 0;
+	$.each($("#accordion1").children(), function( index, value ) {		
+		var numOps = 0;
+		$.each($(this).children().find("input:checked"), function( index, value ) {		
+			numOps++;
+		});
+		if (numOps>1) numVarMult++;
+	});
+	if (dimensionGrafico=='1'){
+		if (numVarMult>1){
+			alerta("Ha seleccionado más de una variable con varios valores. Solo puede seleccionar este gráfico con una sola variable con varios valores.");
+			vuelta = false;
+		}
+		
+	}else if (dimensionGrafico=='2'){
+		if (numVarMult>2){
+			alerta("Ha seleccionado más de una variable con varios valores. Solo puede seleccionar este gráfico con una sola variable con varios valores.");
+			vuelta = false;
+		}
+	}
+
+	if(vuelta) 	graficoSelected = graf_sel;
+
+	return vuelta;
+}
+
+
+function pintaTituloGrafico() 
+{
+	var titulo = "";			        	
+
+	$("#tituloGrafico").empty();
+
+	if(variableMultiple){
+		var tituloVarMult = "";
+		var isOperValMult = false;
+		if ($(objVarMultiple).attr("name")!="oper")
+			tituloVarMult=listaVariablesNombre[posObjVarMultiple-1];
+		else{
+			tituloVarMult = operaciones;
+			isOperValMult=true;
+		}
+	    $.each(listaVariablesNombreSelec, function( index, value ) {
+	    	if(isOperValMult){
+	        	if(index==0) 
+	        		titulo+=tituloVarMult;
+	    	}else{
+	        	if(index==1){
+	        		if(titulo.length>0) titulo+=", ";
+	    			titulo+=tituloVarMult;
+	    		}
+	    	}
+	    	if(titulo.length>0) titulo+=", ";
+			titulo+=value.trim();
+	    	if(listaVariablesNombreSelec.length==1){
+	    		titulo+=tituloVarMult;
+			}								
+		});
+
+	    if ($( ".labelcheck input[name='periodo']:checked").length==1){
+	        $.each($("input:checked" ), function( index, value ) {								
+	        	if($(value).parent()[0].className=='labelcheck'){
+		        	if($(value).attr("name")=="periodo"){										
+						var per = $(value).parent().text().trim();
+						if(per!='periodopx'){
+							if (titulo.length>0) titulo+=", ";
+							titulo+=per;
+						}
+					}
+	        	}
+			});						        
+	    }
+	}else{
+	        $.each($("input:checked" ), function( index, value ) {								
+	        	if($(value).parent()[0].className=='labelcheck'){
+		        	if($(value).attr("name")!="periodo"){										
+						if (titulo.length>0) titulo+=", ";
+						titulo+=$(value).parent().text().trim();
+					}
+	        	}
+			});					        
+		}			        	
+
+
+	$("#tituloGrafico").append(titulo);	
+}
+
+
+function limpiaHiddenParamsWidget()
+{
+	var nombreVarMult = $(objVarMultiple).prop("name");
+	var ejeHorizontal = $("#ejeHorizontal").prop("value");
+	if (getDimensionGrafico(graficoSelected)=='2'){
+		if (ejeHorizontal=='per'){
+			$.each($("#accordion1").children(), function() {
+				if( $(this).find("input").prop("name") != nombreVarMult ){
+					ocultaLeyenda(this);
+				}else{
+					muestraLeyenda(this);
+					pintaLogoLeyenda(this);
+				}
+			});
+		}else{
+			$.each($("#accordion1").children(), function() {
+				if( $(this).find("input").prop("name") != 'periodo' ){
+					ocultaLeyenda(this);
+				}else{
+					muestraLeyenda(this);
+					pintaLogoLeyenda(this);
+				}
+			});
+		}
+	}else{
+		if (ejeHorizontal!='per'){
+			$.each($("#accordion1").children(), function() {
+				if( $(this).find("input").prop("name") != nombreVarMult ){
+					ocultaLeyenda(this);
+				}else{
+
+					muestraLeyenda(this);
+					pintaLogoLeyenda(this);
+				}
+			});
+		}else{
+			$.each($("#accordion1").children(), function() {
+				if( $(this).find("input").prop("name") != 'periodo' ){
+					ocultaLeyenda(this);
+				}else{
+					muestraLeyenda(this);
+					pintaLogoLeyenda(this);
+				}
+			});
+		}
+	}	
+}
+
+var resizeId;
+function doneResizing(){
+	resizeTabs();					
+	if($("#tabs").tabs('option', 'selected')==1){ 
+		showGraphIconDownload();				
+		objJplot.replot( { resetAxes: true } );
+	}else if($("#tabs").tabs('option', 'selected')==2){		
+		resizeTabMapa(true);
+	}
+}
+function onResize(event){
+	clearTimeout(resizeId);			
+	resizeId = setTimeout(doneResizing, 1000);
+}			
+	
+function enableOnResize(){
+	$(window).resize(onResize);
+}
+
+/**
+	Función que crea un listado de los colores de la leyenda de la variable múltiple
+**/
+function creaListadoColoresVarMult()
+{
+	var ejeHorizontal = $("#ejeHorizontal").prop("value");
+	if (posObjVarPeriodo===undefined) posObjVarPeriodo=listaVariablesNombre.length+1;    
+	var lstVariables = $("#accordion1").children(); 
+	
+	var listaColoresVarMult = [];
+	var element = {};
+
+	if (ejeHorizontal=='per'){ 
+		$.each(lstVariables, function( index, value ) {							
+	    	if(posObjVarMultiple==index){
+				$.each($(this).find(".labelcheck"), function() {
+					if($(this).children("input").is(':checked')){
+						element = {};
+						element.nombre = $.trim($(this).text());
+						element.color = $(this).siblings("input").val();
+						listaColoresVarMult.push(element);	
+					}
+				});										
+			}	
+		});
+
+	}else{
+		$.each(lstVariables, function( index, value ) {
+			if (posObjVarPeriodo==index){
+				$.each($(this).find(".labelcheck"), function() {					
+					if($(this).children("input").is(':checked')){
+						element = {};
+						element.nombre = $.trim($(this).text());
+						element.color = $(this).siblings("input").val();
+						listaColoresVarMult.push(element);	
+					}
+				});	
+			}
+		});	
+	}
+
+	return listaColoresVarMult;
+}
+
+
+
+$(document).ready(function() {
+	inicializaJaxiDatos();
+	//if (paleta_colores!==undefined)
+	//	pintaFormatoMapa();
+    $( "#graficoForm" ).tooltip();
+    graficoSelected = $( "#tipoGrafico" ).val();
+
+	$( "#ejeHorizontal" ).change(function() {
+	    pintaFormatoGrafico();	
+	  	$( "#graficar" ).trigger("click");
+	});
+
+	$("#declegend_selec").change(function() {	
+		$( "#pintarMapa" ).trigger("click");
+	});
+	$("#intervalos_svg").change(function() {	
+		$( "#pintarMapa" ).trigger("click");
+	});
+
+	$( "#tipoGrafico" ).change(function(e) {
+	  	if (validaTipoGrafico(e, $(this).val())){
+	  		if (getDimensionGrafico(graficoSelected)=='1'){
+
+	  			
+				$.each($("#ejeHorizontal option"), function() {
+				 	if($(this).val()!='per')
+				 		$(this).prop("selected", true);
+			 	});
+
+
+ 				$("#ejeHorizontal").parent().css("display","none");
+	  		}else
+	  		   $("#ejeHorizontal").parent().css("display","block");
+	  		$( "#graficar" ).trigger("click");
+	  	}else{
+	  		$( "#tipoGrafico" ).val(graficoSelected);
+	  	}
+	});
+	
+	//Deshabilitamos el botón derecho en gráfico y mapa
+	try{
+		$( "#dialog" ).dialog();
+		$('#graficoNuevo').on("contextmenu",function(e){
+			return false;
+		});	
+		$('#ContentMapa').on("contextmenu",function(e){
+			return false;
+		});
+	}catch(err){
+	}
+	
+	if ( $("#tablaDetalle").length>0 && (!$("#tablaDetalle").text().length>0)) cargaDetalle(tablaId, '#tablaDetalle');
+
+	$( "#graficar" ).click(function() {
+		puedegraficar = pintarGrafica();
+	});
+	
+	$(":checkbox").change(function() {	
+		if (this.form.id=="graficoForm"){
+			if (estadoOkCheck=changeCheck(this)){
+				if (!this.checked){
+					var valor = $( this ).parent().siblings("input").val();
+					if(valor!=''){
+						$( this ).parent().siblings("input").attr("color", valor);
+						$( this ).parent().siblings("input").val("");
+						$( this ).parent().siblings("div").css({"display":"none"});
+					}
+				}else{
+					limpiaHiddenParamsWidget();
+					/*$( this ).parent().siblings("div").css({"display":"block"});
+					$( this ).parent().siblings("input").val($( this ).parent().siblings("input").attr("color"));*/
+				}
+				pintaFormatoGrafico();
+				if(!isSelectedMultiple){
+					$( "#graficar" ).trigger("click");					
+					}
+			}					
+		}
+	});
+	
+	$(":radio").change(function() {	
+		if (this.form.id=="mapaForm"){
+			$( "#pintarMapa" ).trigger("click"); 								
+		}
+	});	
+	
+	//Ocultamos el combo de las columnas del grafico cada vez que se carga la página
+    $('#capa_columnas_grafico').hide();
+
+
+    $('.show_hide').click(function(){
+   		$("#capaDetalle").slideToggle();
+   		cambiarPlusMinus(this);
+	});
+    
+    $('.show_hide_Notas').click(function(){
+    	$("#capaListadoNotas").slideToggle();
+    	cambiarPlusMinus(this);
+	});	
+
+
+
+	$("#graficoForm").submit(function(event){
+	  try{
+
+		if(!puedegraficar){
+			puedegraficar = true;
+			return false;
+		}
+		// abort any pending request
+	    $("#graficoNuevo").empty();
+		$("#graficoNuevo").addClass( "loadingOp" );
+						
+	    if (request) {
+	        request.abort();
+	    }
+
+	    var $form = $(this);
+
+	    var serializedData = $form.serialize();
+
+	    request = $.ajax({
+	        url: "GraficoJsonServlet.htm?"+baseUrl,
+	        type: "post",
+	        dataType: "json",
+	        async:true,
+	        data: serializedData
+	    });
+
+	    // callback handler that will be called on success
+	    request.done(function (response, textStatus, jqXHR){
+	        // log a message to the console
+			$('#graficoNuevo').html('');			       
+
+	        var graficoSeleccionado = $("#tipoGrafico").prop("value");			      
+			
+	        if (!jQuery.isEmptyObject($(response).prop("values"))){
+
+	        	pintaTituloGrafico(); 
+		        
+		        resizeTabGraph();
+		        
+		        if( response.ticks.length==1 && response.ticks[0]=='periodopx')
+		        	response.ticks[0]=' ';	
+		        else if (response.series.length==1 && response.series[0].label=='periodopx')
+		        	response.series[0].label=' ';
+				$('.widgetGrafico').remove();
+
+				var listaColoresVarMult = creaListadoColoresVarMult();
+				var param_colors = [];
+				for(key in response.series){
+				  var obj = response.series[key];
+				  for(key2 in listaColoresVarMult){
+						var obj2 = listaColoresVarMult[key2];
+						if (obj.label==obj2.nombre){
+							if(obj2.color!=undefined && obj2.color!='' )
+								param_colors.push("#"+obj2.color);
+					    	 $('<input>', {
+					    		    type: 'hidden',
+					    		    name: 'p_widget_color',
+					    		    class: 'widgetGrafico',
+					    		    value: obj2.color
+					    		}).appendTo('#widgetFormGrafico');
+						}
+					}
+				}
+				var config = {};
+				config.seriesColors = param_colors;
+				response.config = config;
+
+			    
+
+			    var aux=[];
+			    var aux2=[];
+			    aux =serializedData.split("&")
+			    for(var i=0 ;i<aux.length;i++){
+			    	 aux2 = aux[i].split("=");
+			    	 if (aux2[0]!='p_widget_color' && aux2[1]!=''){
+			    	 $('<input>', {
+			    		    type: 'hidden',
+			    		    name: aux2[0],
+			    		    class: 'widgetGrafico',
+			    		    value: aux2[1]
+			    		}).appendTo('#widgetFormGrafico');
+			    	 }
+			    }
+
+		    	 $('<input>', {
+		    		    type: 'hidden',
+		    		    id: 'p_widgetFormGrafico',
+		    		    name: 'p_widgetFormGrafico',
+		    		    class: 'widgetGrafico',
+		    		    value: '1'
+		    		}).appendTo('#widgetFormGrafico');
+
+
+				objJplot=pintaScrollLienzo(graficoSeleccionado, 'graficoNuevo', $('#graficoNuevo').height(), $('#graficoNuevo').width(), scrollGraphEnabled, false, null, null, 8000,response);
+
+	        }else
+	        	alert("No hay series para los valores seleccionados");
+	    });
+
+	    // callback handler that will be called on failure
+	    request.fail(function (jqXHR, textStatus, errorThrown){
+	        // log the error to the console
+	        console.log(
+	            "The following error occured: "+
+	            textStatus, errorThrown
+	        );
+	    });
+
+	    // callback handler that will be called regardless
+	    // if the request failed or succeeded
+	    request.always(function () {
+	        // reenable the inputs
+	        //$inputs.prop("disabled", false);
+	        $( "#graficoNuevo" ).removeClass( "loadingOp" );
+	    });
+
+	    // prevent default posting of form
+	    
+	  }catch(e){
+		  alert(e);
+	  }
+	  event.preventDefault();
+	});	//Fin graficoForm	
+
+
+
+
+});	
+

@@ -1,0 +1,271 @@
+#sso{
+	text-align: center;
+	display: block;
+}
+#login
+{
+    background-color: #fff;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#EEF2F8));
+    background-image: -webkit-linear-gradient(top, #fff, #EEF2F8);
+    background-image: -moz-linear-gradient(top, #fff, #EEF2F8);
+    background-image: -ms-linear-gradient(top, #fff, #EEF2F8);
+    background-image: -o-linear-gradient(top, #fff, #EEF2F8);
+    background-image: linear-gradient(top, #fff, #EEF2F8);  
+    width: 40%;
+	 display: inline-block;
+    padding: 30px;
+    z-index: 0;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+	border: thin dotted black;
+}
+
+#CestaTab
+{
+    font-size:0.9em;
+	 position: fixed;
+	 top:0px;
+	 right: 0px;
+	 z-index: 9999;
+    background-color: #EEF2F8;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#EEF2F8), to(#B6C5DF));
+    background-image: -webkit-linear-gradient(top, #EEF2F8, #B6C5DF);
+    background-image: -moz-linear-gradient(top, #EEF2F8ff, #B6C5DF);
+    background-image: -ms-linear-gradient(top, #EEF2F8, #B6C5DF);
+    background-image: -o-linear-gradient(top, #EEF2F8, #B6C5DF);
+    background-image: linear-gradient(top, #EEF2F8f, #B6C5DF);  
+	 display: block;
+    padding: 3px;
+    -moz-border-bottom-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 5px;
+	 border-bottom-left-radius: 5px;
+	 border-top-left-radius: 5px;
+		border: thin solid black;
+		text-align: left;
+}
+
+#CestaTab img{
+	/*width:16;
+	height:16px;*/
+	/*background: url(../img/t3.gif) no-repeat center;*/
+	margin: 0px;
+	cursor: pointer;
+}
+
+#CestaTab .Detalles{
+	display: none;
+	margin: 0px 0px 0px 0px;
+	vertical-align: middle;
+}
+#CestaTab .salir{
+	border-top: 1px dotted black;
+	width: 100%;
+	padding-top: 3px;
+	margin-top: 3px;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bolder;
+	font-size: 1.1em;
+}
+
+/*--------------------*/
+
+#login h1
+{
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0px 2px 0 rgba(0, 0, 0, .5);
+    text-transform: uppercase;
+    text-align: center;
+    color: #666;
+    margin: 0 0 30px 0;
+    letter-spacing: 4px;
+    font: normal 26px/1 Verdana, Helvetica;
+    position: relative;
+}
+
+#login h1:after, #login h1:before
+{
+    background-color: #777;
+    content: "";
+    height: 1px;
+    position: absolute;
+    top: 15px;
+    width: 90px;   
+}
+
+#login h1:after
+{ 
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#EEF2F8), to(#B6C5F3));
+    background-image: -webkit-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -moz-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -ms-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -o-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: linear-gradient(top, #EEF2F8, #B6C5F3);
+    right: 0;
+}
+
+#login h1:before
+{
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#EEF2F8), to(#B6C5F3));
+    background-image: -webkit-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -moz-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -ms-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -o-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: linear-gradient(top, #EEF2F8, #B6C5F3);
+    left: 0;
+}
+
+/*--------------------*/
+
+#login fieldset
+{
+    border: 0;
+	 text-align:center;
+}
+
+/*--------------------*/
+
+#inputs input
+{
+    padding: 15px 15px 15px 30px;
+    margin: 0 -30px 10px -30px;
+    width: 90%;
+    border: 1px solid #ccc;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+    -webkit-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+    box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+}
+
+#username
+{
+    background: #f1f1f1 url(../img/cestaAdd.gif) no-repeat  8px 15px;
+}
+
+#password
+{
+    background: #f1f1f1 url(../img/key.png) no-repeat  8px 15px;
+}
+
+#inputs input:focus
+{
+    background-color: #fff;
+    border-color: #e8c291;
+    outline: none;
+    -moz-box-shadow: 0 0 0 1px #e8c291 inset;
+    -webkit-box-shadow: 0 0 0 1px #e8c291 inset;
+    box-shadow: 0 0 0 1px #e8c291 inset;
+}
+
+/*--------------------*/
+#actions
+{
+    margin: 0 0 0 0;
+	 text-align: center;
+}
+
+#submit
+{		
+    background-color: #B6C5F3;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#EEF2F8), to(#B6C5F3));
+    background-image: -webkit-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -moz-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -ms-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: -o-linear-gradient(top, #EEF2F8, #B6C5F3);
+    background-image: linear-gradient(top, #EEF2F8, #B6C5F3);
+    
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    
+     -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+     -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+     box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.3) inset;    
+    
+    border-width: 1px;
+    border-style: solid;
+    border-color: #B6C5DF;
+
+	 font-weight: bolder;
+   
+    height: 35px;
+    padding: 0;
+    width: 120px;
+    cursor: pointer;
+}
+
+#submit:hover,#submit:focus
+{		
+    background-color: #B6C5DF;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#B6C5F3), to(#EEF2F8));
+    background-image: -webkit-linear-gradient(top, #B6C5F3, #EEF2F8);
+    background-image: -moz-linear-gradient(top, #B6C5F3, #EEF2F8);
+    background-image: -ms-linear-gradient(top, #B6C5F3, #EEF2F8);
+    background-image: -o-linear-gradient(top, #B6C5F3, #EEF2F8);
+    background-image: linear-gradient(top, #B6C5F3, #EEF2F8);
+}	
+
+#submit:active
+{		
+    outline: none;
+   
+     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;
+     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) inset;		
+}
+
+#submit::-moz-focus-inner
+{
+  border: none;
+}
+
+#actions a
+{
+    color: #3151A2;    
+    float: right;
+    line-height: 35px;
+    margin-left: 10px;
+}
+
+/*--------------------*/
+
+#back
+{
+    display: block;
+    text-align: center;
+    position: relative;
+    top: 60px;
+    color: #999;
+}
+
+#login .errors{
+	background: red;
+	margin: 10px;
+	padding: 10px;
+	-moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.error{
+	color:red;
+	font-size:1em;
+}
+
+#DlgCestaNumSeries
+{
+	vertical-align: middle;
+	font-size: 0.9em;
+	font-weight: bolder;
+}
+
+#tituloT3
+{
+	font-size: 0.9em;
+	padding: 0px 5px 0px 5px;
+}

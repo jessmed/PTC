@@ -1,0 +1,111 @@
+//Contantes
+//Esta URL debería devolver datos JSON
+valor_url = 'DetalleServlet?t=';
+//Definición de parametros dinamicos para el post-action
+var encoding='ISO-8859-15';
+var cargado=false;
+var valor_http_request ;
+var objsalida;
+var jT3_BeginUnload=false;
+
+
+function cargaDetalle(tabla, salida)
+{
+  if(!jT3_BeginUnload){
+	var tablaSelec = tabla;
+	if (!cargado && tablaSelec!=""){
+		objSalida=salida;
+	var request;
+	// fire off the request to /form.php
+	request = $.ajax({
+		url: valor_url +tablaSelec,
+		type: "post",
+		dataType: "json",
+		async:true
+	});
+
+	// callback handler that will be called on success
+	request.done(function (response, textStatus, jqXHR){
+		var unidad = "";
+		if (response!=null){
+			 // var the_object = eval("(" + response + ")");
+			  
+			  for (i=0;i<response.length;i++){
+			    if (i>0) 
+					unidad+=", ";
+				unidad+=response[i].Nombre;		  
+			  }
+			  cargado=true;
+			  $(salida).empty().append("<strong>Unidades:</strong> "+unidad);	
+		  }else{
+		    numPeticionesMaxCargaDetalle--;
+			if (numPeticionesMaxCargaDetalle>0){
+				setTimeout(function() {
+					cargaDetalle(tablaSelec, salida);
+					}, tiemposMaxCargaDetalle);
+			}else{
+				cargado=true;
+			}		
+		}		
+	});
+
+	// callback handler that will be called on failure
+	request.fail(function (jqXHR, textStatus, errorThrown){
+		    numPeticionesMaxCargaDetalle--;
+			if (numPeticionesMaxCargaDetalle>0){
+				setTimeout(function() {
+					cargaDetalle(tablaSelec, salida);
+					}, tiemposMaxCargaDetalle);
+			}else{
+				cargado=true;
+			}
+		//jaxi_err=textStatus;
+	});
+	}
+  }
+  return false;   	
+
+}
+
+
+
+	function cargaDetalleOLD(tabla, salida){	  
+		if (!cargado && tabla!=""){
+			objSalida=salida;
+		// Descarga los datos JSON del servidor.
+		valor_http_request= new XMLHttpRequest();		
+		//text/html; charset=ISO-8859-1
+		valor_http_request.overrideMimeType('text/html; charset=' + encoding);
+		valor_http_request.onreadystatechange = handle_json;
+		url= valor_url + tabla;
+		valor_http_request.open("GET", url, true);
+		valor_http_request.send(null);
+		}
+		return false;
+	}
+	 
+	function handle_json() {
+	  if (valor_http_request.readyState == 4) {
+	    if (valor_http_request.status == 200) {
+	      var json_data = valor_http_request.responseText; 
+		  if (json_data!="null"){
+			  var the_object = eval("(" + json_data + ")");
+			  var tabla = "";
+			  for (i=0;i<the_object.length;i++){
+			    if (i>0) 
+					tabla+=", ";
+				tabla+=the_object[i].Nombre;		  
+			  }
+			  cargado=true;
+			 $(objSalida).append(tabla);
+			 valor_http_request = null;
+		  }else{
+		    maxpet--;
+			if (maxpet>0)
+				setTimeout(function() {cargaDetalle(tabla, salida)}, 5000);
+			else
+				cargado=true;
+			}
+		}
+	}
+  }

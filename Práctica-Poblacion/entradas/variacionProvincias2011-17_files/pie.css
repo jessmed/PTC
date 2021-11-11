@@ -1,0 +1,65 @@
+/* ---------            Estilos para el PIE  -----------------*/
+
+#pie {
+	color: #333333;
+   clear: both;	
+	font-size: 0.90em;
+   border-top: 3px solid #b6c5df;
+   /* ponia  margin:12px;  cambiado por Joseba 22-10-12  */
+   margin:10px 0px 0px 0px;
+}
+
+/* Lista items PIE  IZQUIERDA  */
+ul.homePie {
+	padding: 0;
+	margin-top:0px;
+	margin-bottom:5px;	
+	 /*Joseba 22-12-12 */
+	   margin-left:0px;
+} 
+ul.homePie li {
+	display: inline; 
+	padding: 2px 6px 2px 6px; 
+	margin: 3px 0px 0px 0px ;	
+	float:left;
+	width:auto;
+	text-align: center;	
+}
+
+ul.homePie li a{
+	color: #333333;
+}
+
+ul.homePie li.bordeL {	
+	border-left: 1px solid #b6c5df;	
+} 
+
+
+/* Fin lista items PIE  */
+
+/* Lista items PIE  DERECHA  */
+ul.homePieDcha {
+ /*	ponia margin: 0px 90px 5px 0px ;	Joseba pongo 0 en vez de 90 22-10-12 */
+	margin: 0px 0px 5px 0px ;
+	float: right;
+	clear: none;
+	vertical-align: top;
+	padding:0px;
+
+}
+ 
+ul.homePieDcha li {
+	display: inline; 
+	padding: 0px 0px;
+	margin: 0px 1px ;	
+	float:left;
+	text-align: left;	
+	white-space: nowrap;
+}
+
+ul.homePieDcha li a{
+	color: #333333;
+}
+
+.pieleft {float:left;}
+/* Fin lista items PIE  DERECHA */

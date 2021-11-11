@@ -1,0 +1,2381 @@
+.cuerpo {
+	margin-left:-10px;
+	margin-right:-10px;
+	padding : 1.2em 1.2em 1.2em 1.2em;
+}
+
+.cuerpo_principal{
+/*	width: 73%;
+	float: left;
+	padding-left : 3%;
+	padding-top:0px;
+	*/
+	float:left;
+	display:inline;
+	padding-left : 16.8em;
+	padding-right:0em;
+	margin-right:0%;
+}
+
+.cuerpo_principal_cole{
+    margin-left: 16.3em;
+    margin-right: 0;
+    padding-left : 5px;
+    padding-right: 0;
+ }
+
+
+
+.cuerpo_principal_ancho{
+	/*width:auto;
+	float: left;*/
+	padding : 0em 1em 1em 1em;
+}
+
+
+/*  cuerpo principal ancho 100%   */
+.cuerpo_centro_principal_ancho{
+   /*   display: inline;
+        float: left;
+	     width: 100%;*/
+    margin-left: 212px;
+/*	 	*margin-left:18px;    */
+    margin-right: 0;
+    padding-right: 0;
+
+}
+
+.cuerpo_centro_principal_ancho p{
+	text-align: justify;
+}
+
+
+
+.cuerpo_principal_borde{
+	border: 1px  solid #e5e7F3;
+	width: 99%;	
+	float: left;
+	padding : 0.6em;
+	margin: 0em 0em 1em 0em;	
+}
+
+.cuerpo_lateral{
+
+	float: left;
+	padding : 0em;
+	display: inline;
+	width:192px;
+}
+
+
+/* ESTILOS ---------  solo COLORES FONDOS BORDES ---  FONDOS  BORDES   SOLO COLORES   SOLO COLORES----------- COLORES */
+
+a.w:link {
+	color: #2b2d73;
+}
+
+a.w:visited {
+	color:#2b2d73;
+}
+
+a.wblanco:link,a.wblanco:active,a.wblanco:hover,a.wblanco:visited{
+	
+}
+.c66  {
+	background: #666600;
+}
+.cff  {
+	background: #FFFFFF;
+}
+.cf6  {
+	background: #FFCC66;
+}
+.cf4  {
+	background: #b6c5df;
+}
+.grisprodyser  {
+	background: #CCCCCC;
+}
+.anchotd  {
+
+	width : 2px;
+}
+
+.azul  {
+	color: #2b2d73;
+}
+
+.negra  {
+	color : #333333;
+}
+
+.fondoviejo {
+	background: #eef2f8;
+}
+
+.cata_sociedad {
+	background: #996600;
+}
+
+.cata_poblacion {
+	background: #ffcc33;
+}
+.cata_agricultura {
+	background: #666600;
+}
+
+.cata_industria {
+	background: #333399;
+}
+
+.cata_medioambiente {
+	background: #33cc33;
+}
+
+.cata_metodos {
+	background: #666666;
+}
+.cata_economia {
+	background: #CC6699;
+}
+
+.cata_servicios {
+	background: #336666;
+}
+
+.cata_tecnologia {
+	background: #ff6633;
+}
+
+.cata_clasifi {
+	background: #eef2f8;
+}
+
+.fondocarne {
+	background-color : #eef2f8;
+	}	
+	
+.bordeinf {
+	border-bottom : 1px solid #b6c5df;
+	}	
+	
+.bordesup {
+	border-top : 1px solid #333333;
+	}		
+	
+.bordesup_dot {
+	border-top : 1px dotted #333333;
+	}		
+		
+.bordesup_ine {
+	border-top : 1px solid #333333;
+	}
+
+/* FIN */
+
+
+/* ESTILOS ---------  solo ALINEACIONES  Y MARGENES  ----------- ALINEACIONES */
+
+.espacio_caracteres {
+	letter-spacing: 5px;
+}
+
+.cont {
+	text-align : left;
+}
+
+.padding_der20 {padding-right: 20px;}
+
+.padding_der10 {padding-right: 10px;}
+
+.paddingid {
+	padding : 0px 10px 0px 010px;
+}
+
+.paddingtodo {
+	padding : 0.2em 0.2em 0.2em 0.2em;
+}
+
+.altounem {
+	MARGIN-top: 1.0em;
+	MARGIN-bottom: 0.2em;	
+}
+
+.sinmargeninf {
+	MARGIN-bottom: 0.2em;	
+}
+
+.alto08em {
+	MARGIN-top: 0.8em;
+		MARGIN-bottom: 0.0em;	
+}
+
+.altomedioem {
+	MARGIN-top: 0.5em;
+}
+
+img.rightimg {
+	text-align: right;
+	}
+
+.centrado {
+	text-align: center;
+	}		
+
+.izquierda {
+	text-align: left;
+}
+
+.texto_flota_izq {
+	float: left;
+}
+
+
+.derecha {
+	text-align: right;
+}
+
+.RIGHT8  {
+	font-size : 1em;
+	text-align : right;
+}
+
+.RIGHT9  {
+
+	text-align : right;
+}
+
+.CENTER  {
+
+	text-align : center;
+}	
+	
+p.mediosp {
+margin:0 0 .20em;
+}
+
+.margensup {
+margin-top:2em;
+}
+
+.margensupCero {
+margin-top:0em;
+}
+
+.margeninfCero {
+margin-bottom:0em;
+}
+
+.margensup_medioem {
+margin-top:0.5em;
+}
+
+.margenizq40 {
+		 margin-left:-40px;
+		 }
+		 
+.espacio_izq {
+	margin-left : 19px;
+}
+
+.masarriba {
+	margin-top : -13px;
+}
+
+.masabajo {
+	margin-bottom : -13px;
+}
+
+.margenInf {
+	margin-bottom : 15px;
+}
+
+
+.valignmiddle {
+	vertical-align: middle;
+}
+	
+/* fin  */
+
+
+/* ESTILOS ---------  TAMAÑOS DE LETRA  CON COLORES Y MAS  ----------- */
+
+.letrapeq  {
+	font-size : 0.7em;
+}
+
+.cuerpo_resaltado_titulo {
+/*	width: 100%;  */
+	padding: 0.2em;
+   background-color: #e5e7f3; 
+	font-weight: bold;
+	margin:0;
+}
+
+
+
+.azuldiezu  {
+	color: #2b2d73;
+	
+	text-decoration: underline;
+}
+TD.txtpeq  {
+	font-size : 1em;
+}
+TD.txtnorm  {
+
+}
+TD.ultdatn  {
+	font-size : 1em;
+}
+TD.temas  {
+	font-weight : bold;
+}
+TD.titsinlink  {
+	font-weight : bold;
+}
+
+.Pp  {
+	font-size : 1em;
+}
+
+UL.normal  {
+	margin-left : 25px;
+	margin-top : 0px;
+	margin-bottom : 0px;	
+}
+
+UL.normal li  {
+	margin : 5px 0px 5px 0px;
+
+}
+
+UL.arriba  {
+	margin-left : 26px;
+	margin-top : 0px;
+	margin-bottom : 0px;
+	list-style : none;
+}
+
+OL.normal  {
+	margin-left : 32px;
+	margin-top : 0px;
+	margin-bottom : 0px;	
+}
+
+OL.sinnada {
+	list-style: none;
+}
+
+LI.lista {
+	margin-left : 2px;
+	padding-left : 0px;
+	list-style : none ;
+}
+
+LI.menu {
+	margin-left : 2px;
+	padding-left : 0px;
+}
+
+LI.menubola {
+	margin-left : 2px;
+	padding-left : 0px;
+	list-style: url(/images/bolacp.gif);
+}
+
+LI.menubolagrande {
+	margin-left : 2px;
+	padding-left : 0px;
+	list-style: url(/images/bolac.gif);
+}
+
+/*   Lista sin bola y sangrada         */
+
+ul.lista_no_vi_si_sang {
+	margin-left: 0.5em;
+}
+
+ul.lista_no_vi_si_sang li {
+	list-style-type: none;
+	padding-bottom: 0.6em;
+	padding-top: 0.0em;
+}
+
+/*  Fin lista   */
+
+/*   Lista sin bola y sin sangrado        */
+
+ul.lista_no_vi_no_sang {
+	margin-left: 0.0em;
+}
+
+ul.lista_no_vi_no_sang li {
+	list-style-type: none;
+	padding-bottom: 0.6em;
+	padding-top: 0.0em;
+}
+
+/*  Fin lista   */
+
+/*   Lista sin bola y pergado a la izquierda        */
+
+ul.lista_no_vi_no_sang_menos {
+	margin-left: -2.5em;
+}
+
+ul.lista_no_vi_no_sang_menos li {
+	list-style-type: none;
+	padding-bottom: 0.4em;
+	padding-top: 0.0em;
+}
+
+/*  Fin lista   */
+
+
+/*   Lista sin bola y sin sangrado        */
+
+ul.lista_poco_sang {
+	margin: 0em 0em 0.5em 0em ;
+	padding-left:10px;
+}
+
+ul.lista_poco_sang li {
+	list-style-type: none;
+	padding-bottom: 0.3em;
+	padding-top: 0.0em;
+}
+
+ul.lista_poco_sang_capas {
+	margin: 0em 0em 0.5em 0em ;
+	padding-left:20px;
+}
+
+ul.lista_poco_sang_capas li {
+	list-style-type: none;
+	padding-bottom: 0.3em;
+	padding-top: 0.0em;
+}
+
+/*  Fin lista   */
+
+/*   Lista con guion y sangrado        */
+
+ul.lista_si_vi_si_sang_marca {
+    margin-left: 40px;
+    margin-top: 5px;
+}
+ul.lista_si_vi_si_sang_marca li {
+    list-style: square;
+    padding-bottom: 0.1em;
+    padding-top: 0.1em;
+}
+
+ul.lista_si_vi_si_sang_marca_acc-dir {
+    margin-bottom: 10px;
+    margin-left: 40px;
+    margin-top: -15px;
+}
+ul.lista_si_vi_si_sang_marca_acc-dir li {
+    list-style: square;
+    padding-bottom: 0.1em;
+    padding-top: 0.1em;
+}
+
+/*   Fin Lista guion-sangrado        */
+/*  lista para menu lateral sin espacio inferior y con poco sangrado */
+ul.lista_no_vi_no_sang_menu {
+	padding-left: 0.0em;
+		list-style-type: none;
+}
+/* fin */
+
+Select.negra  {
+	font-weight : normal;
+}
+
+SPAN.P  {
+	font-size : 1.1em;
+	font-weight : normal;
+}
+SPAN.txtpeq  {
+	font-size : 1em;
+	font-weight : normal;
+}
+.fecha {font-size: 0.90em; font-style: normal;}
+
+.ocho {
+	background-color: #b6c5df;
+	font-weight : normal;	
+	font-size : 1em;
+}
+.ochoa {
+	font-weight : normal;	
+	font-size : 1em;
+}
+.ochob {
+	font-weight : normal;	
+	font-size : 1em;
+}
+.ochon {
+	font-weight : bold;	
+	font-size : 1em;
+}
+.nueve {
+	background-color: #eef2f8;
+	font-weight : normal;
+}
+.nueveine {
+	font-weight : normal;
+}
+.nueven {
+	background-color: #eef2f8;
+	font-weight : normal;
+
+}
+.nuevenbor {
+	background-color: #eef2f8;
+	font-weight : normal;
+
+	border-bottom : 1px solid #b6c5df;
+}
+.nuevenfbl {
+	background-color: #ffffff;
+	font-weight : normal;
+
+}
+.nueveoro {
+	background-color: #b6c5df;
+}
+.nuevetrsp {
+	font-weight : normal;
+
+}
+.diez {
+	background-color: #b6c5df;
+	font-weight : bold;	
+	padding:0.2em;
+}
+.diez_top {
+	font-weight : bold;	
+	padding-top : 10px;	
+}
+.dieznormal {
+	font-weight : normal;	
+}
+.diezboldine {
+	font-weight : bold;
+}
+.dieznormalfondo{
+	font-weight : normal;	
+	background-color: #ffffff;	
+}
+.dieznormalfondonuevo{
+	font-weight : normal;	
+	background-color: #e5e7f3;	
+}
+.dieznormalrfondo{
+	font-weight : normal;	
+	background-color: #ffffff;	
+}
+.diezboldfondob{
+	font-weight : bold;	
+	background-color: #ffffff;	
+}
+
+.diezfondon  {
+	background-color : #eef2f8;
+}			
+
+.dieznormalbold {
+	font-weight : bold;	
+}
+.diezrojomargen {
+	font-weight : bold;	
+	margin-left: 10px;
+}
+.diezrojonmargen {
+	font-weight: normal;
+	margin-left: 10px;
+}
+.dieznormal_margen {
+	font-weight : normal;
+	padding-left : 10px;		
+}
+.diezn_m {
+	font-weight : normal;
+	padding-left : 20px;		
+}
+span.diezmargen {
+	font-weight : normal;
+	padding-left : 20px;
+}
+
+.diezcarne {
+	background-color: #eef2f8;
+	font-weight : bold;	
+	padding:0.2em;
+}
+.diezcarnenobold {
+	background-color: #eef2f8;
+	font-weight : normal;
+}
+.diezn {
+	background-color: #b6c5df;
+	font-weight : normal;	
+}
+.dieznc {
+	background-color: #b6c5df;
+	font-weight : normal;
+	text-align : center;
+}
+.diezn_top {
+	background-color: #b6c5df;
+	font-weight : normal;
+	margin-top : 10px;
+}
+
+.veinte_censoag  {
+	font-size : 1.5em;
+	color : #666600;	
+}			
+
+.veinte  {
+	font-size : 1.5em;	
+}	
+
+.once {
+	background-color: #b6c5df;
+	font-weight : bold;	
+	font-size : 1.05em;
+	padding:0.2em;
+	}
+.once_v {
+	line-height: 80% 
+	}	
+.onceb {
+	font-weight : bold;	
+	font-size : 1.05em;
+}
+.oncenormal {
+	font-weight : normal;	
+	font-size : 1.05em;
+}
+.onceblan {
+	font-weight : bold;	
+	font-size : 1.05em;
+	color: white;
+}
+.doce {
+	/*background-color: #eef2f8;*/
+	font-weight : bold;	
+	font-size : 1.10em;
+}
+.doceb {
+   color: #0d4eae;
+	font-weight : bold;
+	font-size : 1.10em;
+}
+
+.docenob_cen {
+   color: #0d4eae;
+	font-size : 1.10em;
+	font-weight : normal;	
+}
+
+.doceb_cen {
+ color: #0d4eae;;
+	font-weight : bold;
+	font-size : 1.10em;
+}
+
+p.docenobama {
+	background-color: #b6c5df;
+	font-weight : normal;
+	font-size : 1.10em;
+}
+.docerb {
+	background : #eef2f8;
+	font-weight : bold;
+	font-size : 1.15em;	
+	border : 0px;
+}
+.docernob {
+	font-weight : normal;
+	font-size : 1.1em;
+}
+.docebam {
+	background-color: #b6c5df;
+	font-weight : bold;	
+	font-size : 1.30em;
+}
+.doceblan {
+	font-weight : normal;
+	font-size : 1.10em;
+}
+.docecenso {
+   color: #367F58;
+	font-weight : normal;
+	font-size : 1.30em;
+}
+.docenobama {
+	background-color: #b6c5df;
+	font-weight : normal;
+	font-size : 1.1em;
+}
+.docenob {
+	font-weight : normal;
+	font-size : 1.0em;
+}
+
+
+
+.treceb {
+	font-weight : bold;
+	font-size : 1.1em;
+}
+.catorce {
+	background-color: #b6c5df;
+	font-weight : bold;	
+	font-size : 1.15em;
+}
+
+.fuente_tituloGrande {
+	font-weight : bold;	
+	font-size : 1.35em;
+	color: #0d4eae
+}
+
+.catorcesf {
+	font-weight : bold;	
+	font-size : 1.15em;
+}
+.dieziseis {
+	background-color: #eef2f8;
+	font-weight : normal;
+	font-size : 1.20em;
+	
+}
+.dieziseisn {
+	font-weight : normal;
+	font-size : 1.20em;
+	
+}
+.catorcenorm {
+    
+	font-weight : bold;
+	font-size : 1.15em;
+	background-color: #b6c5df;
+	padding : 5px;	
+}
+
+
+.inecolor_p_b  {
+	font-size : 1em;
+	font-weight : bold;
+}
+.ochorc {
+	font-weight : normal;
+	font-size : 1em;
+	font-style : italic;
+}
+.ap {
+	font-weight: bold;
+	font-size : 1em;
+	margin-left: 30px;
+	padding : 0px 10px 0px 20px;	
+}
+.apsinm {
+	font-weight: bold;
+	font-size : 1em;
+	margin-left: 30px;
+	padding : 0px 10px 0px 20px;
+	
+}
+.apnon {
+	font-weight: normal;
+	font-size : 1em;
+	margin-left: 30px;
+	padding : 0px 10px 0px 20px;	
+}
+.apnonnom {
+	font-weight: normal;
+	font-size : 1em;
+}
+.app {
+	font-weight: normal;
+	font-size : 1em;
+	margin-left: 20px;
+	padding : 0px 20px 0px 50px;	
+}
+.p5a {
+	background : #eef2f8;
+	font-weight: bold;
+	font-size : 1em;
+	border : 0px;
+	margin : 2px 0px 2px 0px;
+	padding : 0px 8px 0px 10px;
+}
+.sinesp {
+	margin-bottom : -0px;
+	margin-top : -0px;
+}
+
+
+TD.P1 {
+	background : #b6c5df;
+	font-weight: bold;
+	font-size: 1.05em;
+	border : 0px;
+	margin : 2px 0px 2px 0px;
+	padding : 0px 5px 0px 10px;
+}
+TD.P1R {
+	background : #eef2f8;
+	font-weight: bold;
+	font-size: 1.05em;
+	border : 0px;
+	margin : 2px 0px 2px 0px;
+	padding : 0px 5px 0px 10px;
+}
+TD.P2 {
+	background : #eef2f8;
+	font-weight: bold;
+	font-size : 1em;	
+	border : 0px;
+	margin : 2px 0px 2px 0px;
+	padding : 0px 10px 0px 20px;
+}
+TD.P2A {
+	background : #eef2f8;
+	font-weight: normal;
+	font-size : 1em;
+	border : 0px;
+	margin : 2px 0px 2px 0px;
+	padding : 0px 10px 0px 20px;
+}
+TD.P5 {
+	background : #eef2f8;
+	font-weight: bold;
+	font-size : 1em;	
+	border : 0px;
+	margin : 2px 0px 2px 0px;
+	padding : 0px 10px 0px 20px;
+}
+
+/* fin  */
+
+
+/* ESTILOS PARA menus DIVULGA -  DIA MUNDIAL DE ESTADISTICA*/
+DIV.menu_divulga {
+	padding: 0px;
+	MARGIN: 0em;
+	width:190px;
+	BACKGROUND: #e5e7f3;
+}
+
+DIV.menu_divulga A {
+	MARGIN: 0px;
+	padding: 0.2em 0.0em;
+	DISPLAY: block;
+	FONT-WEIGHT: normal;
+	width:190px;
+	
+	TEXT-DECORATION: none;
+	BORDER-TOP: #ffffff 2px solid;
+}
+
+DIV.menu_divulga A:hover {
+	BACKGROUND: #eef2f8; 
+		
+}
+
+
+
+DIV.menu_divulga_abre {
+	padding: 0px;
+	MARGIN: 0px;
+	width:190px;
+	BACKGROUND-color: #e5e7f3;
+		BORDER-TOP: #b6c5df 2px solid;
+}
+
+DIV.menu_divulga_abre A {
+	padding: 0.2em 0.0em; 
+	DISPLAY: block;
+	FONT-WEIGHT: normal;
+	width:190px;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menu_divulga_abre A:hover {
+	BACKGROUND: #eef2f8; 
+		
+}
+
+
+
+DIV.menua_divulga_abre {
+	PADDING: 0px;
+	MARGIN: 0em;
+	width:190px;
+	BORDER: 0px;	
+		BORDER-TOP: #b6c5df 2px solid; 
+	BACKGROUND: white;
+		FONT-WEIGHT: bold;
+}
+
+DIV.menua_divulga_abre A {
+	MARGIN: 0px;
+	PADDING:0.2em 0.0em;
+  
+	DISPLAY: block;
+	width:190px;
+	
+	TEXT-DECORATION: none
+}
+
+DIV.menua_divulga_abre A:hover {
+	BACKGROUND: #eef2f8; 
+	
+}
+
+
+
+DIV.menua_divulga_abreycierra {
+	PADDING: 0px;
+	MARGIN: 0em;
+	width:190px;
+	BORDER: 0px;	
+		BORDER-TOP: #b6c5df 2px solid; 
+				BORDER-Bottom: #b6c5df 2px solid;
+	BACKGROUND: white;
+		FONT-WEIGHT: bold;
+}
+
+DIV.menua_divulga_abreycierra A {
+	MARGIN: 0px;
+	PADDING:0.2em 0.0em;
+  
+	DISPLAY: block;
+	width:190px;
+	
+	TEXT-DECORATION: none
+}
+
+DIV.menua_divulga_abreycierra A:hover {
+	BACKGROUND: #eef2f8; 
+	
+}
+
+
+DIV.menua_divulga {
+	PADDING: 0px;
+	MARGIN: 0em;
+	width:190px;
+	BORDER: 0px;	
+	BACKGROUND: white;
+		FONT-WEIGHT: bold;
+}
+
+DIV.menua_divulga A {
+	MARGIN: 0px;
+	PADDING:0.2em 0.0em;
+/*	BORDER-TOP: #b6c5df 2px solid;   */
+	DISPLAY: block;
+	width:190px;
+	
+	TEXT-DECORATION: none
+}
+
+DIV.menua_divulga A:hover {
+	BACKGROUND: #eef2f8; 
+	
+}
+
+DIV.menua_divulga_cierre {
+	padding: 0px;
+	BACKGROUND: white;
+	MARGIN: 0em;
+	width:190px;
+	PADDING-TOP: 0px;
+	BORDER-BOTTOM: #b6c5df 2px solid;
+/*		BORDER-TOP: #b6c5df 2px solid; */
+}
+
+DIV.menua_divulga_cierre A {
+	PADDING:0.2em 0.0em;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	MARGIN: 0px;
+	width:190px;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menua_divulga_cierre A:hover {
+	BACKGROUND: #eef2f8; 
+	
+}
+
+DIV.menu_divulga_cierre {
+	padding: 0px;
+	MARGIN: 0em;
+	width:190px;
+	BACKGROUND: #e5e7f3;
+	BORDER-BOTTOM: #b6c5df 2px solid;
+}
+
+DIV.menu_divulga_cierre A {
+	MARGIN: 0px;
+	padding: 0.2em 0.0em;
+	DISPLAY: block;
+	FONT-WEIGHT: normal;
+	width:190px;
+	
+	TEXT-DECORATION: none;
+	BORDER-TOP: #ffffff 2px solid;
+}
+
+DIV.menu_divulga_cierre A:hover {
+	BACKGROUND: #eef2f8; 
+	
+}
+
+/* ---------------FIN ---------- */ 
+
+
+/* ESTILOS PARA LOS MENUS PARTE IZQUIERDA    -----     MENUS PARTE IZQUIERDA    ------------ */
+
+
+
+.menu {
+	padding: 0px;
+	MARGIN: 0em;
+	width: 190px;
+	BACKGROUND: #e5e7f3;
+}
+
+.menu A {
+	MARGIN: 0px;
+	padding: 0.2em 0.0em;
+	DISPLAY: block;
+	FONT-WEIGHT: normal;
+  width: 190px;
+	
+	TEXT-DECORATION: none;
+	BORDER-TOP: #ffffff 2px solid;
+}
+
+.menu A:hover {
+	BACKGROUND: #eef2f8; 
+		
+}
+
+.menua {
+	PADDING: 0px;
+	MARGIN: 0em;
+	width: 190px;
+	BORDER: 0px;	
+	BACKGROUND: white;
+}
+
+.menua A {
+	MARGIN: 0px;
+	PADDING:0.2em 0.0em;
+	BORDER-TOP: #b6c5df 2px solid;
+	DISPLAY: block;
+	width: 190px;
+	
+	TEXT-DECORATION: none
+}
+
+.menua A:hover {
+	BACKGROUND: white; 
+	
+}
+
+.menua_cierre {
+	padding: 0px;
+	BACKGROUND: white;
+	MARGIN: 0em;
+	width: 190px;
+	PADDING-TOP: 0px;
+	BORDER-BOTTOM: #b6c5df 1px solid;
+}
+
+.menua_cierre A {
+	padding: 0.2em;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	MARGIN: 0px;
+	width: 190px;
+	
+	TEXT-DECORATION: none;
+}
+
+.menua_cierre A:hover {
+	BACKGROUND: white; 
+	
+}
+
+.menu_cierre {
+	padding: 0px;
+	MARGIN: 0em;
+	width: 190px;
+	BACKGROUND: #e5e7f3;
+	BORDER-BOTTOM: #b6c5df 2px solid;
+}
+
+.menu_cierre A {
+	MARGIN: 0px;
+	padding: 0.2em 0.0em;
+	DISPLAY: block;
+	FONT-WEIGHT: normal;
+	width: 190px;
+	
+	TEXT-DECORATION: none;
+	BORDER-TOP: #ffffff 2px solid;
+}
+
+.menu_cierre A:hover {
+	BACKGROUND: white; 
+	
+}
+
+/* ESTILOS PARA LOS CENSOS 2011 */
+DIV.menu_cen {
+	padding: 0px;
+	MARGIN: 0em;
+	WIDTH: 155px;
+	BACKGROUND: #e5e7f3;
+}
+
+DIV.menu_cen A {
+	MARGIN: 0px;
+	padding: 0.2em;
+	BORDER-TOP: #b6c5df 1px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	WIDTH: 150px;
+	
+	TEXT-DECORATION: none;
+}
+
+
+DIV.menu_cen A:hover {
+	BACKGROUND: white; 
+	
+}
+
+DIV.menua_cen {
+	MARGIN: 0em;
+	BORDER-RIGHT: #b6c5df 0px solid;
+	BORDER-TOP: #666600 0px solid;	
+	BORDER-LEFT: #b6c5df 0px solid;	
+	BORDER-BOTTOM: #b6c5df 0px solid;	
+	PADDING: 0px;
+	BACKGROUND: white;
+	WIDTH: 155px;
+}
+
+DIV.menua_cen A {
+	PADDING-RIGHT: 0.0em;
+	PADDING-BOTTOM: 0.2em;	
+	PADDING-LEFT: 0.2em;	
+	PADDING-TOP: 0.2em;
+	BORDER-TOP: #b6c5df 1px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	MARGIN: 0px;
+	WIDTH: 153px;
+	
+	TEXT-DECORATION: none
+}
+
+DIV.menua_cen_cierre {
+	padding: 0px;
+	BACKGROUND: #ffffff;
+	MARGIN: 0em;
+	WIDTH: 155px;
+	BORDER-BOTTOM: #b6c5df 1px solid;
+}
+
+DIV.menua_cen_cierre A {
+	MARGIN: 0px;
+	padding: 0.2em;
+	BORDER-TOP: #b6c5df 1px solid;
+	BORDER-BOTTOM: #b6c5df 0px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	WIDTH: 150px;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menua_cen_cierre A:hover {
+	BACKGROUND: white; 
+	
+}
+
+
+DIV.menu_cen_cierre {
+	padding: 0px;
+	BACKGROUND: #eef2f8;
+	MARGIN: 0em;
+	WIDTH: 155px;
+	BORDER-BOTTOM: #b6c5df 1px solid;
+}
+
+DIV.menu_cen_cierre A {
+	MARGIN: 0px;
+	padding: 0.2em;
+	BORDER-TOP: #b6c5df 1px solid;
+	BORDER-BOTTOM: #b6c5df 0px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	WIDTH: 150px;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menu_cen_cierre A:hover {
+	BACKGROUND: white; 
+	
+}
+
+/* ---------------FIN ---------- */
+
+DIV.menub {
+	PADDING: 0px 0px 0px 10px;
+	BACKGROUND: #b6c5df;
+	MARGIN: 0em;
+	BORDER: 0px ;
+	WIDTH: 145px;
+}
+
+DIV.menub A {
+	MARGIN: 0px;
+	PADDING: 0.2em;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	WIDTH: 140px;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menub A:hover {
+	BACKGROUND: #eef2f8; 
+	
+}
+
+
+DIV.menuba {
+	PADDING: 0px;
+	BACKGROUND: white;
+	MARGIN: 0em;
+	BORDER-LEFT: white 10px solid;
+	BORDER-BOTTOM: #b6c5df 0px solid;
+	BORDER-TOP: #b6c5df 0px solid;
+	WIDTH: 143px;
+}
+
+DIV.menuba A {
+	MARGIN: 0px;
+	PADDING: 0.2em;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	WIDTH: 140px;
+	
+	TEXT-DECORATION: none;
+}
+
+
+
+
+
+DIV.menuw {
+	BORDER: #b6c5df 0px solid;
+	PADDING: 0px;
+	BACKGROUND: #eef2f8;
+	MARGIN: 0em;
+	WIDTH: 185px;
+}
+
+DIV.menuw A {
+	PADDING: 0.1em;
+	BORDER-TOP: #b6c5df 1px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: normal;
+	MARGIN: 0px;
+	WIDTH: 100%;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menuw A:hover {
+	BACKGROUND: #eef2f8;
+	
+}
+
+DIV.menuib {
+	BORDER-RIGHT: #b6c5df 0px solid;
+	BORDER-TOP: #b6c5df 0px solid;
+	BORDER-LEFT: #b6c5df 0px solid;
+	BORDER-BOTTOM: #b6c5df 1px solid;
+	PADDING: 0px;
+	BACKGROUND: #eef2f8;
+	MARGIN: 0em;
+	WIDTH: 130px;
+}
+
+DIV.menuib A {
+	MARGIN: 0px;
+	PADDING-top: 0.1em;
+	PADDING-bottom: 0.1em;
+	BORDER-TOP: #b6c5df 1px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: normal;
+	WIDTH: 100%;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menuib A:hover {
+	BACKGROUND: #ffffff;
+	
+}
+
+DIV.menu_censoag {
+	BORDER-RIGHT: #b6c5df 0px solid;
+	BORDER-TOP: #666600 0px solid;	
+	BORDER-LEFT: #b6c5df 0px solid;	
+	BORDER-BOTTOM: #666600 1px solid;	
+	PADDING: 0px;
+	BACKGROUND: #dee6a8;
+	MARGIN: 0em;
+	WIDTH: 155px;
+}
+
+DIV.menu_censoag A {
+	MARGIN: 0px;
+	PADDING: 0.2em;
+	BORDER-TOP: #666600 1px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	WIDTH: 100%;
+	COLOR: #666600;
+	TEXT-DECORATION: none;
+}
+
+DIV.menu_censoag A:hover {
+	BACKGROUND: #eef2f8; 
+	
+}
+
+
+DIV.menudos {
+	PADDING: 0px;
+	BORDER-TOP: white 1px solid;
+	BACKGROUND: #eef2f8;
+	MARGIN: 0em;
+	BORDER-LEFT: white 1em solid;
+	WIDTH: 13.2em;
+	BORDER-BOTTOM: white 1px solid
+}
+DIV.menudos A {
+	BORDER-TOP: #b6c5df 1px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	PADDING: 0.2em 0.0em;
+	MARGIN: 0px;
+	WIDTH: 100%;
+	
+	TEXT-DECORATION: none
+}
+
+DIV.menudos A:hover {
+	BACKGROUND: white; 
+	
+}
+
+
+DIV.menutres {
+	MARGIN: 0em;
+	BORDER-BOTTOM: #b6c5df 1px solid;
+	PADDING: 0px;
+	BACKGROUND: #eef2f8;
+	WIDTH: 14em;
+}
+
+DIV.menutres A {
+	MARGIN: 0px;
+	PADDING: 0.2em;
+	BORDER-TOP: #b6c5df 1px solid;
+	DISPLAY: block;
+	FONT-WEIGHT: bold;
+	WIDTH: 100%;
+	
+	TEXT-DECORATION: none;
+}
+
+DIV.menutres A:hover {
+	BACKGROUND: #b6c5df; 
+	
+}
+
+/* fin  */
+
+
+a.cajab {
+	background: white;
+	border: 1px solid #b6c5df;
+   padding: 0.1em 0.7em;
+	font-weight: normal;
+	font-size : 0.9em;	
+	text-align: center;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+a.cajab:hover {
+	BACKGROUND: #eef2f8;
+	
+}
+
+a.cajabg {
+	background: white;
+	border: 1px solid #b6c5df;
+	padding: 0.5em 0.5em 0.5em 0.5em;
+	font-weight: normal;
+	font-size : 1em;	
+	text-align: center;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+a.cajabg:hover {
+	BACKGROUND: #eef2f8;
+	
+}
+
+
+
+.fondoine {
+	background-color : #eef2f8;
+	
+	border: 1px solid #b6c5df;
+	font-style: normal;
+	font-size: small;
+	}
+	
+.fondoinediez {
+	background-color : #b6c5df;
+	
+	border: none;
+	font-style: normal;
+	font-size: 1em;
+	}	
+
+/* ESTILOS  PAGINAS  LEGISLACION  UE -----   PAGINAS LEGISLACION UE  -----------------	*/
+	
+.uno {
+	background-color: #b6c5df;
+	font-size : 1.05em;
+	
+}
+
+.dos {
+	background-color: #eef2f8;
+	margin-left : 60px;
+}
+.dosa {
+	margin-left : 60px;
+}
+.kk {
+	background-color: #eef2f8;
+	margin-left : 75px;
+}
+
+.kkkk {
+	margin-left : 75px;
+}
+
+.tres {
+    
+	font-size : 1.05em;
+	margin-top : 5px;
+}
+
+.tresb {
+    
+	font-weight : bold;
+	font-size : 1.05em;
+	margin-top : 5px;
+}
+
+.cuatro {
+    
+	background-color: #b6c5df;
+	font-size : 1.1em;
+	margin-top : 5px;
+}
+/* fin */
+
+
+.colizq {clear:left; float:left;  width:5%; margin: 0.15em;}
+
+.coldcha {float:left; text-align:left;  width:90%; margin: 0.15em;}
+
+.floatleft {
+	position: relative;
+	float: left;
+   margin: 0.15em;}
+
+.floatright_solo {
+	float: right;}
+	
+.floatright {
+	position: relative;
+	float: right;
+   margin: 0.5em;}	
+
+.floatright_margen {
+	position: relative;
+	float: right;
+   margin: 0.5em 6em;
+	}
+			
+.capa {
+	width: 5em;
+   margin: 0.15em;
+	}
+	
+.sindato {
+	empty-cells: show;
+}
+
+.fondotab {
+	background-image: url(../testin/cen01/fondo1.gif);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+
+
+#visita div {
+	margin: 0.3em;
+
+}
+
+#visita label {
+	width: 19%;
+	float: left;
+	font-size: 1em;
+	
+	padding: 0.3em 0.5em 0.1em 0.3em;
+	font-weight: bold;
+	clear: left;
+}
+
+#visita p {
+	width: 19%;
+	float: left;
+	font-size: 1em;
+	
+	padding: 0.3em 0.5em 0.1em 0.3em;
+	font-weight: bold;
+	clear: left;
+}
+
+/*  BOTONes formulario  */
+
+input.boton	 {
+	text-decoration: none;
+	
+	background: #b6c5df;
+	padding: 1px 3px 1px 3px;
+	margin: 0px;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	overflow: visible;
+}
+
+input.boton:hover {
+	text-decoration: none;	
+	background: #e5e7f3;
+	overflow: visible;
+}
+
+input.boton-hover {
+	text-decoration: none;
+	
+	background: #eef2f8;
+	padding: 1px 3px 1px 3px;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: auto;
+	overflow: visible;
+}
+
+input.botonRojo	 {
+	
+	background: #eef2f8;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px 3px 0px 3px;
+	overflow: visible;
+}
+
+input.botonRojo:hover {
+	border: 1px solid #eef2f8;
+	background: #b6c5df;
+	
+	overflow: visible;
+}
+
+input.botonRojo-hover {
+	
+	background: #b6c5df;	
+	border: 1px solid #eef2f8;	
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px 3px 0px 3px;
+	overflow: visible;
+}
+
+
+/* fin botones con evento */
+
+
+/* Colores y bordes para campos formulario  */
+
+.form {
+	width: auto;
+	background-color: #e5e7f3;
+	float: left;
+	padding: 0.3em;
+	margin: 0.75em;
+	font-size: 0.90em;
+	border:0px;
+}
+
+.campos_form_entra {
+	width: 120px;
+	background-color: white;
+	float: left;
+	padding: 0.3em;
+	margin: 0.2em 0.3em 0.2em 0.0em;
+	clear:both;
+}
+
+.campos_form_entra_oce {
+	width: 150px;
+	background-color: white;
+	float: left;
+	padding: 0.3em;
+	margin: 0.2em 0.3em 0.2em 0.0em;
+	clear:both;
+}
+
+.campos_form_sale {
+	width: 250px;
+	float: left;
+	padding: 0.1em;
+	margin: 0.2em 0.3em 0.2em 0.3em;
+   border: 1px solid #333333;
+}
+
+.campos_form_sale_oce {
+	width: 360px;
+	float: left;
+	padding: 0.1em;
+	margin: 0.2em 0.3em 0.2em 0.3em;
+   border: 1px solid #333333;
+}
+
+ /* Fin colores y bordes formularios  */
+
+ 
+  /*  ESTILOS DE LA HOJA DEL GESTOR PARA DOCUTRAB   */
+
+.revista_cubierta {
+	margin-top:0.25em;
+	padding-bottom:1.5em; 
+	padding-right:1.3em;
+	float:left;
+}
+
+.revista_tit {
+	font-weight: bold;
+	font-size: 1.2em;
+	margin-bottom: 0em;
+	margin-top:0em;
+}
+
+.clear {clear: both;}
+
+
+/*  Estilos para el rastro de migas (DE INEBASE??)------------
+#capa_rastroMigasInebase{
+	background : #e5e7f3;
+/*	margin : 0px -10px 0px -10px; 
+	padding : 0px 10px 0px 10px;
+    .padding : 0px 10px 0px 10px;
+    border-bottom: 3px solid #8DA6C9;	 
+	}
+*/
+
+#capa_rastroMigasIne{
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;	 
+    background: url(../menus/img/cab1_num.gif) no-repeat top left;	
+	 min-height:46px;
+}
+	
+#capa_rastroMigasPyS{
+    margin: 0;
+    padding: 0.0em 0.0em 0.0em 4.5em;
+    border-bottom: 3px solid #b6c5df;	 
+    background: url(../menus/img/cab6_num.gif) no-repeat top left;	
+	 min-height:46px;
+}
+	
+	.cf{ 
+	zoom: 1;
+}
+/*   .cf{
+	*zoom: 1;
+}
+*/
+.cf:after{
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+/*  Fin estilos Rastro de migas*/
+
+
+
+/*  estilos para el boton de IR -------------------*/
+
+input.Menu_BtnBuscar{
+	background: #b6c5df;
+	border: 1px solid #b6c5df;
+	
+	vertical-align: middle;
+	font-size : 1em;
+	cursor: pointer;
+}
+
+input.Menu_BtnBuscar:hover{
+	background: #eef2f8;
+	
+}
+
+input.Menu_BtnBuscar-hover{
+	background: #eef2f8;
+	border: 1px solid #b6c5df;
+	
+	vertical-align: middle;
+	font-size : 1em;
+	cursor: pointer;
+}
+
+/*   fin estilos boton IR ----------------*/
+
+
+#contieneHtml {
+	font-size:0.9em;
+}
+
+h2.docenob {
+   
+	font-weight : normal;
+	font-size : 1.0em;
+	margin-top:0;
+	margin-bottom:0px;
+	padding-top:0.0em;
+}
+
+h2.docernob {
+   
+	font-weight : normal;
+	font-size : 1.0em;
+	margin-top:0;
+	margin-bottom:0px;
+	padding-top:0.0em;
+}
+
+h1.docenob {
+   
+	font-weight : normal;
+	font-size : 1.0em;
+	margin-top:0;
+	margin-bottom:0px;
+	padding-top:0.0em;
+}
+
+h1.doce {
+   
+	font-weight : normal;
+	font-size : 1.0em;
+	margin-top:0;
+	padding-top:0.0em;
+}
+
+h1.docernob {
+   
+	font-weight : normal;
+	font-size : 1.0em;
+	margin-top:0;
+	padding-top:0.0em;
+}
+
+h1.doceblan {
+   
+	font-weight : normal;
+	font-size : 1.0em;
+	margin-top:0;
+	padding-top:0.0em;
+}
+
+img.right {
+	float: right;
+}
+
+img.left {
+	float: left;
+}
+
+/*  Lista Horizontal con separador  BORDE LATERAL class, NO id------------------------*/
+
+ul.lista_subtemas_hori {
+	margin-top:0px;
+	margin-bottom:5px;	
+	margin-left:0;
+		font-size:1.1em;
+} 
+
+ul.lista_subtemas_hori li {
+	display: inline-block; 
+    	padding: 3px 10px 2px 7px; 
+	margin-top:5px;
+	margin-bottom:0px;	
+/*	*display: inline;    */
+		line-height: 140%;
+			BACKGROUND: #e5e7f3;	 
+}
+
+ul.lista_subtemas_hori li:hover {
+
+			BACKGROUND: #eef2f8; 
+}
+
+ul.lista_subtemas_hori li.bordeL {	
+	border-left: 2px solid #b6c5df;	
+	padding: 3px 10px 2px 10px;
+
+	margin: 2px -3px	;  
+		BACKGROUND: #e5e7f3;			
+} 
+
+ul.lista_subtemas_hori li.bordeL:hover {	
+
+		BACKGROUND: #eef2f8;			
+}
+
+ul.lista_subtemas_hori li.bordeLR {	
+	border-right: 2px solid #b6c5df;	
+		border-left: 2px solid #b6c5df;	
+	padding: 3px 10px 2px 10px;
+	margin: 2px -3px	;  
+		BACKGROUND: #e5e7f3;			
+} 
+
+ul.lista_subtemas_hori li.bordeLR:hover {	
+
+		BACKGROUND: #eef2f8;			
+}
+
+ul.lista_subtemas_hori li a:hover {	
+	COLOR: #2b2d73;	
+	padding-left: 0px;
+	padding-right: 0px;			
+}
+
+ul.lista_subtemas_hori li a:visited{
+     color: #2b2d73;
+}
+
+ul.lista_subtemas_hori li.On {	
+	BACKGROUND: white; 
+	COLOR: #333;	
+	font-weight: bold;
+    margin-right: -2px;
+    padding: 1px 10px 2px;
+    		border-top: 2px solid #b6c5df;
+    		border-right: 2px solid #b6c5df;
+    		border-left: 2px solid #b6c5df;
+}
+
+ul.lista_subtemas_hori li.On:hover {	
+	BACKGROUND: #eef2f8; }
+
+/*  FIn  Lista Horizontal con separador  BORDE LATERAL  ---*/
+
+
+
+
+/*  Lista Horizontal con separador  BORDE LATERAL ------------------------*/
+
+ul#lista_subtemas_hori {
+	margin-top:0px;
+	margin-bottom:5px;	
+	margin-left:0;
+		font-size:1.1em;
+} 
+
+ul#lista_subtemas_hori li {
+	display: inline-block; 
+    	padding: 3px 10px 2px 7px; 
+	margin-top:5px;
+	margin-bottom:0px;	
+/*	*display: inline;    */
+		line-height: 140%;
+			BACKGROUND: #e5e7f3;	 
+}
+
+ul#lista_subtemas_hori li:hover {
+
+			BACKGROUND: #eef2f8; 
+}
+
+ul#lista_subtemas_hori li.bordeL {	
+	border-left: 2px solid #b6c5df;	
+	padding: 3px 10px 2px 10px;
+
+	margin: 2px -3px	;  
+		BACKGROUND: #e5e7f3;			
+} 
+
+ul#lista_subtemas_hori li.bordeL:hover {	
+
+		BACKGROUND: #eef2f8;			
+}
+
+ul#lista_subtemas_hori li.bordeLR {	
+	border-right: 2px solid #b6c5df;	
+		border-left: 2px solid #b6c5df;	
+	padding: 3px 10px 2px 10px;
+	margin: 2px -3px	;  
+		BACKGROUND: #e5e7f3;			
+} 
+
+ul#lista_subtemas_hori li.bordeLR:hover {	
+
+		BACKGROUND: #eef2f8;			
+}
+
+ul#lista_subtemas_hori li a:hover {	
+	COLOR: #2b2d73;	
+	padding-left: 0px;
+	padding-right: 0px;			
+}
+
+ul#lista_subtemas_hori li a:visited{
+     color: #2b2d73;
+}
+
+ul#lista_subtemas_hori li.On {	
+	BACKGROUND: white; 
+	COLOR: #333;	
+	font-weight: bold;
+    margin-right: -2px;
+    padding: 1px 10px 2px;
+    		border-top: 2px solid #b6c5df;
+    		border-right: 2px solid #b6c5df;
+    		border-left: 2px solid #b6c5df;
+}
+
+ul#lista_subtemas_hori li.On:hover {	
+	BACKGROUND: #eef2f8; }
+
+/*  FIn  Lista Horizontal con separador  BORDE LATERAL  ---*/
+
+
+/*  Lista Horizontal con separador  BORDE LATERAL FUENTE 1.1em ------------------------*/
+ul#lista_subtemas_hori_p {
+    font-size: 1.05em;
+    margin-bottom: 5px;
+    margin-top: 0;
+
+}
+ul#lista_subtemas_hori_p li {
+    display: inline-block;
+    line-height: 140%;
+    margin-left: 0;
+    margin-bottom: 0;
+    margin-top: 5px;
+    padding: 0 8px 0 0;
+	 font-weight:bold;
+}
+ul#lista_subtemas_hori_p li.bordeL {
+    border-left: 2px solid #B6C5DF;
+    margin-bottom: 0;
+    padding: 0 10px 0 10px;
+}
+ul#lista_subtemas_hori_p li a:hover {
+    
+	 background: #eef2f8;
+    padding-left: 0;
+    padding-right: 0;
+}
+ul#lista_subtemas_hori_p li a:visited {
+    color: #2B2D73;
+}
+ul#lista_subtemas_hori_p li.On {
+    background: none repeat scroll 0 0 #B6C5DF;
+    color: black;
+    font-weight: 500;
+    margin-right: -6px;
+    padding: 2px 5px;
+}
+/*  FIn  Lista Horizontal con separador  BORDE LATERAL  ---*/
+
+
+.bloqueBordeAzul{
+    margin-top: 10px;
+    padding: 0.3em;
+    border-top: 2px solid #b6c5df;	
+	 font-size: 1.1em; 
+}
+
+.bloqueBordeAzulfuente{
+    margin-top: 10px;
+    padding: 0.3em;
+    border-top: 2px solid #b6c5df;	
+}
+
+
+/*  estilos para pintar el paginas de los censos y para el grafico de los censos 2011  */
+.censos2011_cuerpo_principal_tres_cols {
+    display: inline;
+    float: left;
+    margin-left: 1.5em;
+    margin-right: 0;
+  /*  padding-left: 16.8em;*/
+    padding-right: 0;
+    width: 442px;
+}
+
+.censos2011_cuerpo_principal_coldcha{
+	padding-left : 670px;
+	width:32%;
+}
+
+.cen11_fondo_azul {
+	background-color: #e5e7f3;
+	
+	border: none;
+	font-style: normal;
+	font-size: 1em;
+	padding:5px 5px 2px 5px;
+	}	
+
+
+.cen11_graf_capa1 {float:left;margin-bottom:10px;margin-top:10px;margin-left:0px;}
+.cen11_graf_capagrafico {clear:both;height:250px;width:320px;float:left;}
+.cen11_graf_leyenda1 {position:absolute;width:95px;padding-top:0px;margin-left:30px;float:left;font-size:0.7em;}
+.cen11_graf_leyenda_titulo {color:#333333;font-weight:bolder;text-decoration:none;font-size:1.2em;}
+.cen11_graf_leyenda2 {position:absolute;width:100px;padding-top:0px;float:left;font-size:0.7em;margin-left:210px}
+.cen11_graf_tituloejex {position:absolute;width:5px;margin-left: 155px;padding-top: 235px;;float:left;font-size:0.7em;}
+
+.cen11_graf_notas {position:absolute;width:310px;padding-top:0px;margin-top:260px;margin-left:5px;float:left;font-size:0.8em;}
+
+/*   fin estilos para gracico censos 2011  */
+
+
+/*  TOOLTIP para Descripcion Operacion INEBASE -- VALE PARA CUALQUIER TOOPTIL*/
+
+a:tooltip_graf hover {
+	background:#ffffff; /*BG color is a must for IE6*/
+	text-decoration:none;
+	} 
+	
+a.tooltip_graf span {
+ 	display:none; 
+	padding:5px 5px; 
+    margin-top:-180px;
+	width:300px; 
+	text-align:left;
+	cursor: default;
+	}
+	
+a.tooltip_graf:hover span {
+	border-radius: 5px 5px; 
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px; 
+	 box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); 
+	-webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); 
+	-moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
+	display:block;
+	position:absolute;
+	border:1px solid #2b2d73;
+	text-decoration:none; 
+	background:#eef2f8; 
+	color:#333333;
+	z-index: 999;
+	padding:0.5em;
+
+	}
+ /*  Fin Tooltip  */
+ 
+ .texto_titulo_nivel2  {
+ 	color:#0d4eae;
+	font-size:1.2em;
+	font-weight: bold;
+	margin-top: 1em;
+	margin-bottom:0em;
+ }
+ 
+  .texto_titulo_nivel2_primer  {
+ 	color:#0d4eae;
+	font-size:1.2em;
+	font-weight: bold;
+	margin-top: 0em;
+	margin-bottom:0em;
+ }
+ 
+ 
+ /*  TEXTOS con evento  */
+
+.boton	 {
+	text-decoration: none;
+	
+	background: #b6c5df;
+	padding: 1px 3px 1px 3px;
+	margin: 0px;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	overflow: visible;
+}
+
+.boton:hover {
+	text-decoration: none;	
+	background: #e5e7f3;
+	overflow: visible;
+}
+
+.boton-hover {
+	text-decoration: none;
+	
+	background: #eef2f8;
+	padding: 1px 3px 1px 3px;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: auto;
+	overflow: visible;
+}
+
+.botonRojo	 {
+	
+	background: #eef2f8;
+	border: 1px solid #b6c5df;
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px 3px 0px 3px;
+	overflow: visible;
+}
+
+.botonRojo:hover {
+	border: 1px solid #eef2f8;
+	background: #b6c5df;
+	
+	overflow: visible;
+}
+
+.botonRojo-hover {
+	
+	background: #b6c5df;	
+	border: 1px solid #eef2f8;	
+	cursor: pointer;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px 3px 0px 3px;
+	overflow: visible;
+}
+
+
+/* fin TEXTOS con evento */
+
+
+/* estilos para pagina estatica con lista tablas de inebase ETCL  */
+.icono_pcaxis {
+    cursor: pointer;
+    height: 12px;
+    vertical-align: middle;
+    width: 12px;
+}
+
+.icono_tabla {
+    cursor: pointer;
+    height: 12px;
+    vertical-align: middle;
+    width: 12px;
+}
+.inebase_tabla {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 0 none;
+    margin: 2px 0;
+    padding: 0;
+}
+.cuerpo_resaltado_titulo_margen {
+/*	width: 100%;  */
+	padding: 0.2em;
+   background-color: #e5e7f3; 
+	font-weight: bold;
+	margin:3px;
+}
+
+OL.sinnada_nomargen {
+	list-style: none;
+	margin-left:5px;
+}
+
+/* fin estilos para pagina estatica tablas inebase etcl  */
+
+div.menu_lateral_estaticas { }
+
+div.menu_lateral_estaticas_img { margin-top: 1em; margin-left: 15% }
+
+img.valign_middle {vertical-align: middle;}
+
+
+/* Estilos para tabla. Los dos ultimos para hacer dos colores alternos por fila */
+.miTabla th{
+    border-bottom: 2px solid white;
+    border-left: 2px solid white;
+    margin: 0;
+    padding: 4px;
+    white-space: normal;
+    text-align: left;
+}
+
+.miTabla td {
+    border-bottom: 2px solid white;
+    border-left: 2px solid white;
+    margin: 0;
+    padding: 4px;
+    white-space: normal;
+}
+
+.miTabla td.diezn_m {
+    padding-left: 2em;
+}
+
+.miTabla tr:nth-child(odd) {
+   background-color: white;
+   color:#333
+}
+
+.miTabla tr:nth-child(even) {
+   background-color: #e5e7f3;
+   color:#333;
+}
+
+
+.miTabla div.tr:nth-child(odd) {
+   background-color: white;
+   color:#333
+}
+
+.miTabla div.tr:nth-child(even) {
+   background-color: #e5e7f3;
+   color:#333;
+}
+
+/* tabla dentro de tabla */
+
+.miTabla td table.miTablaNivel2 {
+width:100%;
+}
+
+.miTabla td table.miTablaNivel2 tr {
+  background-color: inherit;
+}
+
+.miTabla td table.miTablaNivel2 td:first-child {
+  white-space:nowrap;
+}
+
+.miTabla td table.miTablaNivel2 td:nth-child(2) {
+ max-width:20%;
+}
+
+.miTabla td table.miTablaNivel2 td:nth-child(1) {
+ width:45px;
+}
+
+.miTabla td table.miTablaNivel2 td:nth-child(3) {
+
+  min-width: 84px;
+  width: 84px !important;
+}
+
+.miTabla td table.miTablaNivel2 td {
+  padding:0px 3px;
+  border:none;
+  text-align:left;
+}
+
+.columna_periodo {min-width: 84px;width: 84px !important;
+}
+
+
+/*fin tabla dentro tabla*/
+
+/*  fin estilos para tabla  */
+
+/*estilo para tabla calen.htm*/
+.dato_calen {
+	 background-color: #e5e7f3;
+    float: right;
+    font-weight: normal;
+    margin-top: 0;
+    text-align: center;
+    width: 100%;
+}
+.columna_izq_borde {
+	width:47.2%;float:left;border-top:2px solid #b6c5df;margin-bottom:10px;margin-top:5px;
+}
+
+.columna_der_borde {
+	width:47.2%;float:right;border-top:2px solid #b6c5df;margin-bottom:10px;margin-top:5px;
+}
+/*fin*/

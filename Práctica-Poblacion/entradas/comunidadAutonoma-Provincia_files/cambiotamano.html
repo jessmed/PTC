@@ -1,0 +1,53 @@
+var inc=0.1;
+var taminicial='0.90em';
+
+
+function tamano(valor) { 
+	
+	if (valor==0)
+	 document.body.style.fontSize=taminicial;
+	 else{
+	tam =document.body.style.fontSize;
+	tam=tam.substr(0,tam.indexOf("em"));
+	if (tam=="")
+	   tam=1;
+	 tam= Math.round((parseFloat(tam)+(inc*valor))*100)/100;
+  if (tam < 0.5)
+  		tam=0.5;
+  document.body.style.fontSize=tam +'em';
+  	}
+}
+
+
+
+function Buscador_Buscar(opcion){
+	if(Buscador_Valida(opcion))
+		document.getElementById("cabeceraBuscador").submit();	
+}		
+		
+function Buscador_Valida(opcion){
+   /*
+   añade parametros para las estadisticas
+   */
+   Buscador=document.getElementById("cabeceraBuscador");
+   vuelta=true;
+    switch (opcion){
+      case 1: 
+             Buscador.action=HM_raiz_web+'/buscar/advancedSearch.do?L=0';
+             break;
+      default:
+             /*
+			 añadimos la url completa para que no pierda los struts la url del servidor de busqueda
+			 */
+             Buscador.action=HM_raiz_web+'/buscar/searchResults.do?L=0';
+  	  	  if (Buscador.searchString.value=='')
+              vuelta=false;
+		  else  if (Buscador.searchString.value.replace( /^\s+/g, "")==""){
+                  vuelta=false;
+                 }
+          break;
+    }
+	if (!vuelta)
+		alert('Es necesario introducir algún termino para buscar');
+   return vuelta
+}
