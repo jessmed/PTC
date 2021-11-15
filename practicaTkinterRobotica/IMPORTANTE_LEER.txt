@@ -1,0 +1,14 @@
+Como se pedía en la interfaz gráfica los botones agrupar,extraccion,clasificar,etc..
+solo se vuelven disponibles cuando se han capturado los 12 archivos.
+Ahora mismo ya están capturados, pero como hay que hacerlos manualmente
+si se vuelve a dar a capturar se sobreescribe el archivo que yo he capturado
+con el simulador, por lo tanto.
+
+1.Si se quiere realiar una simulacion completa desde 0 para reproducir el trabajo,
+se deben borrar todos los archivos menos los scripts principales y los de vrep.
+
+2.Si se quiere probar el funcionamiento del trabajo con los datos que yo ya
+he recogido del simulador, se debe cambiar el codigo del mainInterfaz.py
+quitando las desactivación de los botones y que estén todo el timepo visibles 
+para poder hacer funcionar los scripts, aparte habrá que borrar todos los archivos
+menos los directorios,los scripts y los de vrep.
